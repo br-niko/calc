@@ -8,16 +8,14 @@
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
         <link
-            href="https://fonts.googleapis.com/css2?family=Work+Sans:wght@400;700&display=swap"
+            href="https://fonts.googleapis.com/css2?family=Work+Sans:wght@400;600;700&display=swap"
             rel="stylesheet"
         />
 
         <style>
             /* Estilos de 'body' e 'table' */
             body {
-                /* --- CSS MODIFICADO (Fonte) --- */
                 font-family: "Work Sans", Arial, sans-serif;
-                /* --- Fim da Modificação --- */
                 background-color: #e0e0e0;
                 padding: 20px;
                 margin: 0;
@@ -27,14 +25,14 @@
                 width: 100%;
                 background-color: #f8f8f8;
                 box-shadow: inset 1px 1px 2px #ccc;
-                margin-bottom: 20px;
+                /* margin-bottom: 20px; Removido para colar o total */
                 table-layout: fixed;
             }
 
             /* colgroup para 8 colunas */
             colgroup col:nth-child(1) {
                 width: 130px;
-            } /* Data (aumentado p/ botão) */
+            } /* Data */
             colgroup col:nth-child(2) {
                 width: 187px;
             } /* Atividade */
@@ -67,7 +65,16 @@
             thead th {
                 border-bottom: 2px solid #aaa;
                 vertical-align: middle;
-                font-weight: 700; /* Usa o peso Bold da Work Sans */
+                font-weight: 600; /* Aplica SemiBold 600 */
+            }
+
+            /* CSS (Alinhamento Títulos) */
+            thead th:nth-child(1),
+            thead th:nth-child(2),
+            thead th:nth-child(3),
+            thead th:nth-child(4),
+            thead th:nth-child(5) {
+                text-align: left;
             }
 
             /* CSS (Header 'Data' clicável) */
@@ -82,9 +89,7 @@
             /* Estilos de 'input' */
             input,
             select {
-                /* --- CSS MODIFICADO (Fonte) --- */
                 font-family: "Work Sans", Arial, sans-serif;
-                /* --- Fim da Modificação --- */
                 background-color: #f0f0f0;
                 border: 2px inset #ccc;
                 padding: 4px 6px;
@@ -112,9 +117,7 @@
 
             /* CSS (Estilo Botão Principal e Ícones) */
             button {
-                /* --- CSS MODIFICADO (Fonte) --- */
                 font-family: "Work Sans", Arial, sans-serif;
-                /* --- Fim da Modificação --- */
                 background-color: royalblue;
                 color: white;
                 padding: 5px 8px;
@@ -141,21 +144,40 @@
                 display: flex;
                 gap: 10px;
                 flex-wrap: wrap;
+                margin-top: 20px; /* Adiciona espaço acima dos botões */
             }
 
-            /* CSS (Fonte do Total) */
+            /* CSS (Fonte do Total Mês) */
             #total-mes {
-                font-weight: normal; /* Mantém normal, h3 já dá peso */
-                font-family:
-                    "Courier New", Courier, monospace; /* Mantém Courier New aqui */
+                font-weight: normal;
+                font-family: "Courier New", Courier, monospace;
             }
-            /* Container do total */
+            /* Container do total mês */
+            #total-mes-container {
+                /* margin-top: 8px; Removido */
+                background-color: #fdfdfd;
+                border: 1px solid #ccc;
+                border-top: none; /* Remove borda superior para colar na tabela */
+                padding: 10px 18px; /* Ajusta padding */
+                border-radius: 0 0 4px 4px; /* Arredonda só cantos inferiores */
+                max-width: none; /* Ocupa largura total */
+                box-sizing: border-box; /* Inclui padding na largura */
+                margin-bottom: 20px; /* Adiciona espaço abaixo do total */
+            }
             #total-mes-container h3 {
-                /* --- CSS MODIFICADO (Fonte) --- */
                 font-family: "Work Sans", Arial, sans-serif;
-                /* --- Fim da Modificação --- */
                 margin: 0;
                 font-size: 1.1em;
+                font-weight: 600; /* Aplica SemiBold 600 */
+                border-bottom: none;
+                padding-bottom: 0;
+                text-align: right; /* Alinha o total à direita */
+            }
+
+            /* CSS (Fonte Total Dia) */
+            .horas-dia {
+                font-family: "Courier New", Courier, monospace;
+                font-weight: bold; /* Deixa o total do dia em negrito */
             }
 
             /* Estilos para os Intervalos */
@@ -227,11 +249,12 @@
 
             /* CSS (Container para campos de ajuste) */
             .ajuste-container {
-                margin-top: 20px;
+                /* margin-top: 20px; Removido daqui */
                 display: flex;
                 flex-direction: column;
                 gap: 10px;
                 max-width: 300px;
+                margin-bottom: 20px; /* Espaço antes do resumo */
             }
             .ajuste-container div {
                 display: flex;
@@ -255,36 +278,29 @@
                 background-color: #ffe0e0;
             }
 
-            /* CSS (Resumo Semanal e Total - Caixas) */
-            #resumo-semanal-container,
-            #total-mes-container {
-                margin-top: 15px;
+            /* CSS (Resumo Semanal) */
+            #resumo-semanal-container {
+                /* margin-top: 15px; Removido daqui */
                 background-color: #fdfdfd;
                 border: 1px solid #ccc;
                 padding: 12px 18px;
                 border-radius: 4px;
                 max-width: 300px;
+                margin-bottom: 20px; /* Adiciona espaço abaixo do resumo */
             }
-            #resumo-semanal-container h4,
-            #total-mes-container h3 {
+            #resumo-semanal-container h4 {
                 margin: 0 0 10px 0;
                 border-bottom: 1px solid #aaa;
                 padding-bottom: 5px;
                 font-size: 1.1em;
-                font-weight: 700; /* Usa o peso Bold da Work Sans */
+                font-weight: 600; /* Aplica SemiBold 600 */
             }
             #resumo-semanal {
-                font-family:
-                    "Courier New", Courier, monospace; /* Mantém Courier New aqui */
+                font-family: "Courier New", Courier, monospace;
                 font-size: 1em;
                 display: flex;
                 flex-direction: column;
                 gap: 5px;
-            }
-            #total-mes-container h3 {
-                border-bottom: none;
-                padding-bottom: 0;
-                margin-bottom: 0;
             }
 
             /* CSS RESPONSIVO */
@@ -297,6 +313,7 @@
                     box-shadow: none;
                     border: none;
                     table-layout: auto;
+                    margin-bottom: 0; /* Remove margem inferior no mobile */
                 }
 
                 thead {
@@ -337,19 +354,19 @@
                     padding-right: 10px;
                     white-space: nowrap;
                     text-align: left;
-                    font-weight: 700; /* Usa o peso Bold da Work Sans */
+                    font-weight: 600;
                     color: #555;
                 }
 
                 /* Ajustes específicos */
                 td[data-label="Data"] {
-                    padding-left: 8px; /* Remove padding extra p/ container flex */
+                    padding-left: 8px;
                 }
                 td[data-label="Data"]::before {
-                    display: none; /* Label já está no thead */
+                    display: none;
                 }
                 .data-container {
-                    margin-top: 5px; /* Espaço após o (invisível) label */
+                    margin-top: 5px;
                 }
 
                 td[data-label="Hora-aula?"] {
@@ -383,11 +400,20 @@
                 }
 
                 /* Ajusta containers inferiores */
-                .ajuste-container,
-                #resumo-semanal-container,
                 #total-mes-container {
+                    border-radius: 4px; /* Volta arredondamento normal no mobile */
+                    border-top: 1px solid #ccc; /* Readiciona borda superior */
+                    margin-bottom: 20px;
+                }
+                #total-mes-container h3 {
+                    text-align: left; /* Alinha total à esquerda no mobile */
+                }
+
+                .ajuste-container,
+                #resumo-semanal-container {
                     max-width: none;
                     width: auto;
+                    margin-top: 0; /* Remove margem superior desnecessária */
                 }
             }
         </style>
@@ -419,6 +445,9 @@
             <tbody id="corpo-tabela"></tbody>
         </table>
 
+        <div id="total-mes-container">
+            <h3>Total do mês: <span id="total-mes">00:00</span></h3>
+        </div>
         <div class="botoes-acao">
             <button onclick="adicionarLinha()" title="Adicionar Linha">
                 <svg
@@ -491,10 +520,6 @@
         <div id="resumo-semanal-container">
             <h4>Resumo Semanal</h4>
             <div id="resumo-semanal"></div>
-        </div>
-
-        <div id="total-mes-container">
-            <h3>Total do mês: <span id="total-mes">00:00</span></h3>
         </div>
 
         <script>
