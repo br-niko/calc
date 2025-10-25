@@ -5,20 +5,39 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <title>Calculadora de Horas do Mês</title>
 
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-        <link
-            href="https://fonts.googleapis.com/css2?family=Work+Sans:wght@400;600;700&display=swap"
-            rel="stylesheet"
-        />
-
         <style>
+            /* --- NOVO: Definição da Fonte W95 --- */
+            @font-face {
+                font-family: "W95Font";
+                src:
+                    url("w95font.woff2") format("woff2"),
+                    /* Prioriza WOFF2 */ url("w95font.woff") format("woff"); /* Fallback para WOFF */
+                font-weight: normal;
+                font-style: normal;
+            }
+            @font-face {
+                font-family: "W95Font";
+                src:
+                    url("w95font-bold.woff2") format("woff2"),
+                    url("w95font-bold.woff") format("woff");
+                font-weight: bold; /* Ou 700 */
+                font-style: normal;
+            }
+            /* --- Fim da Definição --- */
+
             /* Estilos de 'body' e 'table' */
             body {
-                font-family: "Work Sans", Arial, sans-serif;
+                /* --- CSS MODIFICADO (Fonte) --- */
+                font-family:
+                    "W95Font", Arial, sans-serif; /* Usa a nova fonte */
+                /* --- Fim da Modificação --- */
                 background-color: #e0e0e0;
                 padding: 20px;
                 margin: 0;
+                /* Opcional: Para pixel fonts, desabilitar anti-aliasing pode ficar melhor */
+                /* font-smooth: never;
+            -webkit-font-smoothing: none;
+            -moz-osx-font-smoothing: grayscale; */
             }
             table {
                 border-collapse: collapse;
@@ -64,7 +83,9 @@
             thead th {
                 border-bottom: 2px solid #aaa;
                 vertical-align: middle;
-                font-weight: 600;
+                /* --- CSS MODIFICADO (Peso) --- */
+                font-weight: bold; /* Usa a versão bold da W95Font */
+                /* --- Fim da Modificação --- */
             }
 
             /* CSS (Alinhamento Títulos) */
@@ -88,21 +109,22 @@
             /* Estilos de 'input' */
             input,
             select {
-                font-family: "Work Sans", Arial, sans-serif;
-                background-color: #fff; /* Fundo branco para inputs */
-                border: 1px solid #888; /* Borda inset simples */
+                font-family:
+                    "W95Font", Arial, sans-serif; /* Usa a nova fonte */
+                background-color: #fff;
+                border: 1px solid #888;
                 border-right-color: #eee;
                 border-bottom-color: #eee;
                 padding: 4px 6px;
                 font-size: 14px;
-                border-radius: 0; /* Remove cantos arredondados */
+                border-radius: 0;
                 box-sizing: border-box;
                 max-width: 100%;
             }
             input:focus,
             select:focus {
-                outline: 1px dotted #000; /* Outline pontilhado no foco */
-                background-color: #fff; /* Mantém fundo branco */
+                outline: 1px dotted #000;
+                background-color: #fff;
             }
 
             input[type="time"],
@@ -111,7 +133,6 @@
                 width: 100%;
             }
             input[type="checkbox"] {
-                /* Estilo Win95 para checkbox (aproximado) */
                 appearance: none;
                 background-color: #fff;
                 border: 1px solid #888;
@@ -124,7 +145,7 @@
                 margin: 0 4px;
             }
             input[type="checkbox"]:checked::before {
-                content: "✔"; /* Ou outro caractere */
+                content: "✔";
                 position: absolute;
                 top: -2px;
                 left: 1px;
@@ -132,32 +153,31 @@
                 color: #000;
             }
 
-            /* --- CSS MODIFICADO (Estilo Botão Win95) --- */
+            /* CSS (Estilo Botão Win95) */
             button {
-                font-family: "Work Sans", Arial, sans-serif;
-                background-color: #c0c0c0; /* Cinza Win95 */
-                color: #000; /* Texto/Icone preto */
-                padding: 4px 8px; /* Ajusta padding */
-                font-size: 14px; /* Aumenta fonte dos botões principais */
+                font-family:
+                    "W95Font", Arial, sans-serif; /* Usa a nova fonte */
+                background-color: #c0c0c0;
+                color: #000;
+                padding: 4px 8px;
+                font-size: 14px;
                 border-style: outset;
                 border-width: 2px;
-                border-color: #eee #888 #888 #eee; /* Cores para efeito 3D */
-                border-radius: 0; /* Remove cantos arredondados */
+                border-color: #eee #888 #888 #eee;
+                border-radius: 0;
                 cursor: pointer;
                 display: inline-flex;
                 align-items: center;
                 justify-content: center;
                 line-height: 1;
-                min-height: 28px; /* Altura mínima */
+                min-height: 28px;
             }
-            /* Efeito de botão pressionado */
             button:active {
                 border-style: inset;
-                border-color: #888 #eee #eee #888; /* Cores invertidas */
-                padding: 5px 7px 3px 9px; /* Simula movimento */
+                border-color: #888 #eee #eee #888;
+                padding: 5px 7px 3px 9px;
             }
             button:hover {
-                /* Remove o hover azul */
                 background-color: #c0c0c0;
             }
             /* Tamanho dos SVGs nos botões de ação */
@@ -165,7 +185,6 @@
                 width: 20px;
                 height: 20px;
             }
-            /* --- Fim da Modificação --- */
 
             /* Container para os botões de ação */
             .botoes-acao {
@@ -192,10 +211,13 @@
                 margin-bottom: 20px;
             }
             #total-mes-container h3 {
-                font-family: "Work Sans", Arial, sans-serif;
+                font-family:
+                    "W95Font", Arial, sans-serif; /* Usa a nova fonte */
                 margin: 0;
                 font-size: 1.1em;
-                font-weight: 600;
+                /* --- CSS MODIFICADO (Peso) --- */
+                font-weight: bold; /* Usa a versão bold da W95Font */
+                /* --- Fim da Modificação --- */
                 border-bottom: none;
                 padding-bottom: 0;
                 text-align: right;
@@ -222,12 +244,12 @@
                 flex: 1;
             }
 
-            /* --- CSS MODIFICADO (Botões de Ação na Linha - Estilo Win95) --- */
+            /* CSS (Botões de Ação na Linha - Estilo Win95) */
             .add-intervalo,
             .remover-intervalo,
             .add-linha-abaixo {
-                background-color: #c0c0c0; /* Cinza */
-                color: #000; /* Ícone preto */
+                background-color: #c0c0c0;
+                color: #000;
                 border-style: outset;
                 border-width: 2px;
                 border-color: #eee #888 #888 #eee;
@@ -241,15 +263,13 @@
                 align-items: center;
                 justify-content: center;
             }
-            /* Efeito pressionado para botões de ação */
             .add-intervalo:active,
             .remover-intervalo:active,
             .add-linha-abaixo:active {
                 border-style: inset;
                 border-color: #888 #eee #eee #888;
-                padding: 1px 0 0 1px; /* Simula movimento menor */
+                padding: 1px 0 0 1px;
             }
-            /* Remove hover específico */
             .add-intervalo:hover,
             .remover-intervalo:hover,
             .add-linha-abaixo:hover {
@@ -262,7 +282,6 @@
                 width: 16px;
                 height: 16px;
             }
-            /* --- Fim da Modificação --- */
 
             /* CSS (Container da Data) */
             .data-container {
@@ -298,13 +317,13 @@
             /* CSS (Campo de subtração) */
             #horas-subtrair {
                 background-color: #fff0f0;
-                border: 1px solid #888; /* Mantém borda inset */
+                border: 1px solid #888;
                 border-right-color: #eee;
                 border-bottom-color: #eee;
             }
             #horas-subtrair:focus {
                 background-color: #ffe0e0;
-                border: 1px solid #888; /* Mantém borda */
+                border: 1px solid #888;
                 border-right-color: #eee;
                 border-bottom-color: #eee;
                 outline: 1px dotted #000;
@@ -324,7 +343,9 @@
                 border-bottom: 1px solid #aaa;
                 padding-bottom: 5px;
                 font-size: 1.1em;
-                font-weight: 600;
+                /* --- CSS MODIFICADO (Peso) --- */
+                font-weight: bold; /* Usa a versão bold da W95Font */
+                /* --- Fim da Modificação --- */
             }
             #resumo-semanal {
                 font-family: "Courier New", Courier, monospace;
@@ -385,7 +406,9 @@
                     padding-right: 10px;
                     white-space: nowrap;
                     text-align: left;
-                    font-weight: 600;
+                    /* --- CSS MODIFICADO (Peso) --- */
+                    font-weight: bold; /* Usa a versão bold da W95Font */
+                    /* --- Fim da Modificação --- */
                     color: #555;
                 }
 
@@ -435,10 +458,10 @@
                     border-radius: 4px;
                     border-top: 1px solid #ccc;
                     margin-bottom: 20px;
-                    width: auto; /* Volta ao normal no mobile */
+                    width: auto;
                 }
                 #total-mes-container h3 {
-                    text-align: left; /* Alinha total à esquerda no mobile */
+                    text-align: left;
                 }
 
                 .ajuste-container,
