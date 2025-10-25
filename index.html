@@ -6,12 +6,12 @@
         <title>Calculadora de Horas do Mês</title>
 
         <style>
-            /* --- NOVO: Definição da Fonte W95 --- */
+            /* --- Definição da Fonte W95 --- */
             @font-face {
                 font-family: "W95Font";
                 src:
                     url("w95font.woff2") format("woff2"),
-                    /* Prioriza WOFF2 */ url("w95font.woff") format("woff"); /* Fallback para WOFF */
+                    url("w95font.woff") format("woff");
                 font-weight: normal;
                 font-style: normal;
             }
@@ -23,21 +23,13 @@
                 font-weight: bold; /* Ou 700 */
                 font-style: normal;
             }
-            /* --- Fim da Definição --- */
 
             /* Estilos de 'body' e 'table' */
             body {
-                /* --- CSS MODIFICADO (Fonte) --- */
-                font-family:
-                    "W95Font", Arial, sans-serif; /* Usa a nova fonte */
-                /* --- Fim da Modificação --- */
+                font-family: "W95Font", Arial, sans-serif;
                 background-color: #e0e0e0;
                 padding: 20px;
                 margin: 0;
-                /* Opcional: Para pixel fonts, desabilitar anti-aliasing pode ficar melhor */
-                /* font-smooth: never;
-            -webkit-font-smoothing: none;
-            -moz-osx-font-smoothing: grayscale; */
             }
             table {
                 border-collapse: collapse;
@@ -45,6 +37,7 @@
                 background-color: #f8f8f8;
                 box-shadow: inset 1px 1px 2px #ccc;
                 table-layout: fixed;
+                margin-bottom: 20px; /* Margem restaurada */
             }
 
             /* colgroup para 8 colunas */
@@ -83,9 +76,7 @@
             thead th {
                 border-bottom: 2px solid #aaa;
                 vertical-align: middle;
-                /* --- CSS MODIFICADO (Peso) --- */
-                font-weight: bold; /* Usa a versão bold da W95Font */
-                /* --- Fim da Modificação --- */
+                font-weight: bold;
             }
 
             /* CSS (Alinhamento Títulos) */
@@ -109,8 +100,7 @@
             /* Estilos de 'input' */
             input,
             select {
-                font-family:
-                    "W95Font", Arial, sans-serif; /* Usa a nova fonte */
+                font-family: "W95Font", Arial, sans-serif;
                 background-color: #fff;
                 border: 1px solid #888;
                 border-right-color: #eee;
@@ -155,8 +145,7 @@
 
             /* CSS (Estilo Botão Win95) */
             button {
-                font-family:
-                    "W95Font", Arial, sans-serif; /* Usa a nova fonte */
+                font-family: "W95Font", Arial, sans-serif;
                 background-color: #c0c0c0;
                 color: #000;
                 padding: 4px 8px;
@@ -199,29 +188,28 @@
                 font-weight: normal;
                 font-family: "Courier New", Courier, monospace;
             }
-            /* Container do total mês */
+            /* --- CSS MODIFICADO (Container do total mês) --- */
             #total-mes-container {
+                margin-top: 8px; /* Margem restaurada */
                 background-color: #fdfdfd;
                 border: 1px solid #ccc;
-                border-top: none;
+                /* border-top removido */
                 padding: 10px 18px;
-                border-radius: 0 0 4px 4px;
-                width: 100%;
-                box-sizing: border-box;
+                border-radius: 4px; /* Raio restaurado */
+                max-width: 300px; /* Largura restaurada */
+                /* box-sizing removido */
                 margin-bottom: 20px;
             }
             #total-mes-container h3 {
-                font-family:
-                    "W95Font", Arial, sans-serif; /* Usa a nova fonte */
+                font-family: "W95Font", Arial, sans-serif;
                 margin: 0;
                 font-size: 1.1em;
-                /* --- CSS MODIFICADO (Peso) --- */
-                font-weight: bold; /* Usa a versão bold da W95Font */
-                /* --- Fim da Modificação --- */
+                font-weight: bold;
                 border-bottom: none;
                 padding-bottom: 0;
-                text-align: right;
+                text-align: left; /* Alinhamento restaurado */
             }
+            /* --- Fim da Modificação --- */
 
             /* CSS (Fonte Total Dia) */
             .horas-dia {
@@ -336,16 +324,14 @@
                 padding: 12px 18px;
                 border-radius: 4px;
                 max-width: 300px;
-                margin-bottom: 20px;
+                margin-bottom: 8px; /* Reduz espaço antes do Total */
             }
             #resumo-semanal-container h4 {
                 margin: 0 0 10px 0;
                 border-bottom: 1px solid #aaa;
                 padding-bottom: 5px;
                 font-size: 1.1em;
-                /* --- CSS MODIFICADO (Peso) --- */
-                font-weight: bold; /* Usa a versão bold da W95Font */
-                /* --- Fim da Modificação --- */
+                font-weight: bold;
             }
             #resumo-semanal {
                 font-family: "Courier New", Courier, monospace;
@@ -365,7 +351,7 @@
                     box-shadow: none;
                     border: none;
                     table-layout: auto;
-                    margin-bottom: 0;
+                    margin-bottom: 20px; /* Restaura margem no mobile */
                 }
 
                 thead {
@@ -406,9 +392,7 @@
                     padding-right: 10px;
                     white-space: nowrap;
                     text-align: left;
-                    /* --- CSS MODIFICADO (Peso) --- */
-                    font-weight: bold; /* Usa a versão bold da W95Font */
-                    /* --- Fim da Modificação --- */
+                    font-weight: bold;
                     color: #555;
                 }
 
@@ -454,21 +438,21 @@
                 }
 
                 /* Ajusta containers inferiores */
-                #total-mes-container {
-                    border-radius: 4px;
-                    border-top: 1px solid #ccc;
-                    margin-bottom: 20px;
-                    width: auto;
-                }
-                #total-mes-container h3 {
-                    text-align: left;
-                }
-
                 .ajuste-container,
-                #resumo-semanal-container {
+                #resumo-semanal-container,
+                #total-mes-container {
+                    /* Aplica a todos */
                     max-width: none;
                     width: auto;
                     margin-top: 0;
+                    margin-bottom: 15px; /* Espaçamento entre blocos no mobile */
+                }
+                #total-mes-container {
+                    border-radius: 4px; /* Volta raio normal */
+                    border-top: 1px solid #ccc; /* Volta borda */
+                }
+                #total-mes-container h3 {
+                    text-align: left;
                 }
             }
         </style>
@@ -499,10 +483,6 @@
             </thead>
             <tbody id="corpo-tabela"></tbody>
         </table>
-
-        <div id="total-mes-container">
-            <h3>Total do mês: <span id="total-mes">00:00</span></h3>
-        </div>
 
         <div class="botoes-acao">
             <button onclick="adicionarLinha()" title="Adicionar Linha">
@@ -578,6 +558,9 @@
             <div id="resumo-semanal"></div>
         </div>
 
+        <div id="total-mes-container">
+            <h3>Total do mês: <span id="total-mes">00:00</span></h3>
+        </div>
         <script>
             // --- FUNÇÕES DE UTILIDADE (Intervalo e Linha) ---
             function removerIntervalo(botao) {
