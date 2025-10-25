@@ -10,7 +10,7 @@
                 font-family: Arial, sans-serif;
                 background-color: #e0e0e0;
                 padding: 20px;
-                margin: 0; /* Remove margem padrão */
+                margin: 0;
             }
             table {
                 border-collapse: collapse;
@@ -18,13 +18,13 @@
                 background-color: #f8f8f8;
                 box-shadow: inset 1px 1px 2px #ccc;
                 margin-bottom: 20px;
-                table-layout: fixed; /* Ajuda a respeitar colgroup */
+                table-layout: fixed;
             }
 
             /* colgroup para 8 colunas */
             colgroup col:nth-child(1) {
-                width: 100px;
-            } /* Data */
+                width: 130px;
+            } /* Data (aumentado p/ botão) */
             colgroup col:nth-child(2) {
                 width: 187px;
             } /* Atividade */
@@ -51,8 +51,8 @@
                 padding: 8px;
                 text-align: center;
                 vertical-align: top;
-                overflow: hidden; /* Evita que conteúdo vaze */
-                text-overflow: ellipsis; /* Adiciona '...' se vazar */
+                overflow: hidden;
+                text-overflow: ellipsis;
             }
             thead th {
                 border-bottom: 2px solid #aaa;
@@ -74,11 +74,11 @@
                 font-family: Arial, sans-serif;
                 background-color: #f0f0f0;
                 border: 2px inset #ccc;
-                padding: 4px 6px; /* Aumenta um pouco para toque */
-                font-size: 14px; /* Aumenta um pouco para mobile */
+                padding: 4px 6px;
+                font-size: 14px;
                 border-radius: 4px;
                 box-sizing: border-box;
-                max-width: 100%; /* Garante que não ultrapasse a célula */
+                max-width: 100%;
             }
 
             input[type="time"],
@@ -88,7 +88,7 @@
             }
             input[type="checkbox"] {
                 width: auto;
-                height: 18px; /* Tamanho maior para toque */
+                height: 18px;
                 width: 18px;
             }
             input:focus,
@@ -102,8 +102,8 @@
                 font-family: Arial, sans-serif;
                 background-color: royalblue;
                 color: white;
-                padding: 8px 10px; /* Aumenta padding para toque */
-                font-size: 14px; /* Aumenta fonte */
+                padding: 5px 8px;
+                font-size: 12px;
                 border: none;
                 border-radius: 4px;
                 cursor: pointer;
@@ -117,15 +117,15 @@
             }
             /* Tamanho dos SVGs nos botões de ação */
             .botoes-acao button svg {
-                width: 20px; /* Ícones maiores */
+                width: 20px;
                 height: 20px;
             }
 
             /* Container para os botões de ação */
             .botoes-acao {
                 display: flex;
-                gap: 10px; /* Aumenta espaçamento */
-                flex-wrap: wrap; /* Permite quebrar linha em telas pequenas */
+                gap: 10px;
+                flex-wrap: wrap;
             }
 
             /* CSS (Fonte do Total) */
@@ -150,13 +150,14 @@
                 flex: 1;
             }
 
-            /* CSS (Botões '+' e 'x' de intervalo E botão remover linha) */
+            /* CSS (Botões '+', 'x' de intervalo E botão remover linha E botão '+' da data) */
             .add-intervalo,
-            .remover-intervalo {
+            .remover-intervalo,
+            .add-linha-abaixo {
                 border: none;
                 border-radius: 4px;
-                width: 28px; /* Botões maiores para toque */
-                height: 28px;
+                width: 24px;
+                height: 24px;
                 padding: 0;
                 cursor: pointer;
                 flex-shrink: 0;
@@ -164,13 +165,17 @@
                 align-items: center;
                 justify-content: center;
             }
-            .add-intervalo {
+            /* Cor específica do '+' (intervalo e linha abaixo) */
+            .add-intervalo,
+            .add-linha-abaixo {
                 background-color: royalblue;
                 color: white;
             }
-            .add-intervalo:hover {
+            .add-intervalo:hover,
+            .add-linha-abaixo:hover {
                 background-color: #3a5fcd;
             }
+            /* Cor específica do 'x' / lixeira */
             .remover-intervalo {
                 background-color: #ff6347; /* Vermelho 'tomato' */
                 color: white;
@@ -178,19 +183,31 @@
             .remover-intervalo:hover {
                 background-color: #dc143c; /* Vermelho 'crimson' */
             }
-            /* Tamanho dos SVGs nos botões de intervalo / remover linha */
+            /* Tamanho dos SVGs nos botões */
             .add-intervalo svg,
-            .remover-intervalo svg {
-                width: 18px; /* Ícones maiores */
-                height: 18px;
+            .remover-intervalo svg,
+            .add-linha-abaixo svg {
+                width: 16px;
+                height: 16px;
             }
+
+            /* --- NOVO CSS (Container da Data) --- */
+            .data-container {
+                display: flex;
+                align-items: center;
+                gap: 4px; /* Espaço entre input e botão */
+            }
+            .data-container input.data {
+                flex-grow: 1; /* Input ocupa o espaço restante */
+            }
+            /* --- Fim do Novo CSS --- */
 
             /* CSS (Container para campos de ajuste) */
             .ajuste-container {
                 margin-top: 20px;
                 display: flex;
                 flex-direction: column;
-                gap: 10px; /* Aumenta espaçamento */
+                gap: 10px;
                 max-width: 300px;
             }
             .ajuste-container div {
@@ -199,11 +216,11 @@
                 align-items: center;
             }
             .ajuste-container label {
-                font-size: 1em; /* Tamanho normal */
+                font-size: 1em;
                 margin-right: 5px;
             }
             .ajuste-container input[type="time"] {
-                width: 120px; /* Um pouco maior */
+                width: 120px;
             }
 
             /* CSS (Campo de subtração) */
@@ -221,7 +238,7 @@
                 margin-top: 15px;
                 background-color: #fdfdfd;
                 border: 1px solid #ccc;
-                padding: 12px 18px; /* Aumenta padding */
+                padding: 12px 18px;
                 border-radius: 4px;
                 max-width: 300px;
             }
@@ -240,112 +257,114 @@
                 gap: 5px;
             }
             #total-mes-container h3 {
-                border-bottom: none; /* Total não precisa de linha */
+                border-bottom: none;
                 padding-bottom: 0;
                 margin-bottom: 0;
             }
 
-            /* --- NOVO: CSS RESPONSIVO --- */
+            /* CSS RESPONSIVO */
             @media (max-width: 768px) {
                 body {
-                    padding: 10px; /* Menos padding em telas pequenas */
+                    padding: 10px;
                 }
 
                 table {
-                    box-shadow: none; /* Remove sombra interna */
-                    border: none; /* Remove borda externa se houver */
-                    table-layout: auto; /* Permite que o conteúdo defina a largura */
+                    box-shadow: none;
+                    border: none;
+                    table-layout: auto;
                 }
 
-                /* Esconde cabeçalho original */
                 thead {
                     display: none;
                 }
 
-                /* Transforma linhas em blocos */
                 tr {
                     display: block;
                     margin-bottom: 15px;
-                    border: 1px solid #ccc; /* Adiciona borda ao redor de cada "card" */
+                    border: 1px solid #ccc;
                     border-radius: 4px;
-                    background-color: #fff; /* Fundo branco para os cards */
+                    background-color: #fff;
                 }
 
-                /* Remove colgroup no mobile */
                 colgroup {
                     display: none;
                 }
 
-                /* Transforma células em blocos */
                 td {
                     display: block;
-                    width: auto !important; /* Ignora colgroup */
-                    text-align: right; /* Alinha valor à direita */
-                    padding-left: 50%; /* Espaço para o label */
-                    position: relative; /* Para posicionar o ::before */
-                    border-bottom: 1px dotted #eee; /* Linha mais suave entre campos */
+                    width: auto !important;
+                    text-align: right;
+                    padding-left: 50%;
+                    position: relative;
+                    border-bottom: 1px dotted #eee;
                     padding-top: 10px;
                     padding-bottom: 10px;
                 }
                 td:last-child {
-                    border-bottom: none; /* Remove borda da última célula */
+                    border-bottom: none;
                 }
 
-                /* Adiciona o label antes do conteúdo */
                 td::before {
-                    content: attr(data-label); /* Pega o texto do atributo */
+                    content: attr(data-label);
                     position: absolute;
-                    left: 10px; /* Posição do label */
-                    width: calc(50% - 20px); /* Largura do label */
+                    left: 10px;
+                    width: calc(50% - 20px);
                     padding-right: 10px;
                     white-space: nowrap;
-                    text-align: left; /* Alinha label à esquerda */
+                    text-align: left;
                     font-weight: bold;
-                    color: #555; /* Cor mais suave para o label */
+                    color: #555;
                 }
 
-                /* Ajustes específicos para células */
+                /* Ajustes específicos */
+                td[data-label="Data"] {
+                    padding-left: 8px; /* Remove padding extra p/ container flex */
+                }
+                td[data-label="Data"]::before {
+                    display: none; /* Label já está no thead */
+                }
+                .data-container {
+                    margin-top: 5px; /* Espaço após o (invisível) label */
+                }
+
                 td[data-label="Hora-aula?"] {
-                    text-align: left; /* Alinha checkbox diferente */
+                    text-align: left;
                 }
                 td[data-label="Hora-aula?"]::before {
-                    width: auto; /* Deixa o label ter largura natural */
-                    position: static; /* Volta ao fluxo normal */
+                    width: auto;
+                    position: static;
                     margin-right: 10px;
                 }
                 td[data-label="Hora-aula?"] input {
                     vertical-align: middle;
                 }
 
-                /* Célula de Ações */
                 td[data-label="Ações"] {
-                    text-align: center; /* Centraliza o botão de remover */
-                    padding-left: 8px; /* Remove padding extra */
+                    text-align: center;
+                    padding-left: 8px;
                 }
                 td[data-label="Ações"]::before {
-                    display: none; /* Não precisa de label para Ações */
+                    display: none;
                 }
 
-                /* Célula de Intervalos */
                 td[data-label="Intervalos"] {
-                    padding-left: 8px; /* Remove padding extra */
+                    padding-left: 8px;
                 }
                 td[data-label="Intervalos"]::before {
-                    display: none; /* Label já está no thead (invisível) */
+                    display: none;
                 }
                 .intervalo-container {
-                    margin-top: 5px; /* Espaço após o (invisível) label */
+                    margin-top: 5px;
                 }
 
                 /* Ajusta containers inferiores */
                 .ajuste-container,
                 #resumo-semanal-container,
                 #total-mes-container {
-                    max-width: none; /* Ocupa largura total */
-                    width: auto; /* Necessário para sobrescrever max-width */
+                    max-width: none;
+                    width: auto;
                 }
             }
-            /* --- FIM DO CSS RESPONSIVO --- */
         </style>
     </head>
     <body>
@@ -487,14 +506,20 @@
                 calcularHoras();
             }
 
-            // --- FUNÇÃO MODIFICADA (adicionarLinha com data-labels) ---
-            function adicionarLinha() {
-                const tbody = document.getElementById("corpo-tabela");
+            // --- FUNÇÃO REFATORADA (criarElementoLinha) ---
+            // Apenas cria o elemento TR com o HTML interno, não adiciona à tabela
+            function criarElementoLinha() {
                 const linha = document.createElement("tr");
 
-                // Adiciona data-label em cada TD
                 linha.innerHTML = `
-                <td data-label="Data"><input type="date" class="data"></td>
+                <td data-label="Data">
+                    <div class="data-container">
+                        <input type="date" class="data">
+                        <button class="add-linha-abaixo" onclick="adicionarLinhaAbaixo(this)" title="Adicionar linha abaixo com a mesma data">
+                            <svg fill="none" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16"><path d="M9 7h6v2H9v6H7V9H1V7h6V1h2v6z" fill="currentColor"/></svg>
+                        </button>
+                    </div>
+                </td>
                 <td data-label="Atividade"><input type="text" class="atividade"></td>
                 <td data-label="Início"><input type="time" class="entrada"></td>
                 <td data-label="Fim"><input type="time" class="saida"></td>
@@ -517,14 +542,53 @@
                     </button>
                 </td>
             `;
+                return linha; // Retorna o elemento TR criado
+            }
+            // --- Fim da Refatoração ---
 
-                tbody.appendChild(linha);
-                linha.querySelectorAll("input").forEach((input) => {
+            // --- FUNÇÃO MODIFICADA (adicionarLinha) ---
+            // Agora usa criarElementoLinha e adiciona ao final
+            function adicionarLinha() {
+                const tbody = document.getElementById("corpo-tabela");
+                const novaLinhaElement = criarElementoLinha(); // Cria o elemento
+                tbody.appendChild(novaLinhaElement); // Adiciona ao final da tabela
+
+                // Adiciona listeners aos inputs da nova linha
+                novaLinhaElement.querySelectorAll("input").forEach((input) => {
                     input.addEventListener("input", calcularHoras);
                 });
-                return linha;
+                // Não precisa retornar nada aqui
             }
             // --- Fim da Modificação ---
+
+            // --- NOVA FUNÇÃO (adicionarLinhaAbaixo) ---
+            function adicionarLinhaAbaixo(botao) {
+                const linhaAtual = botao.closest("tr");
+                const dataAtualInput = linhaAtual.querySelector(".data");
+                const dataParaCopiar = dataAtualInput
+                    ? dataAtualInput.value
+                    : ""; // Pega data atual
+
+                const novaLinhaElement = criarElementoLinha(); // Cria o elemento da nova linha
+
+                // Define a data na nova linha
+                const dataNovaInput = novaLinhaElement.querySelector(".data");
+                if (dataNovaInput) {
+                    dataNovaInput.value = dataParaCopiar;
+                }
+
+                // Insere a nova linha *depois* da linha atual
+                linhaAtual.insertAdjacentElement("afterend", novaLinhaElement);
+
+                // Adiciona listeners aos inputs da nova linha (IMPORTANTE!)
+                novaLinhaElement.querySelectorAll("input").forEach((input) => {
+                    input.addEventListener("input", calcularHoras);
+                });
+
+                // Opcional: Recalcular aqui se necessário, mas adicionar linha vazia não muda totais.
+                // calcularHoras();
+            }
+            // --- Fim da Nova Função ---
 
             function removerLinha(botao) {
                 const linha = botao.closest("tr");
