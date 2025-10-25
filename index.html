@@ -4,7 +4,6 @@
         <meta charset="UTF-8" />
         <title>Calculadora de Horas do Mês</title>
         <style>
-            /* [Todo o CSS anterior permanece o mesmo - omitido para brevidade] */
             /* Estilos de 'body' e 'table' */
             body {
                 font-family: Arial, sans-serif;
@@ -271,7 +270,6 @@
             <button onclick="document.getElementById('file-input').click()">
                 Carregar (JSON)
             </button>
-            <button onclick="salvarNoGSheets()">Salvar no Google</button>
 
             <input
                 type="file"
@@ -311,9 +309,7 @@
         </div>
 
         <script>
-            // --- A URL QUE VOCÊ IMPLANTOU ---
-            const G_SHEETS_URL =
-                "https://script.google.com/macros/s/AKfycbzJkWjI9RkpHndOZaAL6TtOzy8zcOb_VNONKBFse2W1ZbzgdumLXiYjmgmgoT5413Z2/exec";
+            // A variável G_SHEETS_URL foi removida daqui
 
             // --- FUNÇÕES DE UTILIDADE (Intervalo e Linha) ---
             function removerIntervalo(botao) {
@@ -617,98 +613,7 @@
                 return isNegative ? "-" + horaFormatada : horaFormatada;
             }
 
-            // --- FUNÇÕES Salvar e Carregar (MODIFICADAS) ---
-
-            /**
-             * Pega um objeto de dados (vindo do JSON ou GSheets) e preenche a tabela.
-             */
-            function popularTabela(dados) {
-                document.getElementById("corpo-tabela").innerHTML = ""; // Limpa a tabela
-
-                // Define os valores de ajuste
-                document.getElementById("horas-externas").value =
-                    dados.horasExternas || "";
-                document.getElementById("horas-subtrair").value =
-                    dados.horasSubtrair || "";
-
-                if (!dados.linhas) {
-                    adicionarLinha(); // Adiciona uma linha em branco se não houver dados
-                    calcularHoras();
-                    return;
-                }
-
-                // Recria as linhas
-                dados.linhas.forEach((linhaDados) => {
-                    const novaLinha = adicionarLinha();
-
-                    novaLinha.querySelector(".data").value = linhaDados.data;
-                    novaLinha.querySelector(".atividade").value =
-                        linhaDados.atividade;
-                    novaLinha.querySelector(".entrada").value =
-                        linhaDados.entrada;
-                    novaLinha.querySelector(".saida").value = linhaDados.saida;
-                    novaLinha.querySelector(".hora-aula").checked =
-                        linhaDados.horaAula;
-
-                    const container = novaLinha.querySelector(
-                        ".intervalo-container",
-                    );
-                    const primeiroIntervalo =
-                        container.querySelector(".intervalo-pair");
-                    const botaoAdd =
-                        primeiroIntervalo.querySelector(".add-intervalo"); // Botão '+' do primeiro
-
-                    if (linhaDados.intervalos && linhaDados.intervalos[0]) {
-                        primeiroIntervalo.querySelector(
-                            ".intervalo-inicio",
-                        ).value = linhaDados.intervalos[0].inicio;
-                        primeiroIntervalo.querySelector(
-                            ".intervalo-fim",
-                        ).value = linhaDados.intervalos[0].fim;
-                    }
-
-                    // Adiciona e preenche os intervalos restantes (que terão '+' e 'x')
-                    for (let i = 1; i < linhaDados.intervalos.length; i++) {
-                        adicionarIntervalo(botaoAdd); // Simula o clique no botão '+'
-
-                        const todosOsPares =
-                            container.querySelectorAll(".intervalo-pair");
-                        const novoPair = todosOsPares[todosOsPares.length - 1];
-
-                        novoPair.querySelector(".intervalo-inicio").value =
-                            linhaDados.intervalos[i].inicio;
-                        novoPair.querySelector(".intervalo-fim").value =
-                            linhaDados.intervalos[i].fim;
-                    }
-                });
-
-                calcularHoras(); // Recalcula tudo após preencher
-            }
-
-            /**
-             * Carrega dados de um ARQUIVO JSON local.
-             */
-            function carregarDados(event) {
-                const file = event.target.files[0];
-                if (!file) return;
-
-                const reader = new FileReader();
-                reader.onload = function (e) {
-                    try {
-                        const dados = JSON.parse(e.target.result);
-                        popularTabela(dados); // Chama a nova função
-                    } catch (err) {
-                        alert("Erro ao ler o arquivo JSON: " + err.message);
-                    }
-                };
-
-                reader.readAsText(file);
-                event.target.value = null;
-            }
-
-            /**
-             * Salva dados para um ARQUIVO JSON local.
-             */
+            // --- FUNÇÕES Salvar e Carregar (JSON Local) ---
             function salvarDados() {
                 const dados = {
                     horasExternas:
@@ -753,122 +658,103 @@
                 URL.revokeObjectURL(a.href);
             }
 
-            /**
-             * Salva dados no GOOGLE SHEETS.
-             */
-            function salvarNoGSheets() {
-                if (!G_SHEETS_URL || G_SHEETS_URL.includes("COLE_A_URL")) {
-                    alert(
-                        "Erro: A URL do Google Apps Script não foi configurada no arquivo HTML.",
-                    );
-                    return;
-                }
+            function carregarDados(event) {
+                const file = event.target.files[0];
+                if (!file) return;
 
-                const dados = {
-                    horasExternas:
-                        document.getElementById("horas-externas").value,
-                    horasSubtrair:
-                        document.getElementById("horas-subtrair").value,
-                    linhas: [],
+                const reader = new FileReader();
+                reader.onload = function (e) {
+                    try {
+                        const dados = JSON.parse(e.target.result);
+
+                        // -- Lógica de popular tabela (antes era 'popularTabela') ---
+                        document.getElementById("corpo-tabela").innerHTML = "";
+
+                        document.getElementById("horas-externas").value =
+                            dados.horasExternas || "";
+                        document.getElementById("horas-subtrair").value =
+                            dados.horasSubtrair || "";
+
+                        if (!dados.linhas || dados.linhas.length === 0) {
+                            adicionarLinha();
+                            calcularHoras();
+                            return;
+                        }
+
+                        dados.linhas.forEach((linhaDados) => {
+                            const novaLinha = adicionarLinha();
+
+                            novaLinha.querySelector(".data").value =
+                                linhaDados.data;
+                            novaLinha.querySelector(".atividade").value =
+                                linhaDados.atividade;
+                            novaLinha.querySelector(".entrada").value =
+                                linhaDados.entrada;
+                            novaLinha.querySelector(".saida").value =
+                                linhaDados.saida;
+                            novaLinha.querySelector(".hora-aula").checked =
+                                linhaDados.horaAula;
+
+                            const container = novaLinha.querySelector(
+                                ".intervalo-container",
+                            );
+                            const primeiroIntervalo =
+                                container.querySelector(".intervalo-pair");
+                            const botaoAdd =
+                                primeiroIntervalo.querySelector(
+                                    ".add-intervalo",
+                                );
+
+                            if (
+                                linhaDados.intervalos &&
+                                linhaDados.intervalos[0]
+                            ) {
+                                primeiroIntervalo.querySelector(
+                                    ".intervalo-inicio",
+                                ).value = linhaDados.intervalos[0].inicio;
+                                primeiroIntervalo.querySelector(
+                                    ".intervalo-fim",
+                                ).value = linhaDados.intervalos[0].fim;
+                            }
+
+                            for (
+                                let i = 1;
+                                i < (linhaDados.intervalos || []).length;
+                                i++
+                            ) {
+                                adicionarIntervalo(botaoAdd);
+                                const todosOsPares =
+                                    container.querySelectorAll(
+                                        ".intervalo-pair",
+                                    );
+                                const novoPair =
+                                    todosOsPares[todosOsPares.length - 1];
+                                novoPair.querySelector(
+                                    ".intervalo-inicio",
+                                ).value = linhaDados.intervalos[i].inicio;
+                                novoPair.querySelector(".intervalo-fim").value =
+                                    linhaDados.intervalos[i].fim;
+                            }
+                        });
+
+                        calcularHoras(); // Recalcula tudo após preencher
+                        // -- Fim da lógica ---
+                    } catch (err) {
+                        alert("Erro ao ler o arquivo JSON: " + err.message);
+                    }
                 };
 
-                document
-                    .querySelectorAll("#corpo-tabela tr")
-                    .forEach((linha) => {
-                        const linhaDados = {
-                            data: linha.querySelector(".data").value,
-                            atividade: linha.querySelector(".atividade").value,
-                            entrada: linha.querySelector(".entrada").value,
-                            saida: linha.querySelector(".saida").value,
-                            horaAula: linha.querySelector(".hora-aula").checked,
-                            intervalos: [],
-                        };
-
-                        linha
-                            .querySelectorAll(".intervalo-pair")
-                            .forEach((pair) => {
-                                linhaDados.intervalos.push({
-                                    inicio: pair.querySelector(
-                                        ".intervalo-inicio",
-                                    ).value,
-                                    fim: pair.querySelector(".intervalo-fim")
-                                        .value,
-                                });
-                            });
-                        dados.linhas.push(linhaDados);
-                    });
-
-                alert(
-                    "Enviando dados para o Google Sheets... Por favor, aguarde.",
-                );
-
-                fetch(G_SHEETS_URL, {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "text/plain;charset=utf-8",
-                    },
-                    body: JSON.stringify(dados),
-                })
-                    .then((response) => response.json())
-                    .then((data) => {
-                        if (data && data.status === "sucesso") {
-                            alert(
-                                "Sucesso! Os dados foram salvos no Google Sheets.",
-                            );
-                        } else {
-                            alert("Erro ao salvar:\n" + JSON.stringify(data));
-                        }
-                    })
-                    .catch((error) => {
-                        console.error("Erro no fetch (POST):", error);
-                        alert(
-                            'FALHA CRÍTICA AO CONECTAR COM O GOOGLE.\n\nProvável Causa: Erro de "CORS".\n\nIsso quase sempre significa que a implantação do seu Apps Script NÃO está configurada para "Quem pode acessar: Qualquer pessoa".\n\n(Verifique o console (F12) para detalhes técnicos).',
-                        );
-                    });
+                reader.readAsText(file);
+                event.target.value = null;
             }
 
-            // --- NOVA FUNÇÃO (Carregar do Google Sheets) ---
-            function carregarDoGSheets() {
-                if (!G_SHEETS_URL || G_SHEETS_URL.includes("COLE_A_URL")) {
-                    console.log(
-                        "URL do Google Sheets não configurada. Carregando uma linha em branco.",
-                    );
-                    adicionarLinha(); // Adiciona uma linha em branco
-                    calcularResumoSemanal();
-                    return; // Para o script aqui
-                }
-
-                console.log("Carregando dados do Google Sheets...");
-
-                fetch(G_SHEETS_URL)
-                    .then((response) => response.json())
-                    .then((dados) => {
-                        console.log("Dados recebidos:", dados);
-                        if (dados) {
-                            popularTabela(dados); // Preenche a tabela com os dados
-                        } else {
-                            adicionarLinha(); // Adiciona linha em branco se não houver dados
-                        }
-                        calcularResumoSemanal(); // Atualiza o resumo
-                    })
-                    .catch((error) => {
-                        console.error(
-                            "Erro ao carregar dados do Google Sheets:",
-                            error,
-                        );
-                        alert(
-                            "Não foi possível carregar os dados do Google Sheets. Verifique a URL e as permissões de implantação. Carregando uma linha em branco.",
-                        );
-                        adicionarLinha(); // Adiciona linha em branco em caso de erro
-                        calcularResumoSemanal();
-                    });
-            }
-            // --- Fim das Novas Funções ---
+            // A função salvarNoGSheets foi removida
+            // A função carregarDoGSheets foi removida
 
             // --- INICIALIZAÇÃO DA PÁGINA ---
-            // Em vez de 'adicionarLinha()', agora chamamos 'carregarDoGSheets()'
-            carregarDoGSheets();
-            // calcularResumoSemanal(); // (Não é mais necessário aqui, pois é chamado dentro do carregarDoGSheets)
+            // Volta a chamar adicionarLinha()
+            adicionarLinha();
+            calcularResumoSemanal();
         </script>
     </body>
 </html>
