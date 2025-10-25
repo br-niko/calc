@@ -87,20 +87,32 @@
                 background-color: #cce0ff;
             }
 
-            /* Estilo Botão Principal */
+            /* --- CSS MODIFICADO (Estilo Botão Principal e Ícones) --- */
             button {
                 font-family: Arial, sans-serif;
                 background-color: royalblue;
                 color: white;
-                padding: 4px 10px;
+                /* Padding ajustado para botões com ícones */
+                padding: 5px 8px;
                 font-size: 12px;
                 border: none;
                 border-radius: 4px;
                 cursor: pointer;
+                /* Para alinhar o SVG verticalmente */
+                display: inline-flex;
+                align-items: center;
+                justify-content: center;
+                line-height: 1; /* Remove altura extra da linha */
             }
             button:hover {
                 background-color: #3a5fcd;
             }
+            /* Tamanho dos SVGs nos botões de ação */
+            .botoes-acao button svg {
+                width: 18px;
+                height: 18px;
+            }
+            /* --- Fim da Modificação --- */
 
             /* Container para os botões de ação */
             .botoes-acao {
@@ -131,43 +143,41 @@
                 flex: 1;
             }
 
-            /* CSS (Botão '+' de adicionar intervalo) */
+            /* --- CSS MODIFICADO (Botões '+' e 'x' de intervalo) --- */
+            .add-intervalo,
+            .remover-intervalo {
+                border: none;
+                border-radius: 4px;
+                width: 24px; /* Aumenta um pouco para o ícone */
+                height: 24px;
+                padding: 0;
+                cursor: pointer;
+                flex-shrink: 0;
+                display: inline-flex; /* Para alinhar SVG */
+                align-items: center;
+                justify-content: center;
+            }
             .add-intervalo {
                 background-color: royalblue;
                 color: white;
-                border: none;
-                border-radius: 4px;
-                width: 20px;
-                height: 20px;
-                line-height: 18px; /* Ajuste para centralizar o '+' */
-                padding: 0;
-                font-size: 16px;
-                font-weight: bold;
-                cursor: pointer;
-                flex-shrink: 0;
             }
             .add-intervalo:hover {
                 background-color: #3a5fcd;
             }
-
-            /* CSS (Botão 'x' para remover intervalo) */
             .remover-intervalo {
-                background-color: #ff6347; /* Vermelho 'tomato' (agradável) */
+                background-color: #ff6347; /* Vermelho 'tomato' */
                 color: white;
-                border: none;
-                border-radius: 4px;
-                width: 20px;
-                height: 20px;
-                line-height: 18px;
-                padding: 0;
-                font-size: 16px;
-                font-weight: bold;
-                cursor: pointer;
-                flex-shrink: 0;
             }
             .remover-intervalo:hover {
-                background-color: #dc143c; /* Vermelho 'crimson' (hover) */
+                background-color: #dc143c; /* Vermelho 'crimson' */
             }
+            /* Tamanho dos SVGs nos botões de intervalo */
+            .add-intervalo svg,
+            .remover-intervalo svg {
+                width: 16px;
+                height: 16px;
+            }
+            /* --- Fim da Modificação --- */
 
             /* CSS (Container para campos de ajuste) */
             .ajuste-container {
@@ -265,15 +275,44 @@
         </table>
 
         <div class="botoes-acao">
-            <button onclick="adicionarLinha()">Adicionar Linha</button>
+            <button onclick="adicionarLinha()" title="Adicionar Linha">
+                <svg
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
+                    viewBox="0 0 24 24"
+                >
+                    <path
+                        d="M19 4H3v2h16V4zm0 4H3v2h16V8zM3 12h8v2H3v-2zm8 4H3v2h8v-2zm7-1h3v2h-3v3h-2v-3h-3v-2h3v-3h2v3z"
+                        fill="currentColor"
+                    />
+                </svg>
+            </button>
             <button onclick="salvarDados()" title="Salvar arquivo JSON">
-                Salvar 💾
+                <svg
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
+                    viewBox="0 0 24 24"
+                >
+                    <path
+                        d="M4 2h14v2H4v16h2v-6h12v6h2V6h2v16H2V2h2zm4 18h8v-4H8v4zM20 6h-2V4h2v2zM6 6h9v4H6V6z"
+                        fill="currentColor"
+                    />
+                </svg>
             </button>
             <button
                 onclick="document.getElementById('file-input').click()"
                 title="Carregar arquivo JSON"
             >
-                Carregar 📂
+                <svg
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
+                    viewBox="0 0 24 24"
+                >
+                    <path
+                        d="M19 22h-7v-2h7V10h-6V4H5v8H3V2h12v2h2v2h2v2h2v14h-2zM17 6h-2v2h2V6zM8 19h3v-2H8v-3H6v3H3v2h3v3h2v-3z"
+                        fill="currentColor"
+                    />
+                </svg>
             </button>
 
             <input
@@ -320,6 +359,7 @@
                 calcularHoras();
             }
 
+            // --- FUNÇÃO MODIFICADA (adicionarIntervalo com SVGs) ---
             function adicionarIntervalo(botao) {
                 const container = botao.closest(".intervalo-container");
                 const currentPair = botao.closest(".intervalo-pair");
@@ -327,11 +367,16 @@
                 const novoIntervalo = document.createElement("div");
                 novoIntervalo.className = "intervalo-pair";
 
+                // Adiciona botões com SVGs
                 novoIntervalo.innerHTML = `
                 <input type="time" class="intervalo-inicio">
                 <input type="time" class="intervalo-fim">
-                <button class="add-intervalo" onclick="adicionarIntervalo(this)" title="Adicionar intervalo">+</button>
-                <button class="remover-intervalo" onclick="removerIntervalo(this)" title="Remover intervalo">&times;</button>
+                <button class="add-intervalo" onclick="adicionarIntervalo(this)" title="Adicionar intervalo">
+                   <svg fill="none" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16"><path d="M9 7h6v2H9v6H7V9H1V7h6V1h2v6z" fill="currentColor"/></svg>
+                </button>
+                <button class="remover-intervalo" onclick="removerIntervalo(this)" title="Remover intervalo">
+                    <svg fill="none" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"> <path d="M16 2v4h6v2h-2v14H4V8H2V6h6V2h8zm-2 2h-4v2h4V4zm0 4H6v12h12V8h-4zm-5 2h2v8H9v-8zm6 0h-2v8h2v-8z" fill="currentColor"/> </svg>
+                </button>
             `;
 
                 novoIntervalo.querySelectorAll("input").forEach((input) => {
@@ -341,11 +386,14 @@
                 container.insertBefore(novoIntervalo, currentPair.nextSibling);
                 calcularHoras();
             }
+            // --- Fim da Modificação ---
 
+            // --- FUNÇÃO MODIFICADA (adicionarLinha com SVG) ---
             function adicionarLinha() {
                 const tbody = document.getElementById("corpo-tabela");
                 const linha = document.createElement("tr");
 
+                // Adiciona botão '+' com SVG
                 linha.innerHTML = `
                 <td><input type="date" class="data"></td>
                 <td><input type="text" class="atividade"></td>
@@ -356,7 +404,9 @@
                     <div class="intervalo-pair">
                       <input type="time" class="intervalo-inicio">
                       <input type="time" class="intervalo-fim">
-                      <button class="add-intervalo" onclick="adicionarIntervalo(this)" title="Adicionar intervalo">+</button>
+                      <button class="add-intervalo" onclick="adicionarIntervalo(this)" title="Adicionar intervalo">
+                         <svg fill="none" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16"><path d="M9 7h6v2H9v6H7V9H1V7h6V1h2v6z" fill="currentColor"/></svg>
+                      </button>
                     </div>
                   </div>
                 </td>
@@ -371,6 +421,7 @@
                 });
                 return linha;
             }
+            // --- Fim da Modificação ---
 
             function removerLinha(botao) {
                 const linha = botao.closest("tr");
