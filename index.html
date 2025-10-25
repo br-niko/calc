@@ -735,79 +735,63 @@
                 event.target.value = null;
             }
 
-            // --- NOVA FUNÇÃO (Salvar no Google Sheets) ---
-            function salvarNoGSheets() {
-                if (
-                    !G_SHEETS_URL ||
-                    G_SHEETS_URL === "COLE_A_URL_DO_SEU_APPS_SCRIPT_AQUI"
-                ) {
-                    alert(
-                        "Erro: A URL do Google Apps Script não foi configurada no arquivo HTML.",
-                    );
-                    return;
-                }
+            // --- FUNÇÃO ATUALIZADA (Salvar no Google Sheets) ---
+        function salvarNoGSheets() {
+            if (!G_SHEETS_URL || G_SHEETS_URL === 'COLE_A_URL_DO_SEU_APPS_SCRIPT_AQUI') {
+                alert('Erro: A URL do Google Apps Script não foi configurada no arquivo HTML.\n\nPor favor, edite o arquivo HTML, cole a URL de implantação do seu script e tente novamente.');
+                return;
+            }
 
-                // 1. Coleta os dados (igual ao salvarDados)
-                const dados = {
-                    horasExternas:
-                        document.getElementById("horas-externas").value,
-                    horasSubtrair:
-                        document.getElementById("horas-subtrair").value,
-                    linhas: [],
+            // 1. Coleta os dados (igual ao salvarDados)
+            const dados = {
+                horasExternas: document.getElementById('horas-externas').value,
+                horasSubtrair: document.getElementById('horas-subtrair').value, 
+                linhas: []
+            };
+
+            document.querySelectorAll('#corpo-tabela tr').forEach(linha => {
+                const linhaDados = {
+                    data: linha.querySelector('.data').value,
+                    atividade: linha.querySelector('.atividade').VÁLUE,
+                    entrada: linha.querySelector('.entrada').value,
+                    saida: linha.querySelector('.saida').value,
+                    horaAula: linha.querySelector('.hora-aula').checked,
+                    intervalos: []
                 };
 
-                document
-                    .querySelectorAll("#corpo-tabela tr")
-                    .forEach((linha) => {
-                        const linhaDados = {
-                            data: linha.querySelector(".data").value,
-                            atividade: linha.querySelector(".atividade").value,
-                            entrada: linha.querySelector(".entrada").value,
-                            saida: linha.querySelector(".saida").value,
-                            horaAula: linha.querySelector(".hora-aula").checked,
-                            intervalos: [],
-                        };
-
-                        linha
-                            .querySelectorAll(".intervalo-pair")
-                            .forEach((pair) => {
-                                linhaDados.intervalos.push({
-                                    inicio: pair.querySelector(
-                                        ".intervalo-inicio",
-                                    ).value,
-                                    fim: pair.querySelector(".intervalo-fim")
-                                        .value,
-                                });
-                            });
-                        dados.linhas.push(linhaDados);
+                linha.querySelectorAll('.intervalo-pair').forEach(pair => {
+                    linhaDados.intervalos.push({
+                        inicio: pair.querySelector('.intervalo-inicio').value,
+                        fim: pair.querySelector('.intervalo-fim').value
                     });
+                });
+                dados.linhas.push(linhaDados);
+            });
 
-                // 2. Envia os dados para a URL do Google
-                alert("Salvando no Google Sheets... Por favor, aguarde.");
-                fetch(G_SHEETS_URL, {
-                    method: "POST",
-                    mode: "no-cors", // Necessário para Apps Script
-                    headers: {
-                        "Content-Type": "application/json",
-                    },
-                    body: JSON.stringify(dados),
-                })
-                    .then((response) => {
-                        // Como estamos em 'no-cors', não podemos ler a resposta
-                        // Então apenas assumimos que funcionou.
-                        alert("Dados salvos no Google Sheets com sucesso!");
-                    })
-                    .catch((error) => {
-                        console.error(
-                            "Erro ao salvar no Google Sheets:",
-                            error,
-                        );
-                        alert(
-                            "Erro ao salvar no Google Sheets. Verifique o console (F12) para detalhes.",
-                        );
-                    });
-            }
-            // --- Fim da Nova Função ---
+            // 2. Envia os dados para a URL do Google
+            alert('Salvando no Google Sheets...\n\n(Aviso: O Google pode demorar alguns segundos. Não feche a página.)');
+            
+            fetch(G_SHEETS_URL, {
+                method: 'POST',
+                // O mode 'no-cors' é necessário, mas impede de sabermos 100% se deu certo.
+                // O Apps Script não envia os cabeçalhos CORS corretos para POST.
+                mode: 'no-cors', 
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(dados)
+            })
+            .then(() => {
+                // Como estamos em 'no-cors', não podemos ler a resposta de sucesso.
+                // Apenas assumimos que funcionou se o 'fetch' não deu erro.
+                alert('Dados enviados para o Google Sheets!\n\nPor favor, verifique sua planilha para confirmar se os dados apareceram.');
+            })
+            .catch(error => {
+                console.error('Erro ao salvar no Google Sheets:', error);
+                alert('Erro crítico ao salvar no Google Sheets.\n\nCausa provável: A URL está errada ou o script não foi implantado corretamente.\n\n(Verifique o console (F12) para detalhes técnicos).');
+            });
+        }
+        // --- Fim da Nova Função ---
 
             // Adiciona uma linha inicial
             adicionarLinha();
