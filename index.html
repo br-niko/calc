@@ -7,6 +7,7 @@
 
         <style>
             /* --- Definição da Fonte W95 --- */
+            /* IMPORTANTE: Os arquivos .woff e .woff2 devem estar na MESMA pasta que este HTML */
             @font-face {
                 font-family: "W95Font";
                 src:
@@ -27,23 +28,18 @@
             /* Estilos de 'body' e 'table' */
             body {
                 font-family: "W95Font", Arial, sans-serif;
-                /* --- CSS MODIFICADO (Fundo W95) --- */
-                background-color: #d4d0c8; /* Cinza claro W95 */
-                /* --- Fim da Modificação --- */
-                padding: 15px; /* Ajusta padding */
+                background-color: #d4d0c8;
+                padding: 15px;
                 margin: 0;
-                font-size: 14px; /* Tamanho base */
+                font-size: 14px;
             }
             table {
                 border-collapse: collapse;
                 width: 100%;
-                background-color: #fff; /* Fundo branco para tabela */
-                /* --- CSS MODIFICADO (Borda W95) --- */
+                background-color: #fff;
                 border-style: inset;
                 border-width: 2px;
-                border-color: #888 #eee #eee #888; /* Cores inset */
-                /* box-shadow removido */
-                /* --- Fim da Modificação --- */
+                border-color: #888 #eee #eee #888;
                 table-layout: fixed;
                 margin-bottom: 20px;
             }
@@ -74,30 +70,27 @@
             th,
             td {
                 border: none;
-                border-bottom: 1px solid #c0c0c0; /* Linha divisória cinza */
-                padding: 6px 8px; /* Padding ajustado */
+                border-bottom: 1px solid #c0c0c0;
+                padding: 6px 8px;
                 text-align: center;
                 vertical-align: top;
                 overflow: hidden;
                 text-overflow: ellipsis;
             }
-            /* Remove borda da última linha */
             tbody tr:last-child td {
                 border-bottom: none;
             }
 
             thead th {
-                border-bottom: 1px solid #888; /* Linha escura abaixo do header */
-                border-right: 1px solid #888; /* Linha vertical escura */
+                border-bottom: 1px solid #888;
+                border-right: 1px solid #888;
                 vertical-align: middle;
                 font-weight: bold;
-                background-color: #c0c0c0; /* Fundo cinza para header */
-                /* --- CSS MODIFICADO (Tamanho Fonte) --- */
-                font-size: 1em; /* Mesmo tamanho do body */
-                /* --- Fim da Modificação --- */
+                background-color: #c0c0c0;
+                font-size: 1em;
             }
             thead th:last-child {
-                border-right: none; /* Remove borda direita do último header */
+                border-right: none;
             }
 
             /* CSS (Alinhamento Títulos) */
@@ -115,7 +108,7 @@
                 user-select: none;
             }
             #th-data:hover {
-                background-color: #b0b0b0; /* Cinza mais escuro no hover */
+                background-color: #b0b0b0;
             }
 
             /* Estilos de 'input' */
@@ -123,11 +116,9 @@
             select {
                 font-family: "W95Font", Arial, sans-serif;
                 background-color: #fff;
-                /* --- CSS MODIFICADO (Borda Input) --- */
                 border-style: inset;
                 border-width: 1px;
                 border-color: #888 #eee #eee #888;
-                /* --- Fim da Modificação --- */
                 padding: 4px 6px;
                 font-size: 14px;
                 border-radius: 0;
@@ -138,7 +129,7 @@
             select:focus {
                 outline: 1px dotted #000;
                 background-color: #fff;
-                border-color: #888 #eee #eee #888; /* Mantém borda no foco */
+                border-color: #888 #eee #eee #888;
             }
 
             input[type="time"],
@@ -199,27 +190,28 @@
                 height: 20px;
             }
 
-            /* Container para os botões de ação */
+            /* --- CSS MODIFICADO (Container para os botões de ação) --- */
             .botoes-acao {
                 display: flex;
                 gap: 10px;
                 flex-wrap: wrap;
-                margin-top: 20px;
+                margin-top: 10px; /* Reduz espaço acima */
             }
+            /* --- Fim da Modificação --- */
 
             /* CSS (Fonte do Total Mês) */
             #total-mes {
                 font-weight: normal;
                 font-family: "Courier New", Courier, monospace;
             }
-            /* --- CSS MODIFICADO (Container do total mês W95) --- */
+            /* Container do total mês */
             #total-mes-container {
                 margin-top: 8px;
-                background-color: #c0c0c0; /* Fundo cinza */
-                border-style: inset; /* Borda W95 */
+                background-color: #c0c0c0;
+                border-style: inset;
                 border-width: 2px;
                 border-color: #888 #eee #eee #888;
-                padding: 8px 12px; /* Padding interno */
+                padding: 8px 12px;
                 border-radius: 0;
                 max-width: 300px;
                 margin-bottom: 20px;
@@ -227,13 +219,12 @@
             #total-mes-container h3 {
                 font-family: "W95Font", Arial, sans-serif;
                 margin: 0;
-                font-size: 1em; /* Tamanho normal */
+                font-size: 1em;
                 font-weight: bold;
                 border-bottom: none;
                 padding-bottom: 0;
                 text-align: left;
             }
-            /* --- Fim da Modificação --- */
 
             /* CSS (Fonte Total Dia) */
             .horas-dia {
@@ -305,14 +296,16 @@
                 flex-grow: 1;
             }
 
-            /* CSS (Container para campos de ajuste) */
+            /* --- CSS MODIFICADO (Container para campos de ajuste) --- */
             .ajuste-container {
+                margin-top: 30px; /* Aumenta espaço acima */
                 display: flex;
                 flex-direction: column;
                 gap: 10px;
                 max-width: 300px;
                 margin-bottom: 20px;
             }
+            /* --- Fim da Modificação --- */
             .ajuste-container div {
                 display: flex;
                 justify-content: space-between;
@@ -329,36 +322,36 @@
             /* CSS (Campo de subtração) */
             #horas-subtrair {
                 background-color: #fff0f0;
-                border-style: inset; /* Borda inset */
+                border-style: inset;
                 border-width: 1px;
                 border-color: #888 #eee #eee #888;
             }
             #horas-subtrair:focus {
                 background-color: #ffe0e0;
-                border-style: inset; /* Mantém borda */
+                border-style: inset;
                 border-width: 1px;
                 border-color: #888 #eee #eee #888;
                 outline: 1px dotted #000;
             }
 
-            /* --- CSS MODIFICADO (Resumo Semanal W95) --- */
+            /* CSS (Resumo Semanal W95) */
             #resumo-semanal-container {
-                background-color: #c0c0c0; /* Fundo cinza */
-                border-style: inset; /* Borda W95 */
+                background-color: #c0c0c0;
+                border-style: inset;
                 border-width: 2px;
                 border-color: #888 #eee #eee #888;
                 padding: 8px 12px;
                 border-radius: 0;
                 max-width: 300px;
-                margin-bottom: 8px; /* Reduz espaço antes do Total */
+                margin-bottom: 8px;
             }
             #resumo-semanal-container h4 {
-                margin: 0 0 8px 0; /* Ajusta margem */
-                border-bottom: 1px solid #888; /* Linha escura */
-                padding-bottom: 4px; /* Ajusta padding */
-                font-size: 1em; /* Tamanho normal */
+                margin: 0 0 8px 0;
+                border-bottom: 1px solid #888;
+                padding-bottom: 4px;
+                font-size: 1em;
                 font-weight: bold;
-                color: #000; /* Texto preto */
+                color: #000;
             }
             #resumo-semanal {
                 font-family: "Courier New", Courier, monospace;
@@ -366,19 +359,18 @@
                 display: flex;
                 flex-direction: column;
                 gap: 5px;
-                color: #000; /* Texto preto */
+                color: #000;
             }
-            /* --- Fim da Modificação --- */
 
             /* CSS RESPONSIVO */
             @media (max-width: 768px) {
                 body {
                     padding: 10px;
-                    font-size: 16px; /* Aumenta fonte base no mobile */
+                    font-size: 16px;
                 }
 
                 table {
-                    border-style: none; /* Remove borda W95 da tabela no mobile */
+                    border-style: none;
                     margin-bottom: 20px;
                 }
 
@@ -466,13 +458,12 @@
                 }
 
                 /* Ajusta containers inferiores */
-                /* Remove borda W95 no mobile */
                 .ajuste-container,
                 #resumo-semanal-container,
                 #total-mes-container {
                     border-style: none;
-                    background-color: transparent; /* Remove fundo cinza */
-                    padding: 0; /* Remove padding extra */
+                    background-color: transparent;
+                    padding: 0;
                     max-width: none;
                     width: auto;
                     margin-top: 0;
@@ -484,10 +475,10 @@
                 }
                 /* Estilo específico para labels/inputs de ajuste */
                 .ajuste-container {
-                    gap: 15px; /* Aumenta espaço */
+                    gap: 15px;
                 }
                 .ajuste-container div {
-                    background-color: #f8f8f8; /* Fundo claro */
+                    background-color: #f8f8f8;
                     padding: 10px;
                     border-radius: 4px;
                 }
