@@ -152,33 +152,35 @@
                 font-weight: normal;
                 font-family: "Courier New", Courier, monospace;
             }
-            /* Container do total mês */
+            /* --- CSS MODIFICADO (Container do total mês) --- */
             #total-mes-container {
-                /* margin-top: 8px; Removido */
                 background-color: #fdfdfd;
                 border: 1px solid #ccc;
-                border-top: none; /* Remove borda superior para colar na tabela */
-                padding: 10px 18px; /* Ajusta padding */
-                border-radius: 0 0 4px 4px; /* Arredonda só cantos inferiores */
-                max-width: none; /* Ocupa largura total */
+                border-top: none;
+                padding: 10px 18px;
+                border-radius: 0 0 4px 4px;
+                /* max-width removido */
+                width: 100%; /* Ocupa largura total */
                 box-sizing: border-box; /* Inclui padding na largura */
-                margin-bottom: 20px; /* Adiciona espaço abaixo do total */
+                margin-bottom: 20px;
             }
             #total-mes-container h3 {
                 font-family: "Work Sans", Arial, sans-serif;
                 margin: 0;
                 font-size: 1.1em;
-                font-weight: 600; /* Aplica SemiBold 600 */
+                font-weight: 600;
                 border-bottom: none;
                 padding-bottom: 0;
                 text-align: right; /* Alinha o total à direita */
             }
+            /* --- Fim da Modificação --- */
 
-            /* CSS (Fonte Total Dia) */
+            /* --- CSS MODIFICADO (Fonte Total Dia) --- */
             .horas-dia {
                 font-family: "Courier New", Courier, monospace;
-                font-weight: bold; /* Deixa o total do dia em negrito */
+                /* font-weight: bold; Removido */
             }
+            /* --- Fim da Modificação --- */
 
             /* Estilos para os Intervalos */
             .intervalo-container {
@@ -249,7 +251,6 @@
 
             /* CSS (Container para campos de ajuste) */
             .ajuste-container {
-                /* margin-top: 20px; Removido daqui */
                 display: flex;
                 flex-direction: column;
                 gap: 10px;
@@ -280,7 +281,6 @@
 
             /* CSS (Resumo Semanal) */
             #resumo-semanal-container {
-                /* margin-top: 15px; Removido daqui */
                 background-color: #fdfdfd;
                 border: 1px solid #ccc;
                 padding: 12px 18px;
@@ -313,7 +313,7 @@
                     box-shadow: none;
                     border: none;
                     table-layout: auto;
-                    margin-bottom: 0; /* Remove margem inferior no mobile */
+                    margin-bottom: 0;
                 }
 
                 thead {
@@ -401,9 +401,10 @@
 
                 /* Ajusta containers inferiores */
                 #total-mes-container {
-                    border-radius: 4px; /* Volta arredondamento normal no mobile */
-                    border-top: 1px solid #ccc; /* Readiciona borda superior */
+                    border-radius: 4px;
+                    border-top: 1px solid #ccc;
                     margin-bottom: 20px;
+                    width: auto; /* Volta ao normal no mobile */
                 }
                 #total-mes-container h3 {
                     text-align: left; /* Alinha total à esquerda no mobile */
@@ -413,7 +414,7 @@
                 #resumo-semanal-container {
                     max-width: none;
                     width: auto;
-                    margin-top: 0; /* Remove margem superior desnecessária */
+                    margin-top: 0;
                 }
             }
         </style>
@@ -448,6 +449,7 @@
         <div id="total-mes-container">
             <h3>Total do mês: <span id="total-mes">00:00</span></h3>
         </div>
+
         <div class="botoes-acao">
             <button onclick="adicionarLinha()" title="Adicionar Linha">
                 <svg
