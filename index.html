@@ -1,0 +1,818 @@
+<!doctype html>
+<html lang="pt-BR">
+    <head>
+        <meta charset="UTF-8" />
+        <title>Calculadora de Horas do Mês</title>
+        <style>
+            /* [Todo o CSS anterior permanece o mesmo - omitido para brevidade] */
+            /* Estilos de 'body' e 'table' */
+            body {
+                font-family: Arial, sans-serif;
+                background-color: #e0e0e0;
+                padding: 20px;
+            }
+            table {
+                border-collapse: collapse;
+                width: 100%;
+                background-color: #f8f8f8;
+                box-shadow: inset 1px 1px 2px #ccc;
+                margin-bottom: 20px;
+            }
+
+            /* colgroup para 8 colunas */
+            colgroup col:nth-child(1) {
+                width: 100px;
+            } /* Data */
+            colgroup col:nth-child(2) {
+                width: 187px;
+            } /* Atividade */
+            colgroup col:nth-child(3),
+            colgroup col:nth-child(4) {
+                width: 60px;
+            } /* Início, Fim */
+            colgroup col:nth-child(5) {
+                width: 220px;
+            } /* Intervalos */
+            colgroup col:nth-child(6),
+            colgroup col:nth-child(7),
+            colgroup col:nth-child(8) {
+                width: 80px;
+            } /* Hora-aula, Total, Ações */
+
+            /* CSS (Sem linhas verticais) */
+            th,
+            td {
+                border: none;
+                border-bottom: 1px solid #ccc;
+                padding: 8px;
+                text-align: center;
+                vertical-align: top;
+            }
+            thead th {
+                border-bottom: 2px solid #aaa;
+                vertical-align: middle;
+            }
+
+            /* CSS (Header 'Data' clicável) */
+            #th-data {
+                cursor: pointer;
+                user-select: none; /* Impede selecionar o texto */
+            }
+            #th-data:hover {
+                background-color: #f0f0f0; /* Feedback visual */
+            }
+
+            /* Estilos de 'input' */
+            input,
+            select {
+                font-family: Arial, sans-serif;
+                background-color: #f0f0f0;
+                border: 2px inset #ccc;
+                padding: 2px 4px;
+                font-size: 12px;
+                border-radius: 4px;
+                box-sizing: border-box;
+            }
+
+            input[type="time"],
+            input[type="text"],
+            input[type="date"] {
+                width: 100%;
+            }
+            input[type="checkbox"] {
+                width: auto;
+            }
+            input:focus,
+            select:focus {
+                outline: none;
+                background-color: #cce0ff;
+            }
+
+            /* Estilo Botão Principal */
+            button {
+                font-family: Arial, sans-serif;
+                background-color: royalblue;
+                color: white;
+                padding: 4px 10px;
+                font-size: 12px;
+                border: none;
+                border-radius: 4px;
+                cursor: pointer;
+            }
+            button:hover {
+                background-color: #3a5fcd;
+            }
+
+            /* Container para os botões de ação */
+            .botoes-acao {
+                display: flex;
+                gap: 8px; /* Espaço entre os botões */
+            }
+
+            /* CSS (Fonte do Total) */
+            #total-mes {
+                font-weight: normal;
+                font-family:
+                    "Courier New", Courier, monospace; /* Fonte alterada */
+            }
+
+            /* Estilos para os Intervalos */
+            .intervalo-container {
+                display: flex;
+                flex-direction: column;
+                gap: 4px;
+            }
+            .intervalo-pair {
+                display: flex;
+                gap: 4px;
+                align-items: center;
+            }
+            .intervalo-pair input {
+                width: auto;
+                flex: 1;
+            }
+
+            /* CSS (Botão '+' de adicionar intervalo) */
+            .add-intervalo {
+                background-color: royalblue;
+                color: white;
+                border: none;
+                border-radius: 4px;
+                width: 20px;
+                height: 20px;
+                line-height: 18px; /* Ajuste para centralizar o '+' */
+                padding: 0;
+                font-size: 16px;
+                font-weight: bold;
+                cursor: pointer;
+                flex-shrink: 0;
+            }
+            .add-intervalo:hover {
+                background-color: #3a5fcd;
+            }
+
+            /* CSS (Botão 'x' para remover intervalo) */
+            .remover-intervalo {
+                background-color: #ff6347; /* Vermelho 'tomato' (agradável) */
+                color: white;
+                border: none;
+                border-radius: 4px;
+                width: 20px;
+                height: 20px;
+                line-height: 18px;
+                padding: 0;
+                font-size: 16px;
+                font-weight: bold;
+                cursor: pointer;
+                flex-shrink: 0;
+            }
+            .remover-intervalo:hover {
+                background-color: #dc143c; /* Vermelho 'crimson' (hover) */
+            }
+
+            /* CSS (Container para campos de ajuste) */
+            .ajuste-container {
+                margin-top: 20px;
+                display: flex;
+                flex-direction: column;
+                gap: 8px; /* Espaço entre os campos de ajuste */
+                max-width: 300px; /* Limita a largura */
+            }
+            .ajuste-container div {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+            }
+            .ajuste-container label {
+                font-size: 0.9em;
+                margin-right: 5px;
+            }
+            .ajuste-container input[type="time"] {
+                width: 100px;
+            }
+
+            /* CSS (Campo de subtração) */
+            #horas-subtrair {
+                background-color: #fff0f0; /* Vermelho bem claro */
+                border: 2px inset #e0c0c0; /* Borda avermelhada */
+            }
+            #horas-subtrair:focus {
+                background-color: #ffe0e0; /* Vermelho um pouco mais escuro no foco */
+            }
+
+            /* CSS (Resumo Semanal) */
+            #resumo-semanal-container {
+                margin-top: 15px;
+                background-color: #fdfdfd;
+                border: 1px solid #ccc;
+                padding: 10px 15px;
+                border-radius: 4px;
+                max-width: 300px;
+            }
+            #resumo-semanal-container h4 {
+                margin: 0 0 10px 0;
+                border-bottom: 1px solid #aaa;
+                padding-bottom: 5px;
+                font-size: 1.1em;
+            }
+            #resumo-semanal {
+                font-family: "Courier New", Courier, monospace;
+                font-size: 1em;
+                display: flex;
+                flex-direction: column;
+                gap: 5px; /* Espaço entre as linhas do resumo */
+            }
+
+            /* CSS (Caixa do Total do Mês) */
+            #total-mes-container {
+                margin-top: 8px; /* Espaço entre as duas caixas */
+                background-color: #fdfdfd;
+                border: 1px solid #ccc;
+                padding: 10px 15px;
+                border-radius: 4px;
+                max-width: 300px;
+            }
+            #total-mes-container h3 {
+                margin: 0; /* Remove a margem padrão do h3 */
+                font-size: 1.1em; /* Igual ao título do resumo */
+            }
+        </style>
+    </head>
+    <body>
+        <table id="tabela-horas">
+            <colgroup>
+                <col />
+                <col />
+                <col />
+                <col />
+                <col />
+                <col />
+                <col />
+                <col />
+            </colgroup>
+            <thead>
+                <tr>
+                    <th id="th-data" onclick="ordenarPorData()">Data</th>
+                    <th>Atividade</th>
+                    <th>Início</th>
+                    <th>Fim</th>
+                    <th>Intervalos</th>
+                    <th>Hora-aula?</th>
+                    <th>Total do Dia</th>
+                    <th>Ações</th>
+                </tr>
+            </thead>
+            <tbody id="corpo-tabela"></tbody>
+        </table>
+
+        <div class="botoes-acao">
+            <button onclick="adicionarLinha()">Adicionar Linha</button>
+            <button onclick="salvarDados()">Salvar (JSON)</button>
+            <button onclick="document.getElementById('file-input').click()">
+                Carregar (JSON)
+            </button>
+            <button onclick="salvarNoGSheets()">Salvar no Google</button>
+
+            <input
+                type="file"
+                id="file-input"
+                style="display: none"
+                onchange="carregarDados(event)"
+                accept=".json"
+            />
+        </div>
+        <div class="ajuste-container">
+            <div>
+                <label for="horas-externas">Adicionar Horas:</label>
+                <input
+                    type="time"
+                    id="horas-externas"
+                    oninput="calcularHoras()"
+                />
+            </div>
+            <div>
+                <label for="horas-subtrair">Subtrair Horas:</label>
+                <input
+                    type="time"
+                    id="horas-subtrair"
+                    oninput="calcularHoras()"
+                />
+            </div>
+        </div>
+
+        <div id="resumo-semanal-container">
+            <h4>Resumo Semanal</h4>
+            <div id="resumo-semanal"></div>
+        </div>
+
+        <div id="total-mes-container">
+            <h3>Total do mês: <span id="total-mes">00:00</span></h3>
+        </div>
+
+        <script>
+            // --- SCRIPT MODIFICADO (Adicione sua URL aqui) ---
+            // 1. CRIE UMA PLANILHA GOOGLE E O APPS SCRIPT (ver Parte 2)
+            // 2. IMPLANTE O SCRIPT E PEGUE A "URL DO APP DA WEB"
+            // 3. COLE A URL AQUI:
+            const G_SHEETS_URL =
+                "https://script.google.com/macros/s/AKfycbxlWtMbYUiL7T8vexaQwXQDNzMEdUwd3fwuyvYom66L0ZJ5pVLHNKZPfH0S24CH0tZ2/exec";
+            // --- Fim da Modificação ---
+
+            // --- FUNÇÕES DE UTILIDADE (Intervalo e Linha) ---
+            function removerIntervalo(botao) {
+                const pair = botao.closest(".intervalo-pair");
+                pair.remove();
+                calcularHoras();
+            }
+
+            function adicionarIntervalo(botao) {
+                const container = botao.closest(".intervalo-container");
+                const currentPair = botao.closest(".intervalo-pair");
+
+                const novoIntervalo = document.createElement("div");
+                novoIntervalo.className = "intervalo-pair";
+
+                novoIntervalo.innerHTML = `
+                <input type="time" class="intervalo-inicio">
+                <input type="time" class="intervalo-fim">
+                <button class="add-intervalo" onclick="adicionarIntervalo(this)" title="Adicionar intervalo">+</button>
+                <button class="remover-intervalo" onclick="removerIntervalo(this)" title="Remover intervalo">&times;</button>
+            `;
+
+                novoIntervalo.querySelectorAll("input").forEach((input) => {
+                    input.addEventListener("input", calcularHoras);
+                });
+
+                container.insertBefore(novoIntervalo, currentPair.nextSibling);
+                calcularHoras();
+            }
+
+            function adicionarLinha() {
+                const tbody = document.getElementById("corpo-tabela");
+                const linha = document.createElement("tr");
+
+                linha.innerHTML = `
+                <td><input type="date" class="data"></td>
+                <td><input type="text" class="atividade"></td>
+                <td><input type="time" class="entrada"></td>
+                <td><input type="time" class="saida"></td>
+                <td>
+                  <div class="intervalo-container">
+                    <div class="intervalo-pair">
+                      <input type="time" class="intervalo-inicio">
+                      <input type="time" class="intervalo-fim">
+                      <button class="add-intervalo" onclick="adicionarIntervalo(this)" title="Adicionar intervalo">+</button>
+                    </div>
+                  </div>
+                </td>
+                <td><input type="checkbox" class="hora-aula"></td>
+                <td class="horas-dia">00:00</td>
+                <td><button onclick="removerLinha(this)">Remover</button></td>
+            `;
+
+                tbody.appendChild(linha);
+                linha.querySelectorAll("input").forEach((input) => {
+                    input.addEventListener("input", calcularHoras);
+                });
+                return linha;
+            }
+
+            function removerLinha(botao) {
+                const linha = botao.closest("tr");
+                linha.remove();
+                calcularHoras();
+            }
+
+            // --- FUNÇÃO (Cálculo de Adicional Noturno) ---
+            function calcularMinutosComAdicional(startMin, endMin) {
+                const NIGHT_BONUS_FACTOR = 60 / 52.5;
+                const NIGHT_START = 1320; // 22:00
+                const NIGHT_END = 300; // 05:00
+                const DAY_END = 1440; // 24:00
+
+                let totalCompensatedMinutes = 0;
+
+                let spans = [];
+                if (endMin < startMin) {
+                    spans.push({ start: startMin, end: DAY_END });
+                    spans.push({ start: 0, end: endMin });
+                } else {
+                    spans.push({ start: startMin, end: endMin });
+                }
+
+                for (const span of spans) {
+                    let normalMinutes = 0;
+                    let nightlyMinutes = 0;
+
+                    for (let min = span.start; min < span.end; min++) {
+                        if (min >= NIGHT_START || min < NIGHT_END) {
+                            nightlyMinutes++;
+                        } else {
+                            normalMinutes++;
+                        }
+                    }
+                    totalCompensatedMinutes +=
+                        normalMinutes + nightlyMinutes * NIGHT_BONUS_FACTOR;
+                }
+
+                return totalCompensatedMinutes;
+            }
+
+            // --- FUNÇÃO DE CÁLCULO PRINCIPAL ---
+            function calcularHoras() {
+                const linhas = document.querySelectorAll("#corpo-tabela tr");
+                let totalMinutosMes = 0;
+
+                linhas.forEach((linha) => {
+                    const entrada = linha.querySelector(".entrada").value;
+                    const saida = linha.querySelector(".saida").value;
+                    const horaAula = linha.querySelector(".hora-aula").checked;
+
+                    let minutosDiaCompensados = 0;
+
+                    if (entrada && saida) {
+                        const entradaMin = converterParaMinutos(entrada);
+                        const saidaMin = converterParaMinutos(saida);
+                        minutosDiaCompensados = calcularMinutosComAdicional(
+                            entradaMin,
+                            saidaMin,
+                        );
+                    }
+
+                    const intervalos =
+                        linha.querySelectorAll(".intervalo-pair");
+                    intervalos.forEach((pair) => {
+                        const intervaloInicio =
+                            pair.querySelector(".intervalo-inicio").value;
+                        const intervaloFim =
+                            pair.querySelector(".intervalo-fim").value;
+
+                        if (intervaloInicio && intervaloFim) {
+                            const intervaloInicioMin =
+                                converterParaMinutos(intervaloInicio);
+                            const intervaloFimMin =
+                                converterParaMinutos(intervaloFim);
+                            const minutosIntervaloCompensados =
+                                calcularMinutosComAdicional(
+                                    intervaloInicioMin,
+                                    intervaloFimMin,
+                                );
+                            minutosDiaCompensados -=
+                                minutosIntervaloCompensados;
+                        }
+                    });
+
+                    if (minutosDiaCompensados > 0 && horaAula) {
+                        minutosDiaCompensados =
+                            minutosDiaCompensados * (60 / 50);
+                    }
+
+                    minutosDiaCompensados = Math.max(0, minutosDiaCompensados);
+
+                    const minutosArredondados = Math.round(
+                        minutosDiaCompensados,
+                    );
+                    linha.querySelector(".horas-dia").textContent =
+                        converterParaHora(minutosArredondados);
+                    totalMinutosMes += minutosArredondados;
+                });
+
+                const horasExternasStr =
+                    document.getElementById("horas-externas").value;
+                const minutosExternos = converterParaMinutos(horasExternasStr);
+                totalMinutosMes += minutosExternos;
+
+                const horasSubtrairStr =
+                    document.getElementById("horas-subtrair").value;
+                const minutosSubtrair = converterParaMinutos(horasSubtrairStr);
+                totalMinutosMes -= minutosSubtrair;
+
+                document.getElementById("total-mes").textContent =
+                    converterParaHora(totalMinutosMes);
+
+                calcularResumoSemanal();
+            }
+
+            // --- FUNÇÃO (Cálculo Semanal) ---
+            function calcularResumoSemanal() {
+                const semanas = {}; // Objeto para guardar os minutos por semana
+                const linhas = document.querySelectorAll("#corpo-tabela tr");
+
+                linhas.forEach((linha) => {
+                    const dataStr = linha.querySelector(".data").value;
+                    const horasStr =
+                        linha.querySelector(".horas-dia").textContent;
+
+                    if (dataStr && horasStr) {
+                        const minutosDia = converterParaMinutos(horasStr);
+                        if (minutosDia === 0) return;
+
+                        const inicioSemana = getInicioDaSemana(dataStr);
+
+                        if (!semanas[inicioSemana]) {
+                            semanas[inicioSemana] = 0;
+                        }
+                        semanas[inicioSemana] += minutosDia;
+                    }
+                });
+
+                const container = document.getElementById("resumo-semanal");
+                container.innerHTML = "";
+
+                const chavesSemanas = Object.keys(semanas).sort();
+
+                if (chavesSemanas.length === 0) {
+                    container.innerHTML = "<span>Nenhum dado com data.</span>";
+                    return;
+                }
+
+                chavesSemanas.forEach((chave) => {
+                    const totalHorasSemana = converterParaHora(semanas[chave]);
+                    const [y, m, d] = chave.split("-");
+                    const dataFormatada = `${d}/${m}`;
+
+                    container.innerHTML += `<div>Semana de ${dataFormatada}: <strong>${totalHorasSemana}</strong></div>`;
+                });
+            }
+
+            // --- FUNÇÃO (Helper de Data) ---
+            function getInicioDaSemana(dataStr) {
+                const [ano, mes, dia] = dataStr.split("-").map(Number);
+                const data = new Date(ano, mes - 1, dia);
+                const diaDaSemana = data.getDay();
+                const dataInicio = new Date(
+                    data.setDate(data.getDate() - diaDaSemana),
+                );
+                const y = dataInicio.getFullYear();
+                const m = String(dataInicio.getMonth() + 1).padStart(2, "0");
+                const d = String(dataInicio.getDate()).padStart(2, "0");
+                return `${y}-${m}-${d}`;
+            }
+
+            // --- FUNÇÃO (Ordenação por Data) ---
+            function ordenarPorData() {
+                const thData = document.getElementById("th-data");
+                const tbody = document.getElementById("corpo-tabela");
+                const linhas = Array.from(tbody.querySelectorAll("tr"));
+
+                const direcaoAtual = thData.dataset.sortDirection || "desc";
+                const novaDirecao = direcaoAtual === "asc" ? "desc" : "asc";
+                thData.dataset.sortDirection = novaDirecao;
+
+                thData
+                    .closest("tr")
+                    .querySelectorAll("th")
+                    .forEach((th) => {
+                        if (th.id !== "th-data") {
+                            th.innerHTML = th.innerHTML
+                                .replace(" ▴", "")
+                                .replace(" ▾", "");
+                        }
+                    });
+                thData.innerHTML =
+                    "Data " + (novaDirecao === "asc" ? "▴" : "▾");
+
+                const modificador = novaDirecao === "asc" ? 1 : -1;
+
+                linhas.sort((linhaA, linhaB) => {
+                    const dataAStr = linhaA.querySelector(".data").value;
+                    const dataBStr = linhaB.querySelector(".data").value;
+
+                    if (dataAStr && !dataBStr) return -1;
+                    if (!dataAStr && dataBStr) return 1;
+                    if (!dataAStr && !dataBStr) return 0;
+
+                    let comparacao = dataAStr.localeCompare(dataBStr);
+
+                    return comparacao * modificador;
+                });
+
+                linhas.forEach((linha) => {
+                    tbody.appendChild(linha);
+                });
+            }
+
+            // --- FUNÇÕES CONVERSORAS ---
+            function converterParaMinutos(horaStr) {
+                if (!horaStr || horaStr.indexOf(":") === -1) return 0;
+                const horaLimpa = horaStr.replace("-", "");
+                const [h, m] = horaLimpa.split(":").map(Number);
+                if (horaStr === "24:00") return 1440;
+                if (isNaN(h) || isNaN(m)) return 0;
+                return h * 60 + m;
+            }
+
+            function converterParaHora(minutos) {
+                const isNegative = minutos < 0;
+                const absMinutos = Math.abs(minutos);
+
+                const h = Math.floor(absMinutos / 60);
+                const m = Math.round(absMinutos % 60);
+
+                let horaFormatada;
+
+                if (m === 60) {
+                    horaFormatada = `${String(h + 1).padStart(2, "0")}:00`;
+                } else {
+                    horaFormatada = `${String(h).padStart(2, "0")}:${String(m).padStart(2, "0")}`;
+                }
+
+                return isNegative ? "-" + horaFormatada : horaFormatada;
+            }
+
+            // --- FUNÇÕES Salvar e Carregar (JSON Local) ---
+            function salvarDados() {
+                const dados = {
+                    horasExternas:
+                        document.getElementById("horas-externas").value,
+                    horasSubtrair:
+                        document.getElementById("horas-subtrair").value,
+                    linhas: [],
+                };
+
+                document
+                    .querySelectorAll("#corpo-tabela tr")
+                    .forEach((linha) => {
+                        const linhaDados = {
+                            data: linha.querySelector(".data").value,
+                            atividade: linha.querySelector(".atividade").value,
+                            entrada: linha.querySelector(".entrada").value,
+                            saida: linha.querySelector(".saida").value,
+                            horaAula: linha.querySelector(".hora-aula").checked,
+                            intervalos: [],
+                        };
+
+                        linha
+                            .querySelectorAll(".intervalo-pair")
+                            .forEach((pair) => {
+                                linhaDados.intervalos.push({
+                                    inicio: pair.querySelector(
+                                        ".intervalo-inicio",
+                                    ).value,
+                                    fim: pair.querySelector(".intervalo-fim")
+                                        .value,
+                                });
+                            });
+                        dados.linhas.push(linhaDados);
+                    });
+
+                const dataStr = JSON.stringify(dados, null, 2);
+                const blob = new Blob([dataStr], { type: "application/json" });
+                const a = document.createElement("a");
+                a.href = URL.createObjectURL(blob);
+                a.download = "calculadora_horas.json";
+                a.click();
+                URL.revokeObjectURL(a.href);
+            }
+
+            function carregarDados(event) {
+                const file = event.target.files[0];
+                if (!file) return;
+
+                const reader = new FileReader();
+                reader.onload = function (e) {
+                    const dados = JSON.parse(e.target.result);
+
+                    document.getElementById("corpo-tabela").innerHTML = "";
+
+                    document.getElementById("horas-externas").value =
+                        dados.horasExternas || "";
+                    document.getElementById("horas-subtrair").value =
+                        dados.horasSubtrair || "";
+
+                    dados.linhas.forEach((linhaDados) => {
+                        const novaLinha = adicionarLinha();
+
+                        novaLinha.querySelector(".data").value =
+                            linhaDados.data;
+                        novaLinha.querySelector(".atividade").value =
+                            linhaDados.atividade;
+                        novaLinha.querySelector(".entrada").value =
+                            linhaDados.entrada;
+                        novaLinha.querySelector(".saida").value =
+                            linhaDados.saida;
+                        novaLinha.querySelector(".hora-aula").checked =
+                            linhaDados.horaAula;
+
+                        const container = novaLinha.querySelector(
+                            ".intervalo-container",
+                        );
+                        const primeiroIntervalo =
+                            container.querySelector(".intervalo-pair");
+                        const botaoAdd =
+                            container.querySelector(".add-intervalo");
+
+                        if (linhaDados.intervalos[0]) {
+                            primeiroIntervalo.querySelector(
+                                ".intervalo-inicio",
+                            ).value = linhaDados.intervalos[0].inicio;
+                            primeiroIntervalo.querySelector(
+                                ".intervalo-fim",
+                            ).value = linhaDados.intervalos[0].fim;
+                        }
+
+                        for (let i = 1; i < linhaDados.intervalos.length; i++) {
+                            adicionarIntervalo(
+                                primeiroIntervalo.querySelector(
+                                    ".add-intervalo",
+                                ),
+                            );
+                            const todosOsPares =
+                                container.querySelectorAll(".intervalo-pair");
+                            const novoPair =
+                                todosOsPares[todosOsPares.length - 1];
+                            novoPair.querySelector(".intervalo-inicio").value =
+                                linhaDados.intervalos[i].inicio;
+                            novoPair.querySelector(".intervalo-fim").value =
+                                linhaDados.intervalos[i].fim;
+                        }
+                    });
+
+                    calcularHoras();
+                };
+
+                reader.readAsText(file);
+                event.target.value = null;
+            }
+
+            // --- NOVA FUNÇÃO (Salvar no Google Sheets) ---
+            function salvarNoGSheets() {
+                if (
+                    !G_SHEETS_URL ||
+                    G_SHEETS_URL === "COLE_A_URL_DO_SEU_APPS_SCRIPT_AQUI"
+                ) {
+                    alert(
+                        "Erro: A URL do Google Apps Script não foi configurada no arquivo HTML.",
+                    );
+                    return;
+                }
+
+                // 1. Coleta os dados (igual ao salvarDados)
+                const dados = {
+                    horasExternas:
+                        document.getElementById("horas-externas").value,
+                    horasSubtrair:
+                        document.getElementById("horas-subtrair").value,
+                    linhas: [],
+                };
+
+                document
+                    .querySelectorAll("#corpo-tabela tr")
+                    .forEach((linha) => {
+                        const linhaDados = {
+                            data: linha.querySelector(".data").value,
+                            atividade: linha.querySelector(".atividade").value,
+                            entrada: linha.querySelector(".entrada").value,
+                            saida: linha.querySelector(".saida").value,
+                            horaAula: linha.querySelector(".hora-aula").checked,
+                            intervalos: [],
+                        };
+
+                        linha
+                            .querySelectorAll(".intervalo-pair")
+                            .forEach((pair) => {
+                                linhaDados.intervalos.push({
+                                    inicio: pair.querySelector(
+                                        ".intervalo-inicio",
+                                    ).value,
+                                    fim: pair.querySelector(".intervalo-fim")
+                                        .value,
+                                });
+                            });
+                        dados.linhas.push(linhaDados);
+                    });
+
+                // 2. Envia os dados para a URL do Google
+                alert("Salvando no Google Sheets... Por favor, aguarde.");
+                fetch(G_SHEETS_URL, {
+                    method: "POST",
+                    mode: "no-cors", // Necessário para Apps Script
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify(dados),
+                })
+                    .then((response) => {
+                        // Como estamos em 'no-cors', não podemos ler a resposta
+                        // Então apenas assumimos que funcionou.
+                        alert("Dados salvos no Google Sheets com sucesso!");
+                    })
+                    .catch((error) => {
+                        console.error(
+                            "Erro ao salvar no Google Sheets:",
+                            error,
+                        );
+                        alert(
+                            "Erro ao salvar no Google Sheets. Verifique o console (F12) para detalhes.",
+                        );
+                    });
+            }
+            // --- Fim da Nova Função ---
+
+            // Adiciona uma linha inicial
+            adicionarLinha();
+            // Calcula o resumo semanal (para o caso inicial)
+            calcularResumoSemanal();
+        </script>
+    </body>
+</html>
