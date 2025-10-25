@@ -2,6 +2,7 @@
 <html lang="pt-BR">
     <head>
         <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <title>Calculadora de Horas do Mês</title>
         <style>
             /* Estilos de 'body' e 'table' */
@@ -9,6 +10,7 @@
                 font-family: Arial, sans-serif;
                 background-color: #e0e0e0;
                 padding: 20px;
+                margin: 0; /* Remove margem padrão */
             }
             table {
                 border-collapse: collapse;
@@ -16,6 +18,7 @@
                 background-color: #f8f8f8;
                 box-shadow: inset 1px 1px 2px #ccc;
                 margin-bottom: 20px;
+                table-layout: fixed; /* Ajuda a respeitar colgroup */
             }
 
             /* colgroup para 8 colunas */
@@ -36,11 +39,9 @@
         colgroup col:nth-child(7) {
                 width: 80px;
             } /* Total */
-            /* --- CSS MODIFICADO (Coluna Ações um pouco menor) --- */
             colgroup col:nth-child(8) {
                 width: 50px;
             } /* Ações */
-            /* --- Fim da Modificação --- */
 
             /* CSS (Sem linhas verticais) */
             th,
@@ -50,6 +51,8 @@
                 padding: 8px;
                 text-align: center;
                 vertical-align: top;
+                overflow: hidden; /* Evita que conteúdo vaze */
+                text-overflow: ellipsis; /* Adiciona '...' se vazar */
             }
             thead th {
                 border-bottom: 2px solid #aaa;
@@ -59,10 +62,10 @@
             /* CSS (Header 'Data' clicável) */
             #th-data {
                 cursor: pointer;
-                user-select: none; /* Impede selecionar o texto */
+                user-select: none;
             }
             #th-data:hover {
-                background-color: #f0f0f0; /* Feedback visual */
+                background-color: #f0f0f0;
             }
 
             /* Estilos de 'input' */
@@ -71,10 +74,11 @@
                 font-family: Arial, sans-serif;
                 background-color: #f0f0f0;
                 border: 2px inset #ccc;
-                padding: 2px 4px;
-                font-size: 12px;
+                padding: 4px 6px; /* Aumenta um pouco para toque */
+                font-size: 14px; /* Aumenta um pouco para mobile */
                 border-radius: 4px;
                 box-sizing: border-box;
+                max-width: 100%; /* Garante que não ultrapasse a célula */
             }
 
             input[type="time"],
@@ -84,6 +88,8 @@
             }
             input[type="checkbox"] {
                 width: auto;
+                height: 18px; /* Tamanho maior para toque */
+                width: 18px;
             }
             input:focus,
             select:focus {
@@ -96,8 +102,8 @@
                 font-family: Arial, sans-serif;
                 background-color: royalblue;
                 color: white;
-                padding: 5px 8px;
-                font-size: 12px;
+                padding: 8px 10px; /* Aumenta padding para toque */
+                font-size: 14px; /* Aumenta fonte */
                 border: none;
                 border-radius: 4px;
                 cursor: pointer;
@@ -111,21 +117,21 @@
             }
             /* Tamanho dos SVGs nos botões de ação */
             .botoes-acao button svg {
-                width: 18px;
-                height: 18px;
+                width: 20px; /* Ícones maiores */
+                height: 20px;
             }
 
             /* Container para os botões de ação */
             .botoes-acao {
                 display: flex;
-                gap: 8px; /* Espaço entre os botões */
+                gap: 10px; /* Aumenta espaçamento */
+                flex-wrap: wrap; /* Permite quebrar linha em telas pequenas */
             }
 
             /* CSS (Fonte do Total) */
             #total-mes {
                 font-weight: normal;
-                font-family:
-                    "Courier New", Courier, monospace; /* Fonte alterada */
+                font-family: "Courier New", Courier, monospace;
             }
 
             /* Estilos para os Intervalos */
@@ -145,13 +151,12 @@
             }
 
             /* CSS (Botões '+' e 'x' de intervalo E botão remover linha) */
-            /* Aplica o estilo a ambos */
             .add-intervalo,
             .remover-intervalo {
                 border: none;
                 border-radius: 4px;
-                width: 24px;
-                height: 24px;
+                width: 28px; /* Botões maiores para toque */
+                height: 28px;
                 padding: 0;
                 cursor: pointer;
                 flex-shrink: 0;
@@ -159,7 +164,6 @@
                 align-items: center;
                 justify-content: center;
             }
-            /* Cor específica do '+' */
             .add-intervalo {
                 background-color: royalblue;
                 color: white;
@@ -167,7 +171,6 @@
             .add-intervalo:hover {
                 background-color: #3a5fcd;
             }
-            /* Cor específica do 'x' / lixeira */
             .remover-intervalo {
                 background-color: #ff6347; /* Vermelho 'tomato' */
                 color: white;
@@ -178,8 +181,8 @@
             /* Tamanho dos SVGs nos botões de intervalo / remover linha */
             .add-intervalo svg,
             .remover-intervalo svg {
-                width: 16px;
-                height: 16px;
+                width: 18px; /* Ícones maiores */
+                height: 18px;
             }
 
             /* CSS (Container para campos de ajuste) */
@@ -187,8 +190,8 @@
                 margin-top: 20px;
                 display: flex;
                 flex-direction: column;
-                gap: 8px; /* Espaço entre os campos de ajuste */
-                max-width: 300px; /* Limita a largura */
+                gap: 10px; /* Aumenta espaçamento */
+                max-width: 300px;
             }
             .ajuste-container div {
                 display: flex;
@@ -196,32 +199,34 @@
                 align-items: center;
             }
             .ajuste-container label {
-                font-size: 0.9em;
+                font-size: 1em; /* Tamanho normal */
                 margin-right: 5px;
             }
             .ajuste-container input[type="time"] {
-                width: 100px;
+                width: 120px; /* Um pouco maior */
             }
 
             /* CSS (Campo de subtração) */
             #horas-subtrair {
-                background-color: #fff0f0; /* Vermelho bem claro */
-                border: 2px inset #e0c0c0; /* Borda avermelhada */
+                background-color: #fff0f0;
+                border: 2px inset #e0c0c0;
             }
             #horas-subtrair:focus {
-                background-color: #ffe0e0; /* Vermelho um pouco mais escuro no foco */
+                background-color: #ffe0e0;
             }
 
-            /* CSS (Resumo Semanal) */
-            #resumo-semanal-container {
+            /* CSS (Resumo Semanal e Total - Caixas) */
+            #resumo-semanal-container,
+            #total-mes-container {
                 margin-top: 15px;
                 background-color: #fdfdfd;
                 border: 1px solid #ccc;
-                padding: 10px 15px;
+                padding: 12px 18px; /* Aumenta padding */
                 border-radius: 4px;
                 max-width: 300px;
             }
-            #resumo-semanal-container h4 {
+            #resumo-semanal-container h4,
+            #total-mes-container h3 {
                 margin: 0 0 10px 0;
                 border-bottom: 1px solid #aaa;
                 padding-bottom: 5px;
@@ -232,22 +237,115 @@
                 font-size: 1em;
                 display: flex;
                 flex-direction: column;
-                gap: 5px; /* Espaço entre as linhas do resumo */
-            }
-
-            /* CSS (Caixa do Total do Mês) */
-            #total-mes-container {
-                margin-top: 8px; /* Espaço entre as duas caixas */
-                background-color: #fdfdfd;
-                border: 1px solid #ccc;
-                padding: 10px 15px;
-                border-radius: 4px;
-                max-width: 300px;
+                gap: 5px;
             }
             #total-mes-container h3 {
-                margin: 0; /* Remove a margem padrão do h3 */
-                font-size: 1.1em; /* Igual ao título do resumo */
+                border-bottom: none; /* Total não precisa de linha */
+                padding-bottom: 0;
+                margin-bottom: 0;
             }
+
+            /* --- NOVO: CSS RESPONSIVO --- */
+            @media (max-width: 768px) {
+                body {
+                    padding: 10px; /* Menos padding em telas pequenas */
+                }
+
+                table {
+                    box-shadow: none; /* Remove sombra interna */
+                    border: none; /* Remove borda externa se houver */
+                    table-layout: auto; /* Permite que o conteúdo defina a largura */
+                }
+
+                /* Esconde cabeçalho original */
+                thead {
+                    display: none;
+                }
+
+                /* Transforma linhas em blocos */
+                tr {
+                    display: block;
+                    margin-bottom: 15px;
+                    border: 1px solid #ccc; /* Adiciona borda ao redor de cada "card" */
+                    border-radius: 4px;
+                    background-color: #fff; /* Fundo branco para os cards */
+                }
+
+                /* Remove colgroup no mobile */
+                colgroup {
+                    display: none;
+                }
+
+                /* Transforma células em blocos */
+                td {
+                    display: block;
+                    width: auto !important; /* Ignora colgroup */
+                    text-align: right; /* Alinha valor à direita */
+                    padding-left: 50%; /* Espaço para o label */
+                    position: relative; /* Para posicionar o ::before */
+                    border-bottom: 1px dotted #eee; /* Linha mais suave entre campos */
+                    padding-top: 10px;
+                    padding-bottom: 10px;
+                }
+                td:last-child {
+                    border-bottom: none; /* Remove borda da última célula */
+                }
+
+                /* Adiciona o label antes do conteúdo */
+                td::before {
+                    content: attr(data-label); /* Pega o texto do atributo */
+                    position: absolute;
+                    left: 10px; /* Posição do label */
+                    width: calc(50% - 20px); /* Largura do label */
+                    padding-right: 10px;
+                    white-space: nowrap;
+                    text-align: left; /* Alinha label à esquerda */
+                    font-weight: bold;
+                    color: #555; /* Cor mais suave para o label */
+                }
+
+                /* Ajustes específicos para células */
+                td[data-label="Hora-aula?"] {
+                    text-align: left; /* Alinha checkbox diferente */
+                }
+                td[data-label="Hora-aula?"]::before {
+                    width: auto; /* Deixa o label ter largura natural */
+                    position: static; /* Volta ao fluxo normal */
+                    margin-right: 10px;
+                }
+                td[data-label="Hora-aula?"] input {
+                    vertical-align: middle;
+                }
+
+                /* Célula de Ações */
+                td[data-label="Ações"] {
+                    text-align: center; /* Centraliza o botão de remover */
+                    padding-left: 8px; /* Remove padding extra */
+                }
+                td[data-label="Ações"]::before {
+                    display: none; /* Não precisa de label para Ações */
+                }
+
+                /* Célula de Intervalos */
+                td[data-label="Intervalos"] {
+                    padding-left: 8px; /* Remove padding extra */
+                }
+                td[data-label="Intervalos"]::before {
+                    display: none; /* Label já está no thead (invisível) */
+                }
+                .intervalo-container {
+                    margin-top: 5px; /* Espaço após o (invisível) label */
+                }
+
+                /* Ajusta containers inferiores */
+                .ajuste-container,
+                #resumo-semanal-container,
+                #total-mes-container {
+                    max-width: none; /* Ocupa largura total */
+                    width: auto; /* Necessário para sobrescrever max-width */
+                }
+            }
+            /* --- FIM DO CSS RESPONSIVO --- */
         </style>
     </head>
     <body>
@@ -389,17 +487,18 @@
                 calcularHoras();
             }
 
-            // --- FUNÇÃO MODIFICADA (adicionarLinha com SVG de lixeira) ---
+            // --- FUNÇÃO MODIFICADA (adicionarLinha com data-labels) ---
             function adicionarLinha() {
                 const tbody = document.getElementById("corpo-tabela");
                 const linha = document.createElement("tr");
 
+                // Adiciona data-label em cada TD
                 linha.innerHTML = `
-                <td><input type="date" class="data"></td>
-                <td><input type="text" class="atividade"></td>
-                <td><input type="time" class="entrada"></td>
-                <td><input type="time" class="saida"></td>
-                <td>
+                <td data-label="Data"><input type="date" class="data"></td>
+                <td data-label="Atividade"><input type="text" class="atividade"></td>
+                <td data-label="Início"><input type="time" class="entrada"></td>
+                <td data-label="Fim"><input type="time" class="saida"></td>
+                <td data-label="Intervalos">
                   <div class="intervalo-container">
                     <div class="intervalo-pair">
                       <input type="time" class="intervalo-inicio">
@@ -410,9 +509,9 @@
                     </div>
                   </div>
                 </td>
-                <td><input type="checkbox" class="hora-aula"></td>
-                <td class="horas-dia">00:00</td>
-                <td>
+                <td data-label="Hora-aula?"><input type="checkbox" class="hora-aula"></td>
+                <td data-label="Total Dia" class="horas-dia">00:00</td>
+                <td data-label="Ações">
                     <button class="remover-intervalo" onclick="removerLinha(this)" title="Remover Linha">
                         <svg fill="none" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"> <path d="M16 2v4h6v2h-2v14H4V8H2V6h6V2h8zm-2 2h-4v2h4V4zm0 4H6v12h12V8h-4zm-5 2h2v8H9v-8zm6 0h-2v8h2v-8z" fill="currentColor"/> </svg>
                     </button>
