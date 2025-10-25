@@ -191,7 +191,7 @@
                 height: 16px;
             }
 
-            /* --- NOVO CSS (Container da Data) --- */
+            /* CSS (Container da Data) */
             .data-container {
                 display: flex;
                 align-items: center;
@@ -200,7 +200,6 @@
             .data-container input.data {
                 flex-grow: 1; /* Input ocupa o espaço restante */
             }
-            /* --- Fim do Novo CSS --- */
 
             /* CSS (Container para campos de ajuste) */
             .ajuste-container {
@@ -507,7 +506,6 @@
             }
 
             // --- FUNÇÃO REFATORADA (criarElementoLinha) ---
-            // Apenas cria o elemento TR com o HTML interno, não adiciona à tabela
             function criarElementoLinha() {
                 const linha = document.createElement("tr");
 
@@ -542,12 +540,11 @@
                     </button>
                 </td>
             `;
-                return linha; // Retorna o elemento TR criado
+                return linha;
             }
-            // --- Fim da Refatoração ---
 
-            // --- FUNÇÃO MODIFICADA (adicionarLinha) ---
-            // Agora usa criarElementoLinha e adiciona ao final
+            // --- FUNÇÃO CORRIGIDA (adicionarLinha) ---
+            // Agora retorna o elemento criado, como antes
             function adicionarLinha() {
                 const tbody = document.getElementById("corpo-tabela");
                 const novaLinhaElement = criarElementoLinha(); // Cria o elemento
@@ -557,9 +554,12 @@
                 novaLinhaElement.querySelectorAll("input").forEach((input) => {
                     input.addEventListener("input", calcularHoras);
                 });
-                // Não precisa retornar nada aqui
+
+                // --- LINHA CORRIGIDA ---
+                return novaLinhaElement; // Retorna o elemento TR criado
+                // --- FIM DA CORREÇÃO ---
             }
-            // --- Fim da Modificação ---
+            // --- Fim da Correção ---
 
             // --- NOVA FUNÇÃO (adicionarLinhaAbaixo) ---
             function adicionarLinhaAbaixo(botao) {
@@ -584,11 +584,7 @@
                 novaLinhaElement.querySelectorAll("input").forEach((input) => {
                     input.addEventListener("input", calcularHoras);
                 });
-
-                // Opcional: Recalcular aqui se necessário, mas adicionar linha vazia não muda totais.
-                // calcularHoras();
             }
-            // --- Fim da Nova Função ---
 
             function removerLinha(botao) {
                 const linha = botao.closest("tr");
@@ -901,7 +897,10 @@
                         }
 
                         dados.linhas.forEach((linhaDados) => {
+                            // --- LINHA CORRIGIDA ---
+                            // Chama adicionarLinha que AGORA retorna o elemento
                             const novaLinha = adicionarLinha();
+                            // --- FIM DA CORREÇÃO ---
 
                             novaLinha.querySelector(".data").value =
                                 linhaDados.data;
@@ -919,10 +918,12 @@
                             );
                             const primeiroIntervalo =
                                 container.querySelector(".intervalo-pair");
+                            // --- CORREÇÃO: Pegar o botão '+' do primeiro intervalo ---
                             const botaoAdd =
                                 primeiroIntervalo.querySelector(
                                     ".add-intervalo",
                                 );
+                            // --- FIM DA CORREÇÃO ---
 
                             if (
                                 linhaDados.intervalos &&
@@ -941,7 +942,9 @@
                                 i < (linhaDados.intervalos || []).length;
                                 i++
                             ) {
-                                adicionarIntervalo(botaoAdd);
+                                // --- CORREÇÃO: Passar o botão correto para adicionarIntervalo ---
+                                adicionarIntervalo(botaoAdd); // Continua usando o botão do primeiro
+                                // --- FIM DA CORREÇÃO ---
                                 const todosOsPares =
                                     container.querySelectorAll(
                                         ".intervalo-pair",
@@ -959,6 +962,14 @@
                         calcularHoras(); // Recalcula tudo após preencher
                     } catch (err) {
                         alert("Erro ao ler o arquivo JSON: " + err.message);
+                        console.error("Erro ao carregar JSON:", err); // Loga o erro no console
+                        // Adiciona uma linha em branco em caso de erro para não ficar vazio
+                        if (
+                            document.getElementById("corpo-tabela").children
+                                .length === 0
+                        ) {
+                            adicionarLinha();
+                        }
                     }
                 };
 
