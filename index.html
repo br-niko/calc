@@ -25,7 +25,6 @@
                 width: 100%;
                 background-color: #f8f8f8;
                 box-shadow: inset 1px 1px 2px #ccc;
-                /* margin-bottom: 20px; Removido para colar o total */
                 table-layout: fixed;
             }
 
@@ -65,7 +64,7 @@
             thead th {
                 border-bottom: 2px solid #aaa;
                 vertical-align: middle;
-                font-weight: 600; /* Aplica SemiBold 600 */
+                font-weight: 600;
             }
 
             /* CSS (Alinhamento Títulos) */
@@ -90,13 +89,20 @@
             input,
             select {
                 font-family: "Work Sans", Arial, sans-serif;
-                background-color: #f0f0f0;
-                border: 2px inset #ccc;
+                background-color: #fff; /* Fundo branco para inputs */
+                border: 1px solid #888; /* Borda inset simples */
+                border-right-color: #eee;
+                border-bottom-color: #eee;
                 padding: 4px 6px;
                 font-size: 14px;
-                border-radius: 4px;
+                border-radius: 0; /* Remove cantos arredondados */
                 box-sizing: border-box;
                 max-width: 100%;
+            }
+            input:focus,
+            select:focus {
+                outline: 1px dotted #000; /* Outline pontilhado no foco */
+                background-color: #fff; /* Mantém fundo branco */
             }
 
             input[type="time"],
@@ -105,46 +111,68 @@
                 width: 100%;
             }
             input[type="checkbox"] {
-                width: auto;
-                height: 18px;
-                width: 18px;
+                /* Estilo Win95 para checkbox (aproximado) */
+                appearance: none;
+                background-color: #fff;
+                border: 1px solid #888;
+                border-right-color: #eee;
+                border-bottom-color: #eee;
+                width: 16px;
+                height: 16px;
+                position: relative;
+                vertical-align: middle;
+                margin: 0 4px;
             }
-            input:focus,
-            select:focus {
-                outline: none;
-                background-color: #cce0ff;
+            input[type="checkbox"]:checked::before {
+                content: "✔"; /* Ou outro caractere */
+                position: absolute;
+                top: -2px;
+                left: 1px;
+                font-size: 14px;
+                color: #000;
             }
 
-            /* CSS (Estilo Botão Principal e Ícones) */
+            /* --- CSS MODIFICADO (Estilo Botão Win95) --- */
             button {
                 font-family: "Work Sans", Arial, sans-serif;
-                background-color: royalblue;
-                color: white;
-                padding: 5px 8px;
-                font-size: 12px;
-                border: none;
-                border-radius: 4px;
+                background-color: #c0c0c0; /* Cinza Win95 */
+                color: #000; /* Texto/Icone preto */
+                padding: 4px 8px; /* Ajusta padding */
+                font-size: 14px; /* Aumenta fonte dos botões principais */
+                border-style: outset;
+                border-width: 2px;
+                border-color: #eee #888 #888 #eee; /* Cores para efeito 3D */
+                border-radius: 0; /* Remove cantos arredondados */
                 cursor: pointer;
                 display: inline-flex;
                 align-items: center;
                 justify-content: center;
                 line-height: 1;
+                min-height: 28px; /* Altura mínima */
+            }
+            /* Efeito de botão pressionado */
+            button:active {
+                border-style: inset;
+                border-color: #888 #eee #eee #888; /* Cores invertidas */
+                padding: 5px 7px 3px 9px; /* Simula movimento */
             }
             button:hover {
-                background-color: #3a5fcd;
+                /* Remove o hover azul */
+                background-color: #c0c0c0;
             }
             /* Tamanho dos SVGs nos botões de ação */
             .botoes-acao button svg {
                 width: 20px;
                 height: 20px;
             }
+            /* --- Fim da Modificação --- */
 
             /* Container para os botões de ação */
             .botoes-acao {
                 display: flex;
                 gap: 10px;
                 flex-wrap: wrap;
-                margin-top: 20px; /* Adiciona espaço acima dos botões */
+                margin-top: 20px;
             }
 
             /* CSS (Fonte do Total Mês) */
@@ -152,16 +180,15 @@
                 font-weight: normal;
                 font-family: "Courier New", Courier, monospace;
             }
-            /* --- CSS MODIFICADO (Container do total mês) --- */
+            /* Container do total mês */
             #total-mes-container {
                 background-color: #fdfdfd;
                 border: 1px solid #ccc;
                 border-top: none;
                 padding: 10px 18px;
                 border-radius: 0 0 4px 4px;
-                /* max-width removido */
-                width: 100%; /* Ocupa largura total */
-                box-sizing: border-box; /* Inclui padding na largura */
+                width: 100%;
+                box-sizing: border-box;
                 margin-bottom: 20px;
             }
             #total-mes-container h3 {
@@ -171,16 +198,13 @@
                 font-weight: 600;
                 border-bottom: none;
                 padding-bottom: 0;
-                text-align: right; /* Alinha o total à direita */
+                text-align: right;
             }
-            /* --- Fim da Modificação --- */
 
-            /* --- CSS MODIFICADO (Fonte Total Dia) --- */
+            /* CSS (Fonte Total Dia) */
             .horas-dia {
                 font-family: "Courier New", Courier, monospace;
-                /* font-weight: bold; Removido */
             }
-            /* --- Fim da Modificação --- */
 
             /* Estilos para os Intervalos */
             .intervalo-container {
@@ -198,12 +222,16 @@
                 flex: 1;
             }
 
-            /* CSS (Botões '+', 'x' de intervalo E botão remover linha E botão '+' da data) */
+            /* --- CSS MODIFICADO (Botões de Ação na Linha - Estilo Win95) --- */
             .add-intervalo,
             .remover-intervalo,
             .add-linha-abaixo {
-                border: none;
-                border-radius: 4px;
+                background-color: #c0c0c0; /* Cinza */
+                color: #000; /* Ícone preto */
+                border-style: outset;
+                border-width: 2px;
+                border-color: #eee #888 #888 #eee;
+                border-radius: 0;
                 width: 24px;
                 height: 24px;
                 padding: 0;
@@ -213,40 +241,37 @@
                 align-items: center;
                 justify-content: center;
             }
-            /* Cor específica do '+' (intervalo e linha abaixo) */
-            .add-intervalo,
-            .add-linha-abaixo {
-                background-color: royalblue;
-                color: white;
+            /* Efeito pressionado para botões de ação */
+            .add-intervalo:active,
+            .remover-intervalo:active,
+            .add-linha-abaixo:active {
+                border-style: inset;
+                border-color: #888 #eee #eee #888;
+                padding: 1px 0 0 1px; /* Simula movimento menor */
             }
+            /* Remove hover específico */
             .add-intervalo:hover,
+            .remover-intervalo:hover,
             .add-linha-abaixo:hover {
-                background-color: #3a5fcd;
+                background-color: #c0c0c0;
             }
-            /* Cor específica do 'x' / lixeira */
-            .remover-intervalo {
-                background-color: #ff6347; /* Vermelho 'tomato' */
-                color: white;
-            }
-            .remover-intervalo:hover {
-                background-color: #dc143c; /* Vermelho 'crimson' */
-            }
-            /* Tamanho dos SVGs nos botões */
+            /* Tamanho dos SVGs nos botões de ação na linha */
             .add-intervalo svg,
             .remover-intervalo svg,
             .add-linha-abaixo svg {
                 width: 16px;
                 height: 16px;
             }
+            /* --- Fim da Modificação --- */
 
             /* CSS (Container da Data) */
             .data-container {
                 display: flex;
                 align-items: center;
-                gap: 4px; /* Espaço entre input e botão */
+                gap: 4px;
             }
             .data-container input.data {
-                flex-grow: 1; /* Input ocupa o espaço restante */
+                flex-grow: 1;
             }
 
             /* CSS (Container para campos de ajuste) */
@@ -255,7 +280,7 @@
                 flex-direction: column;
                 gap: 10px;
                 max-width: 300px;
-                margin-bottom: 20px; /* Espaço antes do resumo */
+                margin-bottom: 20px;
             }
             .ajuste-container div {
                 display: flex;
@@ -273,27 +298,33 @@
             /* CSS (Campo de subtração) */
             #horas-subtrair {
                 background-color: #fff0f0;
-                border: 2px inset #e0c0c0;
+                border: 1px solid #888; /* Mantém borda inset */
+                border-right-color: #eee;
+                border-bottom-color: #eee;
             }
             #horas-subtrair:focus {
                 background-color: #ffe0e0;
+                border: 1px solid #888; /* Mantém borda */
+                border-right-color: #eee;
+                border-bottom-color: #eee;
+                outline: 1px dotted #000;
             }
 
-            /* CSS (Resumo Semanal) */
+            /* CSS (Resumo Semanal e Total - Caixas) */
             #resumo-semanal-container {
                 background-color: #fdfdfd;
                 border: 1px solid #ccc;
                 padding: 12px 18px;
                 border-radius: 4px;
                 max-width: 300px;
-                margin-bottom: 20px; /* Adiciona espaço abaixo do resumo */
+                margin-bottom: 20px;
             }
             #resumo-semanal-container h4 {
                 margin: 0 0 10px 0;
                 border-bottom: 1px solid #aaa;
                 padding-bottom: 5px;
                 font-size: 1.1em;
-                font-weight: 600; /* Aplica SemiBold 600 */
+                font-weight: 600;
             }
             #resumo-semanal {
                 font-family: "Courier New", Courier, monospace;
