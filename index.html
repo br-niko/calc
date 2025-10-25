@@ -32,11 +32,15 @@
             colgroup col:nth-child(5) {
                 width: 220px;
             } /* Intervalos */
-            colgroup col:nth-child(6),
-            colgroup col:nth-child(7),
-            colgroup col:nth-child(8) {
+            colgroup col:nth-child(6), /* Hora-aula */
+        colgroup col:nth-child(7) {
                 width: 80px;
-            } /* Hora-aula, Total, Ações */
+            } /* Total */
+            /* --- CSS MODIFICADO (Coluna Ações um pouco menor) --- */
+            colgroup col:nth-child(8) {
+                width: 50px;
+            } /* Ações */
+            /* --- Fim da Modificação --- */
 
             /* CSS (Sem linhas verticais) */
             th,
@@ -87,22 +91,20 @@
                 background-color: #cce0ff;
             }
 
-            /* --- CSS MODIFICADO (Estilo Botão Principal e Ícones) --- */
+            /* CSS (Estilo Botão Principal e Ícones) */
             button {
                 font-family: Arial, sans-serif;
                 background-color: royalblue;
                 color: white;
-                /* Padding ajustado para botões com ícones */
                 padding: 5px 8px;
                 font-size: 12px;
                 border: none;
                 border-radius: 4px;
                 cursor: pointer;
-                /* Para alinhar o SVG verticalmente */
                 display: inline-flex;
                 align-items: center;
                 justify-content: center;
-                line-height: 1; /* Remove altura extra da linha */
+                line-height: 1;
             }
             button:hover {
                 background-color: #3a5fcd;
@@ -112,7 +114,6 @@
                 width: 18px;
                 height: 18px;
             }
-            /* --- Fim da Modificação --- */
 
             /* Container para os botões de ação */
             .botoes-acao {
@@ -143,20 +144,22 @@
                 flex: 1;
             }
 
-            /* --- CSS MODIFICADO (Botões '+' e 'x' de intervalo) --- */
+            /* CSS (Botões '+' e 'x' de intervalo E botão remover linha) */
+            /* Aplica o estilo a ambos */
             .add-intervalo,
             .remover-intervalo {
                 border: none;
                 border-radius: 4px;
-                width: 24px; /* Aumenta um pouco para o ícone */
+                width: 24px;
                 height: 24px;
                 padding: 0;
                 cursor: pointer;
                 flex-shrink: 0;
-                display: inline-flex; /* Para alinhar SVG */
+                display: inline-flex;
                 align-items: center;
                 justify-content: center;
             }
+            /* Cor específica do '+' */
             .add-intervalo {
                 background-color: royalblue;
                 color: white;
@@ -164,6 +167,7 @@
             .add-intervalo:hover {
                 background-color: #3a5fcd;
             }
+            /* Cor específica do 'x' / lixeira */
             .remover-intervalo {
                 background-color: #ff6347; /* Vermelho 'tomato' */
                 color: white;
@@ -171,13 +175,12 @@
             .remover-intervalo:hover {
                 background-color: #dc143c; /* Vermelho 'crimson' */
             }
-            /* Tamanho dos SVGs nos botões de intervalo */
+            /* Tamanho dos SVGs nos botões de intervalo / remover linha */
             .add-intervalo svg,
             .remover-intervalo svg {
                 width: 16px;
                 height: 16px;
             }
-            /* --- Fim da Modificação --- */
 
             /* CSS (Container para campos de ajuste) */
             .ajuste-container {
@@ -323,6 +326,7 @@
                 accept=".json"
             />
         </div>
+
         <div class="ajuste-container">
             <div>
                 <label for="horas-externas">Adicionar Horas:</label>
@@ -359,7 +363,6 @@
                 calcularHoras();
             }
 
-            // --- FUNÇÃO MODIFICADA (adicionarIntervalo com SVGs) ---
             function adicionarIntervalo(botao) {
                 const container = botao.closest(".intervalo-container");
                 const currentPair = botao.closest(".intervalo-pair");
@@ -367,7 +370,6 @@
                 const novoIntervalo = document.createElement("div");
                 novoIntervalo.className = "intervalo-pair";
 
-                // Adiciona botões com SVGs
                 novoIntervalo.innerHTML = `
                 <input type="time" class="intervalo-inicio">
                 <input type="time" class="intervalo-fim">
@@ -386,14 +388,12 @@
                 container.insertBefore(novoIntervalo, currentPair.nextSibling);
                 calcularHoras();
             }
-            // --- Fim da Modificação ---
 
-            // --- FUNÇÃO MODIFICADA (adicionarLinha com SVG) ---
+            // --- FUNÇÃO MODIFICADA (adicionarLinha com SVG de lixeira) ---
             function adicionarLinha() {
                 const tbody = document.getElementById("corpo-tabela");
                 const linha = document.createElement("tr");
 
-                // Adiciona botão '+' com SVG
                 linha.innerHTML = `
                 <td><input type="date" class="data"></td>
                 <td><input type="text" class="atividade"></td>
@@ -412,7 +412,11 @@
                 </td>
                 <td><input type="checkbox" class="hora-aula"></td>
                 <td class="horas-dia">00:00</td>
-                <td><button onclick="removerLinha(this)">Remover</button></td>
+                <td>
+                    <button class="remover-intervalo" onclick="removerLinha(this)" title="Remover Linha">
+                        <svg fill="none" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"> <path d="M16 2v4h6v2h-2v14H4V8H2V6h6V2h8zm-2 2h-4v2h4V4zm0 4H6v12h12V8h-4zm-5 2h2v8H9v-8zm6 0h-2v8h2v-8z" fill="currentColor"/> </svg>
+                    </button>
+                </td>
             `;
 
                 tbody.appendChild(linha);
