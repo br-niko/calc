@@ -4,10 +4,20 @@
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <title>Calculadora de Horas do Mês</title>
+
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+        <link
+            href="https://fonts.googleapis.com/css2?family=Work+Sans:wght@400;700&display=swap"
+            rel="stylesheet"
+        />
+
         <style>
             /* Estilos de 'body' e 'table' */
             body {
-                font-family: Arial, sans-serif;
+                /* --- CSS MODIFICADO (Fonte) --- */
+                font-family: "Work Sans", Arial, sans-serif;
+                /* --- Fim da Modificação --- */
                 background-color: #e0e0e0;
                 padding: 20px;
                 margin: 0;
@@ -57,6 +67,7 @@
             thead th {
                 border-bottom: 2px solid #aaa;
                 vertical-align: middle;
+                font-weight: 700; /* Usa o peso Bold da Work Sans */
             }
 
             /* CSS (Header 'Data' clicável) */
@@ -71,7 +82,9 @@
             /* Estilos de 'input' */
             input,
             select {
-                font-family: Arial, sans-serif;
+                /* --- CSS MODIFICADO (Fonte) --- */
+                font-family: "Work Sans", Arial, sans-serif;
+                /* --- Fim da Modificação --- */
                 background-color: #f0f0f0;
                 border: 2px inset #ccc;
                 padding: 4px 6px;
@@ -99,7 +112,9 @@
 
             /* CSS (Estilo Botão Principal e Ícones) */
             button {
-                font-family: Arial, sans-serif;
+                /* --- CSS MODIFICADO (Fonte) --- */
+                font-family: "Work Sans", Arial, sans-serif;
+                /* --- Fim da Modificação --- */
                 background-color: royalblue;
                 color: white;
                 padding: 5px 8px;
@@ -130,8 +145,17 @@
 
             /* CSS (Fonte do Total) */
             #total-mes {
-                font-weight: normal;
-                font-family: "Courier New", Courier, monospace;
+                font-weight: normal; /* Mantém normal, h3 já dá peso */
+                font-family:
+                    "Courier New", Courier, monospace; /* Mantém Courier New aqui */
+            }
+            /* Container do total */
+            #total-mes-container h3 {
+                /* --- CSS MODIFICADO (Fonte) --- */
+                font-family: "Work Sans", Arial, sans-serif;
+                /* --- Fim da Modificação --- */
+                margin: 0;
+                font-size: 1.1em;
             }
 
             /* Estilos para os Intervalos */
@@ -247,9 +271,11 @@
                 border-bottom: 1px solid #aaa;
                 padding-bottom: 5px;
                 font-size: 1.1em;
+                font-weight: 700; /* Usa o peso Bold da Work Sans */
             }
             #resumo-semanal {
-                font-family: "Courier New", Courier, monospace;
+                font-family:
+                    "Courier New", Courier, monospace; /* Mantém Courier New aqui */
                 font-size: 1em;
                 display: flex;
                 flex-direction: column;
@@ -311,7 +337,7 @@
                     padding-right: 10px;
                     white-space: nowrap;
                     text-align: left;
-                    font-weight: bold;
+                    font-weight: 700; /* Usa o peso Bold da Work Sans */
                     color: #555;
                 }
 
@@ -544,7 +570,6 @@
             }
 
             // --- FUNÇÃO CORRIGIDA (adicionarLinha) ---
-            // Agora retorna o elemento criado, como antes
             function adicionarLinha() {
                 const tbody = document.getElementById("corpo-tabela");
                 const novaLinhaElement = criarElementoLinha(); // Cria o elemento
@@ -555,11 +580,8 @@
                     input.addEventListener("input", calcularHoras);
                 });
 
-                // --- LINHA CORRIGIDA ---
                 return novaLinhaElement; // Retorna o elemento TR criado
-                // --- FIM DA CORREÇÃO ---
             }
-            // --- Fim da Correção ---
 
             // --- NOVA FUNÇÃO (adicionarLinhaAbaixo) ---
             function adicionarLinhaAbaixo(botao) {
@@ -897,10 +919,7 @@
                         }
 
                         dados.linhas.forEach((linhaDados) => {
-                            // --- LINHA CORRIGIDA ---
-                            // Chama adicionarLinha que AGORA retorna o elemento
                             const novaLinha = adicionarLinha();
-                            // --- FIM DA CORREÇÃO ---
 
                             novaLinha.querySelector(".data").value =
                                 linhaDados.data;
@@ -918,12 +937,10 @@
                             );
                             const primeiroIntervalo =
                                 container.querySelector(".intervalo-pair");
-                            // --- CORREÇÃO: Pegar o botão '+' do primeiro intervalo ---
                             const botaoAdd =
                                 primeiroIntervalo.querySelector(
                                     ".add-intervalo",
                                 );
-                            // --- FIM DA CORREÇÃO ---
 
                             if (
                                 linhaDados.intervalos &&
@@ -942,9 +959,7 @@
                                 i < (linhaDados.intervalos || []).length;
                                 i++
                             ) {
-                                // --- CORREÇÃO: Passar o botão correto para adicionarIntervalo ---
-                                adicionarIntervalo(botaoAdd); // Continua usando o botão do primeiro
-                                // --- FIM DA CORREÇÃO ---
+                                adicionarIntervalo(botaoAdd);
                                 const todosOsPares =
                                     container.querySelectorAll(
                                         ".intervalo-pair",
@@ -962,8 +977,7 @@
                         calcularHoras(); // Recalcula tudo após preencher
                     } catch (err) {
                         alert("Erro ao ler o arquivo JSON: " + err.message);
-                        console.error("Erro ao carregar JSON:", err); // Loga o erro no console
-                        // Adiciona uma linha em branco em caso de erro para não ficar vazio
+                        console.error("Erro ao carregar JSON:", err);
                         if (
                             document.getElementById("corpo-tabela").children
                                 .length === 0
