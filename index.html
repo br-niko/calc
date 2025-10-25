@@ -266,9 +266,14 @@
 
         <div class="botoes-acao">
             <button onclick="adicionarLinha()">Adicionar Linha</button>
-            <button onclick="salvarDados()">Salvar (JSON)</button>
-            <button onclick="document.getElementById('file-input').click()">
-                Carregar (JSON)
+            <button onclick="salvarDados()" title="Salvar arquivo JSON">
+                Salvar 💾
+            </button>
+            <button
+                onclick="document.getElementById('file-input').click()"
+                title="Carregar arquivo JSON"
+            >
+                Carregar 📂
             </button>
 
             <input
@@ -279,7 +284,6 @@
                 accept=".json"
             />
         </div>
-
         <div class="ajuste-container">
             <div>
                 <label for="horas-externas">Adicionar Horas:</label>
@@ -309,8 +313,6 @@
         </div>
 
         <script>
-            // A variável G_SHEETS_URL foi removida daqui
-
             // --- FUNÇÕES DE UTILIDADE (Intervalo e Linha) ---
             function removerIntervalo(botao) {
                 const pair = botao.closest(".intervalo-pair");
@@ -667,7 +669,6 @@
                     try {
                         const dados = JSON.parse(e.target.result);
 
-                        // -- Lógica de popular tabela (antes era 'popularTabela') ---
                         document.getElementById("corpo-tabela").innerHTML = "";
 
                         document.getElementById("horas-externas").value =
@@ -738,7 +739,6 @@
                         });
 
                         calcularHoras(); // Recalcula tudo após preencher
-                        // -- Fim da lógica ---
                     } catch (err) {
                         alert("Erro ao ler o arquivo JSON: " + err.message);
                     }
@@ -748,11 +748,7 @@
                 event.target.value = null;
             }
 
-            // A função salvarNoGSheets foi removida
-            // A função carregarDoGSheets foi removida
-
             // --- INICIALIZAÇÃO DA PÁGINA ---
-            // Volta a chamar adicionarLinha()
             adicionarLinha();
             calcularResumoSemanal();
         </script>
