@@ -125,6 +125,12 @@
             input[type="date"] {
                 width: 100%;
             }
+             /* --- CSS MODIFICADO (Input number largura) --- */
+             input[type="number"] {
+                  width: 60px; /* Largura menor para dias */
+                  text-align: right;
+             }
+
             input[type="checkbox"] {
                 appearance: none;
                 background-color: #fff;
@@ -201,9 +207,9 @@
                 padding: 8px 12px;
                 border-radius: 0;
                 max-width: 300px;
-                margin-bottom: 20px; /* Mantém margem só no último */
+                margin-bottom: 20px; 
             }
-             #resumo-semanal-container { margin-bottom: 8px; } /* Ajusta margens */
+             #resumo-semanal-container { margin-bottom: 8px; } 
              #total-mes-container { margin-bottom: 8px; }
 
             #total-mes-container h3, #saldo-mes-container h3 {
@@ -219,7 +225,7 @@
             /* CSS (Fonte e Alinhamento Total Dia e Saldo Dia) */
             .horas-dia, .saldo-dia {
                 font-family: "Courier New", Courier, monospace;
-                vertical-align: middle !important; /* Alinha ambos no meio */
+                vertical-align: middle !important; 
             }
 
              /* CSS (Cores do Saldo - Aplicadas aos containers também) */
@@ -227,7 +233,7 @@
                 padding: 6px 4px !important; 
              }
              .saldo-positivo {
-                 background-color: #DFF0D8 !important; /* !important para sobrescrever .saldo-dia se necessário e aplicar ao container */
+                 background-color: #DFF0D8 !important; 
                  color: #3C763D !important;
              }
              .saldo-negativo {
@@ -238,11 +244,10 @@
                  background-color: #D9EDF7 !important;
                  color: #31708F !important;
              }
-              /* Garante que o texto dentro do container colorido do saldo do mês fique visível */
              #saldo-mes-container.saldo-positivo h3, #saldo-mes-container.saldo-positivo #saldo-mes,
              #saldo-mes-container.saldo-negativo h3, #saldo-mes-container.saldo-negativo #saldo-mes,
              #saldo-mes-container.saldo-neutro h3, #saldo-mes-container.saldo-neutro #saldo-mes {
-                   color: inherit !important; /* Herda a cor definida no container */
+                   color: inherit !important; 
               }
 
 
@@ -329,9 +334,12 @@
                 font-size: 1em;
                 margin-right: 5px;
             }
-            .ajuste-container input[type="time"] {
-                width: 120px;
+            /* --- CSS MODIFICADO (Aplica largura a time e number) --- */
+            .ajuste-container input[type="time"],
+            .ajuste-container input[type="number"] {
+                width: 120px; 
             }
+            /* --- Fim da Modificação --- */
 
             /* CSS (Campo de subtração) */
             #horas-subtrair {
@@ -482,8 +490,8 @@
                      vertical-align: top !important; /* Intervalos precisa alinhar no topo */
                 }
                  td[data-label="Intervalos"]::before {
-                     display: block; /* Garante que o label exista mas não mostre */
-                     visibility: hidden; /* Esconde o label mas mantém espaço */
+                     display: block; 
+                     visibility: hidden; 
                  }
                 .intervalo-container {
                     margin-top: 5px;
@@ -494,7 +502,7 @@
                 .ajuste-container,
                 #resumo-semanal-container,
                 #total-mes-container,
-                #saldo-mes-container /* Inclui o novo container */
+                #saldo-mes-container 
                  {
                     border-style: none;
                     background-color: transparent;
@@ -512,41 +520,40 @@
                     background-color: #f8f8f8;
                     padding: 10px;
                     border-radius: 4px;
-                    border: 1px solid #ccc; /* Adiciona borda similar aos cards */
+                    border: 1px solid #ccc; 
                 }
                 .ajuste-container label {
-                    font-family: Arial, sans-serif; /* Fonte normal para labels */
+                    font-family: Arial, sans-serif; 
                 }
 
                 /* Estilo específico para resumo e total no mobile */
                 #resumo-semanal-container,
                 #total-mes-container,
-                #saldo-mes-container /* Inclui o novo container */
+                #saldo-mes-container 
                  {
                     background-color: #f8f8f8;
                     padding: 10px;
                     border-radius: 4px;
-                    border: 1px solid #ccc; /* Adiciona borda similar aos cards */
+                    border: 1px solid #ccc; 
                 }
                 #resumo-semanal-container h4,
                 #total-mes-container h3,
-                #saldo-mes-container h3 /* Inclui o novo container */
+                #saldo-mes-container h3 
                  {
                     border: none;
                     padding: 0;
                     margin-bottom: 8px;
-                    font-family: Arial, sans-serif; /* Fonte normal para títulos */
+                    font-family: Arial, sans-serif; 
                 }
                 #total-mes-container h3,
-                #saldo-mes-container h3 /* Inclui o novo container */
+                #saldo-mes-container h3 
                  {
                     text-align: left;
                 }
                 #resumo-semanal {
-                    font-family: Arial, sans-serif; /* Fonte normal para resumo */
+                    font-family: Arial, sans-serif; 
                     color: #333;
                 }
-                 /* Garante que texto do saldo do mês herde cor no mobile */
                  #saldo-mes-container.saldo-positivo h3, #saldo-mes-container.saldo-positivo #saldo-mes,
                  #saldo-mes-container.saldo-negativo h3, #saldo-mes-container.saldo-negativo #saldo-mes,
                  #saldo-mes-container.saldo-neutro h3, #saldo-mes-container.saldo-neutro #saldo-mes {
@@ -644,7 +651,17 @@
                     oninput="calcularHoras()"
                 />
             </div>
-        </div>
+            <div>
+                <label for="feriados-mes">Feriados no Mês (dias):</label>
+                <input
+                    type="number"
+                    id="feriados-mes"
+                    min="0"
+                    value="0"
+                    oninput="calcularHoras()"
+                />
+            </div>
+             </div>
 
         <div id="resumo-semanal-container">
             <h4>Resumo Semanal</h4>
@@ -658,6 +675,8 @@
         <div id="saldo-mes-container">
             <h3>Saldo do Mês: <span id="saldo-mes">00:00</span></h3>
         </div>
+
+
         <script>
             // --- FUNÇÕES DE UTILIDADE (Intervalo e Linha) ---
             function removerIntervalo(botao) {
@@ -802,15 +821,15 @@
                 return totalCompensatedMinutes;
             }
 
-             // --- FUNÇÃO DE CÁLCULO PRINCIPAL (COM SALDO POR DATA e SALDO MENSAL) ---
+            // --- FUNÇÃO DE CÁLCULO PRINCIPAL (COM SALDO POR DATA e SALDO MENSAL AJUSTADO) ---
             function calcularHoras() {
                 const linhas = document.querySelectorAll('#corpo-tabela tr');
                 let totalMinutosMes = 0;
                 const totaisPorData = {}; 
-                const diasTrabalhados = new Set(); // Guarda as datas únicas com lançamentos
-                const HORAS_DIA_PADRAO_MIN = 8 * 60; // 480 minutos
+                const diasTrabalhados = new Set(); 
+                const HORAS_DIA_PADRAO_MIN = 8 * 60; 
 
-                // --- PRIMEIRO LOOP: Calcula totais por linha e acumula por data ---
+                // --- PRIMEIRO LOOP ---
                 linhas.forEach(linha => {
                     const entrada = linha.querySelector('.entrada').value;
                     const saida = linha.querySelector('.saida').value;
@@ -848,17 +867,16 @@
                     linha.querySelector('.horas-dia').textContent = converterParaHora(minutosArredondados);
                     totalMinutosMes += minutosArredondados;
 
-                    // Acumula os minutos por data e registra o dia trabalhado
-                    if (dataStr && minutosArredondados > 0) { // Só conta se teve horas e data
+                    if (dataStr && minutosArredondados > 0) { 
                         if (!totaisPorData[dataStr]) {
                             totaisPorData[dataStr] = 0;
                         }
                         totaisPorData[dataStr] += minutosArredondados;
-                        diasTrabalhados.add(dataStr); // Adiciona a data ao Set
+                        diasTrabalhados.add(dataStr); 
                     }
                 });
 
-                // --- SEGUNDO LOOP: Calcula e aplica o saldo por data (APENAS NA ÚLTIMA LINHA DO DIA) ---
+                // --- SEGUNDO LOOP ---
                 const todasLinhasArray = Array.from(linhas); 
 
                 linhas.forEach((linha, index) => {
@@ -906,7 +924,7 @@
                      }
                 });
 
-                // --- Finaliza cálculo do total e saldo do mês ---
+                // --- Finaliza cálculo do total e saldo do mês (COM FERIADOS) ---
                 const horasExternasStr = document.getElementById('horas-externas').value;
                 const minutosExternos = converterParaMinutos(horasExternasStr);
                 totalMinutosMes += minutosExternos;
@@ -915,11 +933,19 @@
                 const minutosSubtrair = converterParaMinutos(horasSubtrairStr);
                 totalMinutosMes -= minutosSubtrair;
 
+                // Pega número de feriados
+                const feriadosInput = document.getElementById('feriados-mes');
+                const numeroDeFeriados = parseInt(feriadosInput.value, 10) || 0;
+                const minutosFeriados = numeroDeFeriados * HORAS_DIA_PADRAO_MIN;
+
                 // Atualiza Total do Mês
                 document.getElementById('total-mes').textContent = converterParaHora(totalMinutosMes);
                 
+                // Calcula Horas Esperadas descontando feriados
+                // Considera apenas dias ÚNICOS onde houve lançamento
+                const horasEsperadasMes = (diasTrabalhados.size * HORAS_DIA_PADRAO_MIN) - minutosFeriados;
+                
                 // Calcula e Atualiza Saldo do Mês
-                const horasEsperadasMes = diasTrabalhados.size * HORAS_DIA_PADRAO_MIN;
                 const saldoMinutosMes = totalMinutosMes - horasEsperadasMes;
                 const saldoMesContainer = document.getElementById('saldo-mes-container');
                 const saldoMesSpan = document.getElementById('saldo-mes');
@@ -933,7 +959,7 @@
                         saldoMesContainer.classList.add('saldo-positivo');
                     } else if (saldoMinutosMes < 0) {
                         saldoMesContainer.classList.add('saldo-negativo');
-                    } else if (diasTrabalhados.size > 0){ // Neutro só se houve dias trabalhados
+                    } else if (diasTrabalhados.size > 0 || numeroDeFeriados > 0){ // Neutro se houve dias ou feriados
                         saldoMesContainer.classList.add('saldo-neutro');
                     }
                 }
@@ -1074,11 +1100,12 @@
             }
 
 
-            // --- FUNÇÕES Salvar e Carregar (JSON Local - CORRIGIDA) ---
+            // --- FUNÇÕES Salvar e Carregar (JSON Local - COM FERIADOS) ---
             function salvarDados() {
                 const dados = {
                     horasExternas: document.getElementById("horas-externas").value,
                     horasSubtrair: document.getElementById("horas-subtrair").value,
+                    feriadosMes: document.getElementById("feriados-mes").value, // Salva feriados
                     linhas: [],
                 };
 
@@ -1125,6 +1152,8 @@
                             dados.horasExternas || "";
                         document.getElementById("horas-subtrair").value =
                             dados.horasSubtrair || "";
+                        document.getElementById("feriados-mes").value = 
+                            dados.feriadosMes || 0; // Carrega feriados
 
                         if (!dados.linhas || dados.linhas.length === 0) {
                             adicionarLinha();
