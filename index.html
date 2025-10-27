@@ -1,628 +1,451 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="pt-BR">
-    <head>
-        <meta charset="UTF-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <title>Calculadora de Horas do Mês</title>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calculadora de Horas do Mês</title>
+    <style>
+        /* Estilos de 'body' e 'table' */
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #e0e0e0;
+            padding: 20px;
+            margin: 0; 
+        }
+        table {
+            border-collapse: collapse;
+            width: 100%;
+            background-color: #f8f8f8;
+            box-shadow: inset 1px 1px 2px #ccc;
+            margin-bottom: 20px;
+            table-layout: fixed; 
+        }
 
-        <style>
-            /* --- Definição da Fonte W95 --- */
-            /* IMPORTANTE: Os arquivos .woff e .woff2 devem estar na MESMA pasta que este HTML */
-            @font-face {
-                font-family: "W95Font";
-                src:
-                    url("w95font.woff2") format("woff2"),
-                    url("w95font.woff") format("woff");
-                font-weight: normal;
-                font-style: normal;
-            }
-            @font-face {
-                font-family: "W95Font";
-                src:
-                    url("w95font-bold.woff2") format("woff2"),
-                    url("w95font-bold.woff") format("woff");
-                font-weight: bold;
-                font-style: normal;
-            }
+        /* --- CSS MODIFICADO (colgroup para 9 colunas) --- */
+        colgroup col:nth-child(1) { width: 130px; } /* Data */
+        colgroup col:nth-child(2) { width: 170px; } /* Atividade (reduzido) */
+        colgroup col:nth-child(3),
+        colgroup col:nth-child(4) { width: 60px; } /* Início, Fim */
+        colgroup col:nth-child(5) { width: 210px; } /* Intervalos (reduzido) */
+        colgroup col:nth-child(6) { width: 70px; } /* Hora-aula (reduzido) */
+        colgroup col:nth-child(7) { width: 70px; } /* Total Dia */
+        colgroup col:nth-child(8) { width: 70px; } /* Saldo Dia */
+        colgroup col:nth-child(9) { width: 50px; } /* Ações */
+        /* --- Fim da Modificação --- */
 
-            /* Estilos de 'body' e 'table' */
+
+        /* CSS (Sem linhas verticais) */
+        th, td {
+            border: none; 
+            border-bottom: 1px solid #ccc; 
+            padding: 8px;
+            text-align: center;
+            vertical-align: top; 
+            overflow: hidden; 
+            text-overflow: ellipsis; 
+        }
+        thead th {
+            border-bottom: 2px solid #aaa; 
+            vertical-align: middle; 
+        }
+
+        /* CSS (Header 'Data' clicável) */
+        #th-data {
+            cursor: pointer;
+            user-select: none; 
+        }
+        #th-data:hover {
+            background-color: #f0f0f0; 
+        }
+
+        /* Estilos de 'input' */
+        input, select {
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+            border: 2px inset #ccc;
+            padding: 4px 6px; 
+            font-size: 14px; 
+            border-radius: 4px;
+            box-sizing: border-box;
+            max-width: 100%; 
+        }
+        
+        input[type="time"], input[type="text"], input[type="date"] {
+            width: 100%;
+        }
+        input[type="checkbox"] {
+            width: auto;
+            height: 18px; 
+            width: 18px;
+        }
+        input:focus, select:focus {
+            outline: none;
+            background-color: #cce0ff;
+        }
+
+        /* CSS (Estilo Botão Principal e Ícones) */
+        button {
+            font-family: Arial, sans-serif;
+            background-color: royalblue;
+            color: white;
+            padding: 5px 8px; 
+            font-size: 12px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            display: inline-flex; 
+            align-items: center;
+            justify-content: center;
+            line-height: 1; 
+        }
+        button:hover {
+            background-color: #3a5fcd;
+        }
+        /* Tamanho dos SVGs nos botões de ação */
+        .botoes-acao button svg {
+            width: 20px; 
+            height: 20px;
+        }
+        
+        /* Container para os botões de ação */
+        .botoes-acao {
+            display: flex;
+            gap: 10px; 
+            flex-wrap: wrap; 
+        }
+        
+        /* CSS (Fonte do Total) */
+        #total-mes {
+            font-weight: normal;
+            font-family: "Courier New", Courier, monospace; 
+        }
+
+
+        /* Estilos para os Intervalos */
+        .intervalo-container {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+        .intervalo-pair {
+            display: flex;
+            gap: 4px;
+            align-items: center; 
+        }
+        .intervalo-pair input {
+            width: auto;
+            flex: 1;
+        }
+        
+        /* CSS (Botões '+', 'x' de intervalo E botão remover linha E botão '+' da data) */
+        .add-intervalo, .remover-intervalo, .add-linha-abaixo {
+            border: none;
+            border-radius: 4px; 
+            width: 24px; 
+            height: 24px;
+            padding: 0;
+            cursor: pointer;
+            flex-shrink: 0; 
+            display: inline-flex; 
+            align-items: center;
+            justify-content: center;
+        }
+        .add-intervalo, .add-linha-abaixo {
+            background-color: royalblue; 
+            color: white;
+        }
+        .add-intervalo:hover, .add-linha-abaixo:hover {
+            background-color: #3a5fcd; 
+        }
+        .remover-intervalo {
+            background-color: #FF6347; /* Vermelho 'tomato' */
+            color: white;
+        }
+        .remover-intervalo:hover {
+            background-color: #DC143C; /* Vermelho 'crimson' */
+        }
+        .add-intervalo svg, .remover-intervalo svg, .add-linha-abaixo svg {
+             width: 16px; 
+             height: 16px;
+        }
+
+        /* CSS (Container da Data) */
+        .data-container {
+            display: flex;
+            align-items: center;
+            gap: 4px; 
+        }
+        .data-container input.data {
+             flex-grow: 1; 
+        }
+
+        /* --- NOVO CSS (Cores e Estilo do Saldo) --- */
+        .saldo-dia {
+            font-weight: bold;
+            font-family: "Courier New", Courier, monospace;
+            padding: 8px 4px !important; /* Menos padding lateral para cor preencher */
+            vertical-align: middle !important; /* Alinha o texto no meio */
+        }
+        .saldo-positivo {
+            background-color: #DFF0D8; /* Verde claro */
+            color: #3C763D; /* Verde escuro */
+        }
+        .saldo-negativo {
+            background-color: #F2DEDE; /* Vermelho claro */
+            color: #A94442; /* Vermelho escuro */
+        }
+        .saldo-neutro {
+            background-color: #D9EDF7; /* Azul claro */
+            color: #31708F; /* Azul escuro */
+        }
+        /* --- Fim do Novo CSS --- */
+
+        /* CSS (Container para campos de ajuste) */
+        .ajuste-container {
+            margin-top: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px; 
+            max-width: 300px; 
+        }
+        .ajuste-container div {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .ajuste-container label {
+            font-size: 1em; 
+            margin-right: 5px;
+        }
+        .ajuste-container input[type="time"] {
+            width: 120px; 
+        }
+        
+        /* CSS (Campo de subtração) */
+        #horas-subtrair {
+            background-color: #FFF0F0; 
+            border: 2px inset #E0C0C0; 
+        }
+        #horas-subtrair:focus {
+            background-color: #FFE0E0; 
+        }
+
+        /* CSS (Resumo Semanal e Total - Caixas) */
+        #resumo-semanal-container, #total-mes-container {
+             margin-top: 15px;
+             background-color: #fdfdfd;
+             border: 1px solid #ccc;
+             padding: 12px 18px; 
+             border-radius: 4px;
+             max-width: 300px; 
+        }
+        #resumo-semanal-container h4, #total-mes-container h3 {
+             margin: 0 0 10px 0;
+             border-bottom: 1px solid #aaa;
+             padding-bottom: 5px;
+             font-size: 1.1em;
+        }
+        #resumo-semanal {
+            font-family: "Courier New", Courier, monospace;
+            font-size: 1em;
+            display: flex;
+            flex-direction: column;
+            gap: 5px; 
+        }
+         #total-mes-container h3 {
+             border-bottom: none; 
+             padding-bottom: 0;
+             margin-bottom: 0;
+         }
+
+        /* CSS RESPONSIVO */
+        @media (max-width: 768px) {
             body {
-                font-family: "W95Font", Arial, sans-serif;
-                background-color: #d4d0c8;
-                padding: 15px;
-                margin: 0;
-                font-size: 14px;
+                padding: 10px; 
             }
+
             table {
-                border-collapse: collapse;
-                width: 100%;
-                background-color: #fff;
-                border-style: inset;
-                border-width: 2px;
-                border-color: #888 #eee #eee #888;
-                table-layout: fixed;
-                margin-bottom: 20px;
+                box-shadow: none; 
+                border: none; 
+                table-layout: auto; 
             }
 
-            /* colgroup para 8 colunas */
-            colgroup col:nth-child(1) {
-                width: 130px;
-            }
-            colgroup col:nth-child(2) {
-                width: 187px;
-            }
-            colgroup col:nth-child(3),
-            colgroup col:nth-child(4) {
-                width: 60px;
-            }
-            colgroup col:nth-child(5) {
-                width: 220px;
-            }
-            colgroup col:nth-child(6),
-            colgroup col:nth-child(7) {
-                width: 80px;
-            }
-            colgroup col:nth-child(8) {
-                width: 50px;
+            thead {
+                display: none;
             }
 
-            /* CSS (Sem linhas verticais, ajuste padding) */
-            th,
+            tr {
+                display: block;
+                margin-bottom: 15px;
+                border: 1px solid #ccc; 
+                border-radius: 4px;
+                background-color: #fff; 
+            }
+            
+             colgroup {
+                 display: none;
+             }
+
             td {
-                border: none;
-                border-bottom: 1px solid #c0c0c0;
-                padding: 6px 8px;
-                text-align: center;
-                vertical-align: top;
-                overflow: hidden;
-                text-overflow: ellipsis;
+                display: block;
+                width: auto !important; 
+                text-align: right; 
+                padding-left: 50%; 
+                position: relative; 
+                border-bottom: 1px dotted #eee; 
+                padding-top: 10px;
+                padding-bottom: 10px;
             }
-            tbody tr:last-child td {
-                border-bottom: none;
-            }
-
-            thead th {
-                border-bottom: 1px solid #888;
-                border-right: 1px solid #888;
-                vertical-align: middle;
-                font-weight: bold;
-                background-color: #c0c0c0;
-                font-size: 1em;
-            }
-            thead th:last-child {
-                border-right: none;
+            td:last-child {
+                 border-bottom: none; 
             }
 
-            /* CSS (Alinhamento Títulos) */
-            thead th:nth-child(1),
-            thead th:nth-child(2),
-            thead th:nth-child(3),
-            thead th:nth-child(4),
-            thead th:nth-child(5) {
-                text-align: left;
-            }
-
-            /* CSS (Header 'Data' clicável) */
-            #th-data {
-                cursor: pointer;
-                user-select: none;
-            }
-            #th-data:hover {
-                background-color: #b0b0b0;
-            }
-
-            /* Estilos de 'input' */
-            input,
-            select {
-                font-family: "W95Font", Arial, sans-serif;
-                background-color: #fff;
-                border-style: inset;
-                border-width: 1px;
-                border-color: #888 #eee #eee #888;
-                padding: 4px 6px;
-                font-size: 14px;
-                border-radius: 0;
-                box-sizing: border-box;
-                max-width: 100%;
-            }
-            input:focus,
-            select:focus {
-                outline: 1px dotted #000;
-                background-color: #fff;
-                border-color: #888 #eee #eee #888;
-            }
-
-            input[type="time"],
-            input[type="text"],
-            input[type="date"] {
-                width: 100%;
-            }
-            input[type="checkbox"] {
-                appearance: none;
-                background-color: #fff;
-                border: 1px solid #888;
-                border-right-color: #eee;
-                border-bottom-color: #eee;
-                width: 16px;
-                height: 16px;
-                position: relative;
-                vertical-align: middle;
-                margin: 0 4px;
-            }
-            input[type="checkbox"]:checked::before {
-                content: "✔";
+            td::before {
+                content: attr(data-label); 
                 position: absolute;
-                top: -2px;
-                left: 1px;
-                font-size: 14px;
-                color: #000;
+                left: 10px; 
+                width: calc(50% - 20px); 
+                padding-right: 10px;
+                white-space: nowrap;
+                text-align: left; 
+                font-weight: bold;
+                color: #555; 
             }
 
-            /* CSS (Estilo Botão Win95) */
-            button {
-                font-family: "W95Font", Arial, sans-serif;
-                background-color: #c0c0c0;
-                color: #000;
-                padding: 4px 8px;
-                font-size: 14px;
-                border-style: outset;
-                border-width: 2px;
-                border-color: #eee #888 #888 #eee;
-                border-radius: 0;
-                cursor: pointer;
-                display: inline-flex;
-                align-items: center;
-                justify-content: center;
-                line-height: 1;
-                min-height: 28px;
-            }
-            button:active {
-                border-style: inset;
-                border-color: #888 #eee #eee #888;
-                padding: 5px 7px 3px 9px;
-            }
-            button:hover {
-                background-color: #c0c0c0;
-            }
-            /* Tamanho dos SVGs nos botões de ação */
-            .botoes-acao button svg {
-                width: 20px;
-                height: 20px;
-            }
+             /* Ajustes específicos */
+             td[data-label="Data"] {
+                 padding-left: 8px; 
+             }
+             td[data-label="Data"]::before {
+                   display: none; 
+             }
+             .data-container {
+                 margin-top: 5px; 
+             }
 
-            /* --- CSS MODIFICADO (Container para os botões de ação) --- */
-            .botoes-acao {
-                display: flex;
-                gap: 10px;
-                flex-wrap: wrap;
-                margin-top: 10px; /* Reduz espaço acima */
+            /* --- CSS MODIFICADO (Saldo no mobile) --- */
+            td[data-label="Saldo Dia"] {
+                 padding-left: 50% !important; /* Garante espaço para label */
+                 padding-right: 8px !important; /* Remove padding extra da direita */
             }
             /* --- Fim da Modificação --- */
 
-            /* CSS (Fonte do Total Mês) */
-            #total-mes {
-                font-weight: normal;
-                font-family: "Courier New", Courier, monospace;
+            td[data-label="Hora-aula?"] {
+                 text-align: left; 
             }
-            /* Container do total mês */
+             td[data-label="Hora-aula?"]::before {
+                 width: auto; 
+                 position: static; 
+                 margin-right: 10px;
+             }
+             td[data-label="Hora-aula?"] input {
+                  vertical-align: middle;
+             }
+            
+             td[data-label="Ações"] {
+                 text-align: center; 
+                 padding-left: 8px; 
+             }
+              td[data-label="Ações"]::before {
+                   display: none; 
+              }
+
+              td[data-label="Intervalos"] {
+                  padding-left: 8px; 
+              }
+               td[data-label="Intervalos"]::before {
+                    display: none; 
+               }
+               .intervalo-container {
+                   margin-top: 5px; 
+               }
+
+            /* Ajusta containers inferiores */
+            .ajuste-container, 
+            #resumo-semanal-container, 
             #total-mes-container {
-                margin-top: 8px;
-                background-color: #c0c0c0;
-                border-style: inset;
-                border-width: 2px;
-                border-color: #888 #eee #eee #888;
-                padding: 8px 12px;
-                border-radius: 0;
-                max-width: 300px;
-                margin-bottom: 20px;
+                max-width: none; 
+                width: auto; 
             }
-            #total-mes-container h3 {
-                font-family: "W95Font", Arial, sans-serif;
-                margin: 0;
-                font-size: 1em;
-                font-weight: bold;
-                border-bottom: none;
-                padding-bottom: 0;
-                text-align: left;
-            }
+        }
 
-            /* CSS (Fonte Total Dia) */
-            .horas-dia {
-                font-family: "Courier New", Courier, monospace;
-            }
+    </style>
+</head>
+<body>
+    
+    <table id="tabela-horas">
+        <colgroup>
+            <col> <col> <col> <col> <col> <col> <col> <col> <col>
+        </colgroup>
+        <thead>
+            <tr>
+                <th id="th-data" onclick="ordenarPorData()">Data</th>
+                <th>Atividade</th>
+                <th>Início</th>
+                <th>Fim</th>
+                <th>Intervalos</th>
+                <th>Hora-aula?</th>
+                <th>Total do Dia</th>
+                <th>Saldo Dia</th>
+                <th>Ações</th>
+            </tr>
+        </thead>
+        <tbody id="corpo-tabela">
+        </tbody>
+    </table>
 
-            /* Estilos para os Intervalos */
-            .intervalo-container {
-                display: flex;
-                flex-direction: column;
-                gap: 4px;
-            }
-            .intervalo-pair {
-                display: flex;
-                gap: 4px;
-                align-items: center;
-            }
-            .intervalo-pair input {
-                width: auto;
-                flex: 1;
-            }
-
-            /* CSS (Botões de Ação na Linha - Estilo Win95) */
-            .add-intervalo,
-            .remover-intervalo,
-            .add-linha-abaixo {
-                background-color: #c0c0c0;
-                color: #000;
-                border-style: outset;
-                border-width: 2px;
-                border-color: #eee #888 #888 #eee;
-                border-radius: 0;
-                width: 24px;
-                height: 24px;
-                padding: 0;
-                cursor: pointer;
-                flex-shrink: 0;
-                display: inline-flex;
-                align-items: center;
-                justify-content: center;
-            }
-            .add-intervalo:active,
-            .remover-intervalo:active,
-            .add-linha-abaixo:active {
-                border-style: inset;
-                border-color: #888 #eee #eee #888;
-                padding: 1px 0 0 1px;
-            }
-            .add-intervalo:hover,
-            .remover-intervalo:hover,
-            .add-linha-abaixo:hover {
-                background-color: #c0c0c0;
-            }
-            /* Tamanho dos SVGs nos botões de ação na linha */
-            .add-intervalo svg,
-            .remover-intervalo svg,
-            .add-linha-abaixo svg {
-                width: 16px;
-                height: 16px;
-            }
-
-            /* CSS (Container da Data) */
-            .data-container {
-                display: flex;
-                align-items: center;
-                gap: 4px;
-            }
-            .data-container input.data {
-                flex-grow: 1;
-            }
-
-            /* --- CSS MODIFICADO (Container para campos de ajuste) --- */
-            .ajuste-container {
-                margin-top: 30px; /* Aumenta espaço acima */
-                display: flex;
-                flex-direction: column;
-                gap: 10px;
-                max-width: 300px;
-                margin-bottom: 20px;
-            }
-            /* --- Fim da Modificação --- */
-            .ajuste-container div {
-                display: flex;
-                justify-content: space-between;
-                align-items: center;
-            }
-            .ajuste-container label {
-                font-size: 1em;
-                margin-right: 5px;
-            }
-            .ajuste-container input[type="time"] {
-                width: 120px;
-            }
-
-            /* CSS (Campo de subtração) */
-            #horas-subtrair {
-                background-color: #fff0f0;
-                border-style: inset;
-                border-width: 1px;
-                border-color: #888 #eee #eee #888;
-            }
-            #horas-subtrair:focus {
-                background-color: #ffe0e0;
-                border-style: inset;
-                border-width: 1px;
-                border-color: #888 #eee #eee #888;
-                outline: 1px dotted #000;
-            }
-
-            /* CSS (Resumo Semanal W95) */
-            #resumo-semanal-container {
-                background-color: #c0c0c0;
-                border-style: inset;
-                border-width: 2px;
-                border-color: #888 #eee #eee #888;
-                padding: 8px 12px;
-                border-radius: 0;
-                max-width: 300px;
-                margin-bottom: 8px;
-            }
-            #resumo-semanal-container h4 {
-                margin: 0 0 8px 0;
-                border-bottom: 1px solid #888;
-                padding-bottom: 4px;
-                font-size: 1em;
-                font-weight: bold;
-                color: #000;
-            }
-            #resumo-semanal {
-                font-family: "Courier New", Courier, monospace;
-                font-size: 1em;
-                display: flex;
-                flex-direction: column;
-                gap: 5px;
-                color: #000;
-            }
-
-            /* CSS RESPONSIVO */
-            @media (max-width: 768px) {
-                body {
-                    padding: 10px;
-                    font-size: 16px;
-                }
-
-                table {
-                    border-style: none;
-                    margin-bottom: 20px;
-                }
-
-                thead {
-                    display: none;
-                }
-
-                tr {
-                    display: block;
-                    margin-bottom: 15px;
-                    border: 1px solid #ccc;
-                    border-radius: 4px;
-                    background-color: #fff;
-                }
-
-                colgroup {
-                    display: none;
-                }
-
-                td {
-                    display: block;
-                    width: auto !important;
-                    text-align: right;
-                    padding-left: 50%;
-                    position: relative;
-                    border-bottom: 1px dotted #eee;
-                    padding-top: 10px;
-                    padding-bottom: 10px;
-                }
-                td:last-child {
-                    border-bottom: none;
-                }
-
-                td::before {
-                    content: attr(data-label);
-                    position: absolute;
-                    left: 10px;
-                    width: calc(50% - 20px);
-                    padding-right: 10px;
-                    white-space: nowrap;
-                    text-align: left;
-                    font-weight: bold;
-                    color: #555;
-                }
-
-                /* Ajustes específicos */
-                td[data-label="Data"] {
-                    padding-left: 8px;
-                }
-                td[data-label="Data"]::before {
-                    display: none;
-                }
-                .data-container {
-                    margin-top: 5px;
-                }
-
-                td[data-label="Hora-aula?"] {
-                    text-align: left;
-                }
-                td[data-label="Hora-aula?"]::before {
-                    width: auto;
-                    position: static;
-                    margin-right: 10px;
-                }
-                td[data-label="Hora-aula?"] input {
-                    vertical-align: middle;
-                }
-
-                td[data-label="Ações"] {
-                    text-align: center;
-                    padding-left: 8px;
-                }
-                td[data-label="Ações"]::before {
-                    display: none;
-                }
-
-                td[data-label="Intervalos"] {
-                    padding-left: 8px;
-                }
-                td[data-label="Intervalos"]::before {
-                    display: none;
-                }
-                .intervalo-container {
-                    margin-top: 5px;
-                }
-
-                /* Ajusta containers inferiores */
-                .ajuste-container,
-                #resumo-semanal-container,
-                #total-mes-container {
-                    border-style: none;
-                    background-color: transparent;
-                    padding: 0;
-                    max-width: none;
-                    width: auto;
-                    margin-top: 0;
-                    margin-bottom: 15px;
-                }
-                #total-mes-container {
-                    border-radius: 0;
-                    border-top: none;
-                }
-                /* Estilo específico para labels/inputs de ajuste */
-                .ajuste-container {
-                    gap: 15px;
-                }
-                .ajuste-container div {
-                    background-color: #f8f8f8;
-                    padding: 10px;
-                    border-radius: 4px;
-                }
-
-                /* Estilo específico para resumo e total no mobile */
-                #resumo-semanal-container,
-                #total-mes-container {
-                    background-color: #f8f8f8;
-                    padding: 10px;
-                    border-radius: 4px;
-                }
-                #resumo-semanal-container h4,
-                #total-mes-container h3 {
-                    border: none;
-                    padding: 0;
-                    margin-bottom: 8px;
-                }
-                #total-mes-container h3 {
-                    text-align: left;
-                }
-            }
-        </style>
-    </head>
-    <body>
-        <table id="tabela-horas">
-            <colgroup>
-                <col />
-                <col />
-                <col />
-                <col />
-                <col />
-                <col />
-                <col />
-                <col />
-            </colgroup>
-            <thead>
-                <tr>
-                    <th id="th-data" onclick="ordenarPorData()">Data</th>
-                    <th>Atividade</th>
-                    <th>Início</th>
-                    <th>Fim</th>
-                    <th>Intervalos</th>
-                    <th>Hora-aula?</th>
-                    <th>Total do Dia</th>
-                    <th>Ações</th>
-                </tr>
-            </thead>
-            <tbody id="corpo-tabela"></tbody>
-        </table>
-
-        <div class="botoes-acao">
-            <button onclick="adicionarLinha()" title="Adicionar Linha">
-                <svg
-                    fill="none"
-                    xmlns="http://www.w3.org/2000/svg"
-                    viewBox="0 0 24 24"
-                >
-                    <path
-                        d="M19 4H3v2h16V4zm0 4H3v2h16V8zM3 12h8v2H3v-2zm8 4H3v2h8v-2zm7-1h3v2h-3v3h-2v-3h-3v-2h3v-3h2v3z"
-                        fill="currentColor"
-                    />
-                </svg>
-            </button>
-            <button onclick="salvarDados()" title="Salvar arquivo JSON">
-                <svg
-                    fill="none"
-                    xmlns="http://www.w3.org/2000/svg"
-                    viewBox="0 0 24 24"
-                >
-                    <path
-                        d="M4 2h14v2H4v16h2v-6h12v6h2V6h2v16H2V2h2zm4 18h8v-4H8v4zM20 6h-2V4h2v2zM6 6h9v4H6V6z"
-                        fill="currentColor"
-                    />
-                </svg>
-            </button>
-            <button
-                onclick="document.getElementById('file-input').click()"
-                title="Carregar arquivo JSON"
-            >
-                <svg
-                    fill="none"
-                    xmlns="http://www.w3.org/2000/svg"
-                    viewBox="0 0 24 24"
-                >
-                    <path
-                        d="M19 22h-7v-2h7V10h-6V4H5v8H3V2h12v2h2v2h2v2h2v14h-2zM17 6h-2v2h2V6zM8 19h3v-2H8v-3H6v3H3v2h3v3h2v-3z"
-                        fill="currentColor"
-                    />
-                </svg>
-            </button>
-
-            <input
-                type="file"
-                id="file-input"
-                style="display: none"
-                onchange="carregarDados(event)"
-                accept=".json"
-            />
+    <div class="botoes-acao">
+        <button onclick="adicionarLinha()" title="Adicionar Linha">
+            <svg fill="none" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"> <path d="M19 4H3v2h16V4zm0 4H3v2h16V8zM3 12h8v2H3v-2zm8 4H3v2h8v-2zm7-1h3v2h-3v3h-2v-3h-3v-2h3v-3h2v3z" fill="currentColor"/> </svg>
+        </button>
+        <button onclick="salvarDados()" title="Salvar arquivo JSON">
+            <svg fill="none" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"> <path d="M4 2h14v2H4v16h2v-6h12v6h2V6h2v16H2V2h2zm4 18h8v-4H8v4zM20 6h-2V4h2v2zM6 6h9v4H6V6z" fill="currentColor"/> </svg>
+        </button>
+        <button onclick="document.getElementById('file-input').click()" title="Carregar arquivo JSON">
+             <svg fill="none" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"> <path d="M19 22h-7v-2h7V10h-6V4H5v8H3V2h12v2h2v2h2v2h2v14h-2zM17 6h-2v2h2V6zM8 19h3v-2H8v-3H6v3H3v2h3v3h2v-3z" fill="currentColor"/> </svg>
+        </button>
+        
+        <input type="file" id="file-input" style="display: none;" onchange="carregarDados(event)" accept=".json">
+    </div>
+    
+    <div class="ajuste-container">
+        <div>
+            <label for="horas-externas">Adicionar Horas:</label>
+            <input type="time" id="horas-externas" oninput="calcularHoras()">
         </div>
+        <div>
+            <label for="horas-subtrair">Subtrair Horas:</label>
+            <input type="time" id="horas-subtrair" oninput="calcularHoras()">
+        </div>
+    </div>
 
-        <div class="ajuste-container">
-            <div>
-                <label for="horas-externas">Adicionar Horas:</label>
-                <input
-                    type="time"
-                    id="horas-externas"
-                    oninput="calcularHoras()"
-                />
+    <div id="resumo-semanal-container">
+        <h4>Resumo Semanal</h4>
+        <div id="resumo-semanal">
             </div>
-            <div>
-                <label for="horas-subtrair">Subtrair Horas:</label>
-                <input
-                    type="time"
-                    id="horas-subtrair"
-                    oninput="calcularHoras()"
-                />
-            </div>
-        </div>
+    </div>
 
-        <div id="resumo-semanal-container">
-            <h4>Resumo Semanal</h4>
-            <div id="resumo-semanal"></div>
-        </div>
+    <div id="total-mes-container">
+        <h3>Total do mês: <span id="total-mes">00:00</span></h3>
+    </div>
 
-        <div id="total-mes-container">
-            <h3>Total do mês: <span id="total-mes">00:00</span></h3>
-        </div>
+    <script>
+        
+        // --- FUNÇÕES DE UTILIDADE (Intervalo e Linha) ---
+        function removerIntervalo(botao) {
+            const pair = botao.closest('.intervalo-pair');
+            pair.remove();
+            calcularHoras(); 
+        }
 
-        <script>
-            // --- FUNÇÕES DE UTILIDADE (Intervalo e Linha) ---
-            function removerIntervalo(botao) {
-                const pair = botao.closest(".intervalo-pair");
-                pair.remove();
-                calcularHoras();
-            }
+        function adicionarIntervalo(botao) {
+            const container = botao.closest('.intervalo-container');
+            const currentPair = botao.closest('.intervalo-pair');
 
-            function adicionarIntervalo(botao) {
-                const container = botao.closest(".intervalo-container");
-                const currentPair = botao.closest(".intervalo-pair");
-
-                const novoIntervalo = document.createElement("div");
-                novoIntervalo.className = "intervalo-pair";
-
-                novoIntervalo.innerHTML = `
+            const novoIntervalo = document.createElement("div");
+            novoIntervalo.className = "intervalo-pair";
+            
+            novoIntervalo.innerHTML = `
                 <input type="time" class="intervalo-inicio">
                 <input type="time" class="intervalo-fim">
                 <button class="add-intervalo" onclick="adicionarIntervalo(this)" title="Adicionar intervalo">
@@ -632,26 +455,27 @@
                     <svg fill="none" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"> <path d="M16 2v4h6v2h-2v14H4V8H2V6h6V2h8zm-2 2h-4v2h4V4zm0 4H6v12h12V8h-4zm-5 2h2v8H9v-8zm6 0h-2v8h2v-8z" fill="currentColor"/> </svg>
                 </button>
             `;
+            
+            novoIntervalo.querySelectorAll('input').forEach(input => {
+                input.addEventListener('input', calcularHoras);
+            });
 
-                novoIntervalo.querySelectorAll("input").forEach((input) => {
-                    input.addEventListener("input", calcularHoras);
-                });
+            container.insertBefore(novoIntervalo, currentPair.nextSibling);
+            calcularHoras(); 
+        }
 
-                container.insertBefore(novoIntervalo, currentPair.nextSibling);
-                calcularHoras();
-            }
+        // --- FUNÇÃO REFATORADA (criarElementoLinha com Saldo) ---
+        function criarElementoLinha() {
+            const linha = document.createElement('tr');
 
-            // --- FUNÇÃO REFATORADA (criarElementoLinha) ---
-            function criarElementoLinha() {
-                const linha = document.createElement("tr");
-
-                linha.innerHTML = `
+            // Adiciona TD para Saldo Dia
+            linha.innerHTML = `
                 <td data-label="Data">
                     <div class="data-container">
                         <input type="date" class="data">
                         <button class="add-linha-abaixo" onclick="adicionarLinhaAbaixo(this)" title="Adicionar linha abaixo com a mesma data">
                             <svg fill="none" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16"><path d="M9 7h6v2H9v6H7V9H1V7h6V1h2v6z" fill="currentColor"/></svg>
-                        </button>
+                        </button> 
                     </div>
                 </td>
                 <td data-label="Atividade"><input type="text" class="atividade"></td>
@@ -670,440 +494,382 @@
                 </td>
                 <td data-label="Hora-aula?"><input type="checkbox" class="hora-aula"></td>
                 <td data-label="Total Dia" class="horas-dia">00:00</td>
+                <td data-label="Saldo Dia" class="saldo-dia">00:00</td> 
                 <td data-label="Ações">
                     <button class="remover-intervalo" onclick="removerLinha(this)" title="Remover Linha">
                         <svg fill="none" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"> <path d="M16 2v4h6v2h-2v14H4V8H2V6h6V2h8zm-2 2h-4v2h4V4zm0 4H6v12h12V8h-4zm-5 2h2v8H9v-8zm6 0h-2v8h2v-8z" fill="currentColor"/> </svg>
                     </button>
                 </td>
             `;
-                return linha;
+            return linha; 
+        }
+
+        function adicionarLinha() {
+            const tbody = document.getElementById('corpo-tabela');
+            const novaLinhaElement = criarElementoLinha(); 
+            tbody.appendChild(novaLinhaElement); 
+            
+            novaLinhaElement.querySelectorAll('input').forEach(input => {
+                input.addEventListener('input', calcularHoras);
+            });
+        }
+
+        function adicionarLinhaAbaixo(botao) {
+            const linhaAtual = botao.closest('tr');
+            const dataAtualInput = linhaAtual.querySelector('.data');
+            const dataParaCopiar = dataAtualInput ? dataAtualInput.value : ''; 
+
+            const novaLinhaElement = criarElementoLinha(); 
+
+            const dataNovaInput = novaLinhaElement.querySelector('.data');
+            if (dataNovaInput) {
+                dataNovaInput.value = dataParaCopiar;
             }
 
-            // --- FUNÇÃO CORRIGIDA (adicionarLinha) ---
-            function adicionarLinha() {
-                const tbody = document.getElementById("corpo-tabela");
-                const novaLinhaElement = criarElementoLinha(); // Cria o elemento
-                tbody.appendChild(novaLinhaElement); // Adiciona ao final da tabela
+            linhaAtual.insertAdjacentElement('afterend', novaLinhaElement);
 
-                // Adiciona listeners aos inputs da nova linha
-                novaLinhaElement.querySelectorAll("input").forEach((input) => {
-                    input.addEventListener("input", calcularHoras);
-                });
+            novaLinhaElement.querySelectorAll('input').forEach(input => {
+                input.addEventListener('input', calcularHoras);
+            });
+        }
 
-                return novaLinhaElement; // Retorna o elemento TR criado
+        function removerLinha(botao) {
+            const linha = botao.closest('tr');
+            linha.remove();
+            calcularHoras();
+        }
+
+        // --- FUNÇÃO (Cálculo de Adicional Noturno) ---
+        function calcularMinutosComAdicional(startMin, endMin) {
+            const NIGHT_BONUS_FACTOR = 60 / 52.5; 
+            const NIGHT_START = 1320; // 22:00
+            const NIGHT_END = 300;    // 05:00
+            const DAY_END = 1440;   // 24:00
+
+            let totalCompensatedMinutes = 0;
+            
+            let spans = [];
+            if (endMin < startMin) {
+                spans.push({ start: startMin, end: DAY_END }); 
+                spans.push({ start: 0, end: endMin });         
+            } else {
+                spans.push({ start: startMin, end: endMin }); 
             }
 
-            // --- NOVA FUNÇÃO (adicionarLinhaAbaixo) ---
-            function adicionarLinhaAbaixo(botao) {
-                const linhaAtual = botao.closest("tr");
-                const dataAtualInput = linhaAtual.querySelector(".data");
-                const dataParaCopiar = dataAtualInput
-                    ? dataAtualInput.value
-                    : ""; // Pega data atual
+            for (const span of spans) {
+                let normalMinutes = 0;
+                let nightlyMinutes = 0;
 
-                const novaLinhaElement = criarElementoLinha(); // Cria o elemento da nova linha
+                for (let min = span.start; min < span.end; min++) {
+                    if (min >= NIGHT_START || min < NIGHT_END) { 
+                        nightlyMinutes++;
+                    } else {
+                        normalMinutes++;
+                    }
+                }
+                totalCompensatedMinutes += normalMinutes + (nightlyMinutes * NIGHT_BONUS_FACTOR);
+            }
+            
+            return totalCompensatedMinutes;
+        }
 
-                // Define a data na nova linha
-                const dataNovaInput = novaLinhaElement.querySelector(".data");
-                if (dataNovaInput) {
-                    dataNovaInput.value = dataParaCopiar;
+
+        // --- FUNÇÃO DE CÁLCULO PRINCIPAL (MODIFICADA para Saldo) ---
+        function calcularHoras() {
+            const linhas = document.querySelectorAll('#corpo-tabela tr');
+            let totalMinutosMes = 0;
+            const HORAS_DIA_PADRAO_MIN = 8 * 60; // 480 minutos
+
+            linhas.forEach(linha => {
+                const entrada = linha.querySelector('.entrada').value;
+                const saida = linha.querySelector('.saida').value;
+                const horaAula = linha.querySelector('.hora-aula').checked;
+                const tdSaldo = linha.querySelector('.saldo-dia'); // Pega a célula do saldo
+                
+                let minutosDiaCompensados = 0;
+
+                if (entrada && saida) {
+                    const entradaMin = converterParaMinutos(entrada);
+                    const saidaMin = converterParaMinutos(saida);
+                    minutosDiaCompensados = calcularMinutosComAdicional(entradaMin, saidaMin);
                 }
 
-                // Insere a nova linha *depois* da linha atual
-                linhaAtual.insertAdjacentElement("afterend", novaLinhaElement);
+                const intervalos = linha.querySelectorAll('.intervalo-pair');
+                intervalos.forEach(pair => {
+                    const intervaloInicio = pair.querySelector('.intervalo-inicio').value;
+                    const intervaloFim = pair.querySelector('.intervalo-fim').value;
 
-                // Adiciona listeners aos inputs da nova linha (IMPORTANTE!)
-                novaLinhaElement.querySelectorAll("input").forEach((input) => {
-                    input.addEventListener("input", calcularHoras);
-                });
-            }
-
-            function removerLinha(botao) {
-                const linha = botao.closest("tr");
-                linha.remove();
-                calcularHoras();
-            }
-
-            // --- FUNÇÃO (Cálculo de Adicional Noturno) ---
-            function calcularMinutosComAdicional(startMin, endMin) {
-                const NIGHT_BONUS_FACTOR = 60 / 52.5;
-                const NIGHT_START = 1320; // 22:00
-                const NIGHT_END = 300; // 05:00
-                const DAY_END = 1440; // 24:00
-
-                let totalCompensatedMinutes = 0;
-
-                let spans = [];
-                if (endMin < startMin) {
-                    spans.push({ start: startMin, end: DAY_END });
-                    spans.push({ start: 0, end: endMin });
-                } else {
-                    spans.push({ start: startMin, end: endMin });
-                }
-
-                for (const span of spans) {
-                    let normalMinutes = 0;
-                    let nightlyMinutes = 0;
-
-                    for (let min = span.start; min < span.end; min++) {
-                        if (min >= NIGHT_START || min < NIGHT_END) {
-                            nightlyMinutes++;
-                        } else {
-                            normalMinutes++;
-                        }
-                    }
-                    totalCompensatedMinutes +=
-                        normalMinutes + nightlyMinutes * NIGHT_BONUS_FACTOR;
-                }
-
-                return totalCompensatedMinutes;
-            }
-
-            // --- FUNÇÃO DE CÁLCULO PRINCIPAL ---
-            function calcularHoras() {
-                const linhas = document.querySelectorAll("#corpo-tabela tr");
-                let totalMinutosMes = 0;
-
-                linhas.forEach((linha) => {
-                    const entrada = linha.querySelector(".entrada").value;
-                    const saida = linha.querySelector(".saida").value;
-                    const horaAula = linha.querySelector(".hora-aula").checked;
-
-                    let minutosDiaCompensados = 0;
-
-                    if (entrada && saida) {
-                        const entradaMin = converterParaMinutos(entrada);
-                        const saidaMin = converterParaMinutos(saida);
-                        minutosDiaCompensados = calcularMinutosComAdicional(
-                            entradaMin,
-                            saidaMin,
-                        );
-                    }
-
-                    const intervalos =
-                        linha.querySelectorAll(".intervalo-pair");
-                    intervalos.forEach((pair) => {
-                        const intervaloInicio =
-                            pair.querySelector(".intervalo-inicio").value;
-                        const intervaloFim =
-                            pair.querySelector(".intervalo-fim").value;
-
-                        if (intervaloInicio && intervaloFim) {
-                            const intervaloInicioMin =
-                                converterParaMinutos(intervaloInicio);
-                            const intervaloFimMin =
-                                converterParaMinutos(intervaloFim);
-                            const minutosIntervaloCompensados =
-                                calcularMinutosComAdicional(
-                                    intervaloInicioMin,
-                                    intervaloFimMin,
-                                );
-                            minutosDiaCompensados -=
-                                minutosIntervaloCompensados;
-                        }
-                    });
-
-                    if (minutosDiaCompensados > 0 && horaAula) {
-                        minutosDiaCompensados =
-                            minutosDiaCompensados * (60 / 50);
-                    }
-
-                    minutosDiaCompensados = Math.max(0, minutosDiaCompensados);
-
-                    const minutosArredondados = Math.round(
-                        minutosDiaCompensados,
-                    );
-                    linha.querySelector(".horas-dia").textContent =
-                        converterParaHora(minutosArredondados);
-                    totalMinutosMes += minutosArredondados;
-                });
-
-                const horasExternasStr =
-                    document.getElementById("horas-externas").value;
-                const minutosExternos = converterParaMinutos(horasExternasStr);
-                totalMinutosMes += minutosExternos;
-
-                const horasSubtrairStr =
-                    document.getElementById("horas-subtrair").value;
-                const minutosSubtrair = converterParaMinutos(horasSubtrairStr);
-                totalMinutosMes -= minutosSubtrair;
-
-                document.getElementById("total-mes").textContent =
-                    converterParaHora(totalMinutosMes);
-
-                calcularResumoSemanal();
-            }
-
-            // --- FUNÇÃO (Cálculo Semanal) ---
-            function calcularResumoSemanal() {
-                const semanas = {}; // Objeto para guardar os minutos por semana
-                const linhas = document.querySelectorAll("#corpo-tabela tr");
-
-                linhas.forEach((linha) => {
-                    const dataStr = linha.querySelector(".data").value;
-                    const horasStr =
-                        linha.querySelector(".horas-dia").textContent;
-
-                    if (dataStr && horasStr) {
-                        const minutosDia = converterParaMinutos(horasStr);
-                        if (minutosDia === 0) return;
-
-                        const inicioSemana = getInicioDaSemana(dataStr);
-
-                        if (!semanas[inicioSemana]) {
-                            semanas[inicioSemana] = 0;
-                        }
-                        semanas[inicioSemana] += minutosDia;
+                    if (intervaloInicio && intervaloFim) {
+                        const intervaloInicioMin = converterParaMinutos(intervaloInicio);
+                        const intervaloFimMin = converterParaMinutos(intervaloFim);
+                        const minutosIntervaloCompensados = calcularMinutosComAdicional(intervaloInicioMin, intervaloFimMin);
+                        minutosDiaCompensados -= minutosIntervaloCompensados;
                     }
                 });
 
-                const container = document.getElementById("resumo-semanal");
-                container.innerHTML = "";
-
-                const chavesSemanas = Object.keys(semanas).sort();
-
-                if (chavesSemanas.length === 0) {
-                    container.innerHTML = "<span>Nenhum dado com data.</span>";
-                    return;
+                if (minutosDiaCompensados > 0 && horaAula) {
+                    minutosDiaCompensados = minutosDiaCompensados * (60 / 50);
                 }
 
-                chavesSemanas.forEach((chave) => {
-                    const totalHorasSemana = converterParaHora(semanas[chave]);
-                    const [y, m, d] = chave.split("-");
-                    const dataFormatada = `${d}/${m}`;
+                minutosDiaCompensados = Math.max(0, minutosDiaCompensados);
+                
+                const minutosArredondados = Math.round(minutosDiaCompensados); 
+                linha.querySelector('.horas-dia').textContent = converterParaHora(minutosArredondados);
+                totalMinutosMes += minutosArredondados;
 
-                    container.innerHTML += `<div>Semana de ${dataFormatada}: <strong>${totalHorasSemana}</strong></div>`;
-                });
-            }
+                // --- LÓGICA DO SALDO ---
+                const saldoMinutos = minutosArredondados - HORAS_DIA_PADRAO_MIN;
+                tdSaldo.textContent = converterParaHora(saldoMinutos);
 
-            // --- FUNÇÃO (Helper de Data) ---
-            function getInicioDaSemana(dataStr) {
-                const [ano, mes, dia] = dataStr.split("-").map(Number);
-                const data = new Date(ano, mes - 1, dia);
-                const diaDaSemana = data.getDay();
-                const dataInicio = new Date(
-                    data.setDate(data.getDate() - diaDaSemana),
-                );
-                const y = dataInicio.getFullYear();
-                const m = String(dataInicio.getMonth() + 1).padStart(2, "0");
-                const d = String(dataInicio.getDate()).padStart(2, "0");
-                return `${y}-${m}-${d}`;
-            }
-
-            // --- FUNÇÃO (Ordenação por Data) ---
-            function ordenarPorData() {
-                const thData = document.getElementById("th-data");
-                const tbody = document.getElementById("corpo-tabela");
-                const linhas = Array.from(tbody.querySelectorAll("tr"));
-
-                const direcaoAtual = thData.dataset.sortDirection || "desc";
-                const novaDirecao = direcaoAtual === "asc" ? "desc" : "asc";
-                thData.dataset.sortDirection = novaDirecao;
-
-                thData
-                    .closest("tr")
-                    .querySelectorAll("th")
-                    .forEach((th) => {
-                        if (th.id !== "th-data") {
-                            th.innerHTML = th.innerHTML
-                                .replace(" ▴", "")
-                                .replace(" ▾", "");
-                        }
-                    });
-                thData.innerHTML =
-                    "Data " + (novaDirecao === "asc" ? "▴" : "▾");
-
-                const modificador = novaDirecao === "asc" ? 1 : -1;
-
-                linhas.sort((linhaA, linhaB) => {
-                    const dataAStr = linhaA.querySelector(".data").value;
-                    const dataBStr = linhaB.querySelector(".data").value;
-
-                    if (dataAStr && !dataBStr) return -1;
-                    if (!dataAStr && dataBStr) return 1;
-                    if (!dataAStr && !dataBStr) return 0;
-
-                    let comparacao = dataAStr.localeCompare(dataBStr);
-
-                    return comparacao * modificador;
-                });
-
-                linhas.forEach((linha) => {
-                    tbody.appendChild(linha);
-                });
-            }
-
-            // --- FUNÇÕES CONVERSORAS ---
-            function converterParaMinutos(horaStr) {
-                if (!horaStr || horaStr.indexOf(":") === -1) return 0;
-                const horaLimpa = horaStr.replace("-", "");
-                const [h, m] = horaLimpa.split(":").map(Number);
-                if (horaStr === "24:00") return 1440;
-                if (isNaN(h) || isNaN(m)) return 0;
-                return h * 60 + m;
-            }
-
-            function converterParaHora(minutos) {
-                const isNegative = minutos < 0;
-                const absMinutos = Math.abs(minutos);
-
-                const h = Math.floor(absMinutos / 60);
-                const m = Math.round(absMinutos % 60);
-
-                let horaFormatada;
-
-                if (m === 60) {
-                    horaFormatada = `${String(h + 1).padStart(2, "0")}:00`;
-                } else {
-                    horaFormatada = `${String(h).padStart(2, "0")}:${String(m).padStart(2, "0")}`;
+                // Aplica a classe de cor
+                tdSaldo.classList.remove('saldo-positivo', 'saldo-negativo', 'saldo-neutro');
+                if (saldoMinutos > 0) {
+                    tdSaldo.classList.add('saldo-positivo');
+                } else if (saldoMinutos < 0) {
+                    tdSaldo.classList.add('saldo-negativo');
+                } else if (minutosArredondados > 0) { // Só aplica neutro se trabalhou (evita 00:00 ficar azul)
+                     tdSaldo.classList.add('saldo-neutro');
                 }
+                // --- FIM DA LÓGICA DO SALDO ---
 
-                return isNegative ? "-" + horaFormatada : horaFormatada;
-            }
+            });
 
-            // --- FUNÇÕES Salvar e Carregar (JSON Local) ---
-            function salvarDados() {
-                const dados = {
-                    horasExternas:
-                        document.getElementById("horas-externas").value,
-                    horasSubtrair:
-                        document.getElementById("horas-subtrair").value,
-                    linhas: [],
-                };
+            const horasExternasStr = document.getElementById('horas-externas').value;
+            const minutosExternos = converterParaMinutos(horasExternasStr);
+            totalMinutosMes += minutosExternos;
 
-                document
-                    .querySelectorAll("#corpo-tabela tr")
-                    .forEach((linha) => {
-                        const linhaDados = {
-                            data: linha.querySelector(".data").value,
-                            atividade: linha.querySelector(".atividade").value,
-                            entrada: linha.querySelector(".entrada").value,
-                            saida: linha.querySelector(".saida").value,
-                            horaAula: linha.querySelector(".hora-aula").checked,
-                            intervalos: [],
-                        };
+            const horasSubtrairStr = document.getElementById('horas-subtrair').value;
+            const minutosSubtrair = converterParaMinutos(horasSubtrairStr);
+            totalMinutosMes -= minutosSubtrair;
 
-                        linha
-                            .querySelectorAll(".intervalo-pair")
-                            .forEach((pair) => {
-                                linhaDados.intervalos.push({
-                                    inicio: pair.querySelector(
-                                        ".intervalo-inicio",
-                                    ).value,
-                                    fim: pair.querySelector(".intervalo-fim")
-                                        .value,
-                                });
-                            });
-                        dados.linhas.push(linhaDados);
-                    });
-
-                const dataStr = JSON.stringify(dados, null, 2);
-                const blob = new Blob([dataStr], { type: "application/json" });
-                const a = document.createElement("a");
-                a.href = URL.createObjectURL(blob);
-                a.download = "calculadora_horas.json";
-                a.click();
-                URL.revokeObjectURL(a.href);
-            }
-
-            function carregarDados(event) {
-                const file = event.target.files[0];
-                if (!file) return;
-
-                const reader = new FileReader();
-                reader.onload = function (e) {
-                    try {
-                        const dados = JSON.parse(e.target.result);
-
-                        document.getElementById("corpo-tabela").innerHTML = "";
-
-                        document.getElementById("horas-externas").value =
-                            dados.horasExternas || "";
-                        document.getElementById("horas-subtrair").value =
-                            dados.horasSubtrair || "";
-
-                        if (!dados.linhas || dados.linhas.length === 0) {
-                            adicionarLinha();
-                            calcularHoras();
-                            return;
-                        }
-
-                        dados.linhas.forEach((linhaDados) => {
-                            const novaLinha = adicionarLinha();
-
-                            novaLinha.querySelector(".data").value =
-                                linhaDados.data;
-                            novaLinha.querySelector(".atividade").value =
-                                linhaDados.atividade;
-                            novaLinha.querySelector(".entrada").value =
-                                linhaDados.entrada;
-                            novaLinha.querySelector(".saida").value =
-                                linhaDados.saida;
-                            novaLinha.querySelector(".hora-aula").checked =
-                                linhaDados.horaAula;
-
-                            const container = novaLinha.querySelector(
-                                ".intervalo-container",
-                            );
-                            const primeiroIntervalo =
-                                container.querySelector(".intervalo-pair");
-                            const botaoAdd =
-                                primeiroIntervalo.querySelector(
-                                    ".add-intervalo",
-                                );
-
-                            if (
-                                linhaDados.intervalos &&
-                                linhaDados.intervalos[0]
-                            ) {
-                                primeiroIntervalo.querySelector(
-                                    ".intervalo-inicio",
-                                ).value = linhaDados.intervalos[0].inicio;
-                                primeiroIntervalo.querySelector(
-                                    ".intervalo-fim",
-                                ).value = linhaDados.intervalos[0].fim;
-                            }
-
-                            for (
-                                let i = 1;
-                                i < (linhaDados.intervalos || []).length;
-                                i++
-                            ) {
-                                adicionarIntervalo(botaoAdd);
-                                const todosOsPares =
-                                    container.querySelectorAll(
-                                        ".intervalo-pair",
-                                    );
-                                const novoPair =
-                                    todosOsPares[todosOsPares.length - 1];
-                                novoPair.querySelector(
-                                    ".intervalo-inicio",
-                                ).value = linhaDados.intervalos[i].inicio;
-                                novoPair.querySelector(".intervalo-fim").value =
-                                    linhaDados.intervalos[i].fim;
-                            }
-                        });
-
-                        calcularHoras(); // Recalcula tudo após preencher
-                    } catch (err) {
-                        alert("Erro ao ler o arquivo JSON: " + err.message);
-                        console.error("Erro ao carregar JSON:", err);
-                        if (
-                            document.getElementById("corpo-tabela").children
-                                .length === 0
-                        ) {
-                            adicionarLinha();
-                        }
-                    }
-                };
-
-                reader.readAsText(file);
-                event.target.value = null;
-            }
-
-            // --- INICIALIZAÇÃO DA PÁGINA ---
-            adicionarLinha();
+            document.getElementById('total-mes').textContent = converterParaHora(totalMinutosMes);
+            
             calcularResumoSemanal();
-        </script>
-    </body>
+        }
+        
+        // --- FUNÇÃO (Cálculo Semanal) ---
+        function calcularResumoSemanal() {
+            const semanas = {}; // Objeto para guardar os minutos por semana
+            const linhas = document.querySelectorAll('#corpo-tabela tr');
+
+            linhas.forEach(linha => {
+                const dataStr = linha.querySelector('.data').value;
+                const horasStr = linha.querySelector('.horas-dia').textContent;
+                
+                if (dataStr && horasStr) {
+                    const minutosDia = converterParaMinutos(horasStr); 
+                    if (minutosDia === 0) return; 
+
+                    const inicioSemana = getInicioDaSemana(dataStr);
+                    
+                    if (!semanas[inicioSemana]) {
+                        semanas[inicioSemana] = 0;
+                    }
+                    semanas[inicioSemana] += minutosDia;
+                }
+            });
+
+            const container = document.getElementById('resumo-semanal');
+            container.innerHTML = ''; 
+
+            const chavesSemanas = Object.keys(semanas).sort();
+
+            if (chavesSemanas.length === 0) {
+                container.innerHTML = "<span>Nenhum dado com data.</span>";
+                return;
+            }
+
+            chavesSemanas.forEach(chave => {
+                const totalHorasSemana = converterParaHora(semanas[chave]);
+                const [y, m, d] = chave.split('-');
+                const dataFormatada = `${d}/${m}`;
+                
+                container.innerHTML += `<div>Semana de ${dataFormatada}: <strong>${totalHorasSemana}</strong></div>`;
+            });
+        }
+
+        // --- FUNÇÃO (Helper de Data) ---
+        function getInicioDaSemana(dataStr) {
+            const [ano, mes, dia] = dataStr.split('-').map(Number);
+            const data = new Date(ano, mes - 1, dia); 
+            const diaDaSemana = data.getDay(); 
+            const dataInicio = new Date(data.setDate(data.getDate() - diaDaSemana));
+            const y = dataInicio.getFullYear();
+            const m = String(dataInicio.getMonth() + 1).padStart(2, '0');
+            const d = String(dataInicio.getDate()).padStart(2, '0');
+            return `${y}-${m}-${d}`;
+        }
+        
+        // --- FUNÇÃO (Ordenação por Data) ---
+        function ordenarPorData() {
+            const thData = document.getElementById('th-data');
+            const tbody = document.getElementById('corpo-tabela');
+            const linhas = Array.from(tbody.querySelectorAll('tr'));
+
+            const direcaoAtual = thData.dataset.sortDirection || 'desc'; 
+            const novaDirecao = direcaoAtual === 'asc' ? 'desc' : 'asc';
+            thData.dataset.sortDirection = novaDirecao;
+
+            thData.closest('tr').querySelectorAll('th').forEach(th => {
+                 if (th.id !== 'th-data') {
+                     th.innerHTML = th.innerHTML.replace(' ▴', '').replace(' ▾', '');
+                 }
+            });
+            thData.innerHTML = 'Data ' + (novaDirecao === 'asc' ? '▴' : '▾');
+
+            const modificador = novaDirecao === 'asc' ? 1 : -1;
+
+            linhas.sort((linhaA, linhaB) => {
+                const dataAStr = linhaA.querySelector('.data').value;
+                const dataBStr = linhaB.querySelector('.data').value;
+
+                if (dataAStr && !dataBStr) return -1;
+                if (!dataAStr && dataBStr) return 1;
+                if (!dataAStr && !dataBStr) return 0;
+                
+                let comparacao = dataAStr.localeCompare(dataBStr);
+                
+                return comparacao * modificador;
+            });
+
+            linhas.forEach(linha => {
+                tbody.appendChild(linha);
+            });
+        }
+
+
+        // --- FUNÇÕES CONVERSORAS ---
+        function converterParaMinutos(horaStr) {
+            if (!horaStr || horaStr.indexOf(':') === -1) return 0;
+            // Modificado para aceitar negativos no saldo do dia
+            const isNegative = horaStr.startsWith('-');
+            const horaLimpa = horaStr.replace('-', '');
+            const [h, m] = horaLimpa.split(':').map(Number);
+            if (horaStr === '24:00') return 1440;
+            if (isNaN(h) || isNaN(m)) return 0;
+            const totalMinutos = h * 60 + m;
+            return isNegative ? -totalMinutos : totalMinutos;
+        }
+
+        function converterParaHora(minutos) {
+            const isNegative = minutos < 0;
+            const absMinutos = Math.abs(minutos);
+            
+            const h = Math.floor(absMinutos / 60);
+            const m = Math.round(absMinutos % 60);
+            
+            let horaFormatada;
+            
+            if (m === 60) {
+                horaFormatada = `${String(h + 1).padStart(2, '0')}:00`;
+            } else {
+                horaFormatada = `${String(h).padStart(2, '0')}:${String(m).padStart(2, '0')}`;
+            }
+            
+            // Retorna "00:00" em vez de "-00:00" se minutos for 0
+            if(horaFormatada === '00:00') return '00:00';
+            
+            return isNegative ? '-' + horaFormatada : horaFormatada;
+        }
+
+        // --- FUNÇÕES Salvar e Carregar (JSON Local) ---
+        function salvarDados() {
+            const dados = {
+                horasExternas: document.getElementById('horas-externas').value,
+                horasSubtrair: document.getElementById('horas-subtrair').value, 
+                linhas: []
+            };
+
+            document.querySelectorAll('#corpo-tabela tr').forEach(linha => {
+                const linhaDados = {
+                    data: linha.querySelector('.data').value,
+                    atividade: linha.querySelector('.atividade').value,
+                    entrada: linha.querySelector('.entrada').value,
+                    saida: linha.querySelector('.saida').value,
+                    horaAula: linha.querySelector('.hora-aula').checked,
+                    intervalos: []
+                };
+
+                linha.querySelectorAll('.intervalo-pair').forEach(pair => {
+                    linhaDados.intervalos.push({
+                        inicio: pair.querySelector('.intervalo-inicio').value,
+                        fim: pair.querySelector('.intervalo-fim').value
+                    });
+                });
+                dados.linhas.push(linhaDados);
+            });
+
+            const dataStr = JSON.stringify(dados, null, 2);
+            const blob = new Blob([dataStr], {type: 'application/json'});
+            const a = document.createElement('a');
+            a.href = URL.createObjectURL(blob);
+            a.download = 'calculadora_horas.json';
+            a.click();
+            URL.revokeObjectURL(a.href);
+        }
+
+        function carregarDados(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                try {
+                    const dados = JSON.parse(e.target.result);
+                    
+                    document.getElementById('corpo-tabela').innerHTML = ''; 
+
+                    document.getElementById('horas-externas').value = dados.horasExternas || '';
+                    document.getElementById('horas-subtrair').value = dados.horasSubtrair || ''; 
+
+                    if (!dados.linhas || dados.linhas.length === 0) {
+                       adicionarLinha(); 
+                       calcularHoras();
+                       return;
+                    }
+
+                    dados.linhas.forEach(linhaDados => {
+                        const novaLinha = adicionarLinha(); 
+                        
+                        novaLinha.querySelector('.data').value = linhaDados.data;
+                        novaLinha.querySelector('.atividade').value = linhaDados.atividade;
+                        novaLinha.querySelector('.entrada').value = linhaDados.entrada;
+                        novaLinha.querySelector('.saida').value = linhaDados.saida;
+                        novaLinha.querySelector('.hora-aula').checked = linhaDados.horaAula;
+
+                        const container = novaLinha.querySelector('.intervalo-container');
+                        const primeiroIntervalo = container.querySelector('.intervalo-pair');
+                        const botaoAdd = primeiroIntervalo.querySelector('.add-intervalo'); 
+
+                        if (linhaDados.intervalos && linhaDados.intervalos[0]) {
+                            primeiroIntervalo.querySelector('.intervalo-inicio').value = linhaDados.intervalos[0].inicio;
+                            primeiroIntervalo.querySelector('.intervalo-fim').value = linhaDados.intervalos[0].fim;
+                        }
+
+                        for (let i = 1; i < (linhaDados.intervalos || []).length; i++) {
+                            adicionarIntervalo(botaoAdd); 
+                            const todosOsPares = container.querySelectorAll('.intervalo-pair');
+                            const novoPair = todosOsPares[todosOsPares.length - 1]; 
+                            novoPair.querySelector('.intervalo-inicio').value = linhaDados.intervalos[i].inicio;
+                            novoPair.querySelector('.intervalo-fim').value = linhaDados.intervalos[i].fim;
+                        }
+                    });
+                    
+                    calcularHoras(); // Recalcula tudo após preencher
+
+                } catch (err) {
+                    alert("Erro ao ler o arquivo JSON: " + err.message);
+                }
+            };
+            
+            reader.readAsText(file);
+            event.target.value = null; 
+        }
+        
+        // --- INICIALIZAÇÃO DA PÁGINA ---
+        adicionarLinha();
+        calcularResumoSemanal(); 
+        
+    </script>
+</body>
 </html>
