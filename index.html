@@ -21,17 +21,16 @@
             table-layout: fixed; 
         }
 
-        /* --- CSS MODIFICADO (colgroup para 9 colunas) --- */
+        /* colgroup para 9 colunas */
         colgroup col:nth-child(1) { width: 130px; } /* Data */
-        colgroup col:nth-child(2) { width: 170px; } /* Atividade (reduzido) */
+        colgroup col:nth-child(2) { width: 170px; } /* Atividade */
         colgroup col:nth-child(3),
         colgroup col:nth-child(4) { width: 60px; } /* Início, Fim */
-        colgroup col:nth-child(5) { width: 210px; } /* Intervalos (reduzido) */
-        colgroup col:nth-child(6) { width: 70px; } /* Hora-aula (reduzido) */
+        colgroup col:nth-child(5) { width: 210px; } /* Intervalos */
+        colgroup col:nth-child(6) { width: 70px; } /* Hora-aula */
         colgroup col:nth-child(7) { width: 70px; } /* Total Dia */
         colgroup col:nth-child(8) { width: 70px; } /* Saldo Dia */
         colgroup col:nth-child(9) { width: 50px; } /* Ações */
-        /* --- Fim da Modificação --- */
 
 
         /* CSS (Sem linhas verticais) */
@@ -179,26 +178,25 @@
              flex-grow: 1; 
         }
 
-        /* --- NOVO CSS (Cores e Estilo do Saldo) --- */
+        /* CSS (Cores e Estilo do Saldo) */
         .saldo-dia {
             font-weight: bold;
             font-family: "Courier New", Courier, monospace;
-            padding: 8px 4px !important; /* Menos padding lateral para cor preencher */
-            vertical-align: middle !important; /* Alinha o texto no meio */
+            padding: 8px 4px !important; 
+            vertical-align: middle !important; 
         }
         .saldo-positivo {
-            background-color: #DFF0D8; /* Verde claro */
-            color: #3C763D; /* Verde escuro */
+            background-color: #DFF0D8; 
+            color: #3C763D; 
         }
         .saldo-negativo {
-            background-color: #F2DEDE; /* Vermelho claro */
-            color: #A94442; /* Vermelho escuro */
+            background-color: #F2DEDE; 
+            color: #A94442; 
         }
         .saldo-neutro {
-            background-color: #D9EDF7; /* Azul claro */
-            color: #31708F; /* Azul escuro */
+            background-color: #D9EDF7; 
+            color: #31708F; 
         }
-        /* --- Fim do Novo CSS --- */
 
         /* CSS (Container para campos de ajuste) */
         .ajuste-container {
@@ -323,12 +321,10 @@
                  margin-top: 5px; 
              }
 
-            /* --- CSS MODIFICADO (Saldo no mobile) --- */
             td[data-label="Saldo Dia"] {
-                 padding-left: 50% !important; /* Garante espaço para label */
-                 padding-right: 8px !important; /* Remove padding extra da direita */
+                 padding-left: 50% !important; 
+                 padding-right: 8px !important; 
             }
-            /* --- Fim da Modificação --- */
 
             td[data-label="Hora-aula?"] {
                  text-align: left; 
@@ -464,11 +460,9 @@
             calcularHoras(); 
         }
 
-        // --- FUNÇÃO REFATORADA (criarElementoLinha com Saldo) ---
         function criarElementoLinha() {
             const linha = document.createElement('tr');
 
-            // Adiciona TD para Saldo Dia
             linha.innerHTML = `
                 <td data-label="Data">
                     <div class="data-container">
@@ -574,7 +568,7 @@
         }
 
 
-        // --- FUNÇÃO DE CÁLCULO PRINCIPAL (MODIFICADA para Saldo) ---
+        // --- FUNÇÃO DE CÁLCULO PRINCIPAL ---
         function calcularHoras() {
             const linhas = document.querySelectorAll('#corpo-tabela tr');
             let totalMinutosMes = 0;
@@ -584,7 +578,7 @@
                 const entrada = linha.querySelector('.entrada').value;
                 const saida = linha.querySelector('.saida').value;
                 const horaAula = linha.querySelector('.hora-aula').checked;
-                const tdSaldo = linha.querySelector('.saldo-dia'); // Pega a célula do saldo
+                const tdSaldo = linha.querySelector('.saldo-dia'); 
                 
                 let minutosDiaCompensados = 0;
 
@@ -617,20 +611,17 @@
                 linha.querySelector('.horas-dia').textContent = converterParaHora(minutosArredondados);
                 totalMinutosMes += minutosArredondados;
 
-                // --- LÓGICA DO SALDO ---
                 const saldoMinutos = minutosArredondados - HORAS_DIA_PADRAO_MIN;
                 tdSaldo.textContent = converterParaHora(saldoMinutos);
 
-                // Aplica a classe de cor
                 tdSaldo.classList.remove('saldo-positivo', 'saldo-negativo', 'saldo-neutro');
                 if (saldoMinutos > 0) {
                     tdSaldo.classList.add('saldo-positivo');
                 } else if (saldoMinutos < 0) {
                     tdSaldo.classList.add('saldo-negativo');
-                } else if (minutosArredondados > 0) { // Só aplica neutro se trabalhou (evita 00:00 ficar azul)
+                } else if (minutosArredondados > 0) { 
                      tdSaldo.classList.add('saldo-neutro');
                 }
-                // --- FIM DA LÓGICA DO SALDO ---
 
             });
 
@@ -649,7 +640,7 @@
         
         // --- FUNÇÃO (Cálculo Semanal) ---
         function calcularResumoSemanal() {
-            const semanas = {}; // Objeto para guardar os minutos por semana
+            const semanas = {}; 
             const linhas = document.querySelectorAll('#corpo-tabela tr');
 
             linhas.forEach(linha => {
@@ -741,7 +732,6 @@
         // --- FUNÇÕES CONVERSORAS ---
         function converterParaMinutos(horaStr) {
             if (!horaStr || horaStr.indexOf(':') === -1) return 0;
-            // Modificado para aceitar negativos no saldo do dia
             const isNegative = horaStr.startsWith('-');
             const horaLimpa = horaStr.replace('-', '');
             const [h, m] = horaLimpa.split(':').map(Number);
@@ -766,13 +756,12 @@
                 horaFormatada = `${String(h).padStart(2, '0')}:${String(m).padStart(2, '0')}`;
             }
             
-            // Retorna "00:00" em vez de "-00:00" se minutos for 0
             if(horaFormatada === '00:00') return '00:00';
             
             return isNegative ? '-' + horaFormatada : horaFormatada;
         }
 
-        // --- FUNÇÕES Salvar e Carregar (JSON Local) ---
+        // --- FUNÇÕES Salvar e Carregar (JSON Local - CORRIGIDA) ---
         function salvarDados() {
             const dados = {
                 horasExternas: document.getElementById('horas-externas').value,
@@ -829,36 +818,51 @@
                     }
 
                     dados.linhas.forEach(linhaDados => {
-                        const novaLinha = adicionarLinha(); 
+                        const novaLinha = adicionarLinha(); // Usa a função que cria a linha BASE
                         
-                        novaLinha.querySelector('.data').value = linhaDados.data;
-                        novaLinha.querySelector('.atividade').value = linhaDados.atividade;
-                        novaLinha.querySelector('.entrada').value = linhaDados.entrada;
-                        novaLinha.querySelector('.saida').value = linhaDados.saida;
-                        novaLinha.querySelector('.hora-aula').checked = linhaDados.horaAula;
+                        // Preenche os dados simples
+                        novaLinha.querySelector('.data').value = linhaDados.data || '';
+                        novaLinha.querySelector('.atividade').value = linhaDados.atividade || '';
+                        novaLinha.querySelector('.entrada').value = linhaDados.entrada || '';
+                        novaLinha.querySelector('.saida').value = linhaDados.saida || '';
+                        novaLinha.querySelector('.hora-aula').checked = linhaDados.horaAula || false;
 
                         const container = novaLinha.querySelector('.intervalo-container');
-                        const primeiroIntervalo = container.querySelector('.intervalo-pair');
-                        const botaoAdd = primeiroIntervalo.querySelector('.add-intervalo'); 
+                        const primeiroIntervaloPair = container.querySelector('.intervalo-pair'); // O que já vem na linha
 
+                        // Preenche o primeiro intervalo (se existir nos dados)
                         if (linhaDados.intervalos && linhaDados.intervalos[0]) {
-                            primeiroIntervalo.querySelector('.intervalo-inicio').value = linhaDados.intervalos[0].inicio;
-                            primeiroIntervalo.querySelector('.intervalo-fim').value = linhaDados.intervalos[0].fim;
+                            primeiroIntervaloPair.querySelector('.intervalo-inicio').value = linhaDados.intervalos[0].inicio || '';
+                            primeiroIntervaloPair.querySelector('.intervalo-fim').value = linhaDados.intervalos[0].fim || '';
                         }
 
+                        // Adiciona e preenche os intervalos restantes
+                        let ultimoBotaoAdicionar = primeiroIntervaloPair.querySelector('.add-intervalo'); // Começa com o botão do primeiro
                         for (let i = 1; i < (linhaDados.intervalos || []).length; i++) {
-                            adicionarIntervalo(botaoAdd); 
-                            const todosOsPares = container.querySelectorAll('.intervalo-pair');
-                            const novoPair = todosOsPares[todosOsPares.length - 1]; 
-                            novoPair.querySelector('.intervalo-inicio').value = linhaDados.intervalos[i].inicio;
-                            novoPair.querySelector('.intervalo-fim').value = linhaDados.intervalos[i].fim;
+                             // Simula o clique no botão '+' DO ÚLTIMO PAR ADICIONADO
+                             adicionarIntervalo(ultimoBotaoAdicionar); 
+                             
+                             // Pega o último par que FOI ADICIONADO
+                             const ultimoPairAdicionado = container.querySelector('.intervalo-pair:last-child'); 
+                             
+                             // Preenche os inputs do último par adicionado
+                             if (ultimoPairAdicionado) {
+                                 ultimoPairAdicionado.querySelector('.intervalo-inicio').value = linhaDados.intervalos[i].inicio || '';
+                                 ultimoPairAdicionado.querySelector('.intervalo-fim').value = linhaDados.intervalos[i].fim || '';
+                                 // Atualiza a referência para o botão '+' do par recém-adicionado
+                                 ultimoBotaoAdicionar = ultimoPairAdicionado.querySelector('.add-intervalo'); 
+                             } else {
+                                 console.error("Não foi possível encontrar o último par de intervalo adicionado.");
+                                 break; // Sai do loop se algo deu errado
+                             }
                         }
                     });
                     
                     calcularHoras(); // Recalcula tudo após preencher
 
                 } catch (err) {
-                    alert("Erro ao ler o arquivo JSON: " + err.message);
+                    console.error("Erro ao ler ou processar o arquivo JSON:", err); // Log mais detalhado
+                    alert("Erro ao ler o arquivo JSON: " + err.message + ". Verifique o console (F12) para detalhes.");
                 }
             };
             
