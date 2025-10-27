@@ -43,7 +43,7 @@
                 margin-bottom: 20px;
             }
 
-            /* --- CSS MODIFICADO (colgroup para 9 colunas) --- */
+            /* colgroup para 9 colunas */
             colgroup col:nth-child(1) { width: 130px; } /* Data */
             colgroup col:nth-child(2) { width: 170px; } /* Atividade */
             colgroup col:nth-child(3),
@@ -53,7 +53,6 @@
             colgroup col:nth-child(7) { width: 70px; }  /* Total Dia */
             colgroup col:nth-child(8) { width: 70px; }  /* Saldo Dia */
             colgroup col:nth-child(9) { width: 50px; }  /* Ações */
-            /* --- Fim da Modificação --- */
 
             /* CSS (Sem linhas verticais, ajuste padding) */
             th,
@@ -62,7 +61,7 @@
                 border-bottom: 1px solid #c0c0c0;
                 padding: 6px 8px;
                 text-align: center;
-                vertical-align: top;
+                vertical-align: top; /* Default para top */
                 overflow: hidden;
                 text-overflow: ellipsis;
             }
@@ -184,7 +183,7 @@
                 display: flex;
                 gap: 10px;
                 flex-wrap: wrap;
-                margin-top: 10px; 
+                margin-top: 10px;
             }
 
             /* CSS (Fonte do Total Mês) */
@@ -214,16 +213,17 @@
                 text-align: left;
             }
 
-            /* CSS (Fonte Total Dia e Saldo Dia) */
+            /* --- CSS MODIFICADO (Fonte e Alinhamento Total Dia e Saldo Dia) --- */
             .horas-dia, .saldo-dia {
                 font-family: "Courier New", Courier, monospace;
+                vertical-align: middle !important; /* Alinha ambos no meio */
             }
+            /* --- Fim da Modificação --- */
 
-             /* --- NOVO CSS (Cores e Estilo do Saldo) --- */
+             /* CSS (Cores e Estilo do Saldo) */
              .saldo-dia {
                 font-weight: bold;
                 padding: 6px 4px !important; /* Menos padding lateral para cor preencher */
-                vertical-align: middle !important; /* Alinha o texto no meio */
              }
              .saldo-positivo {
                  background-color: #DFF0D8; /* Verde claro */
@@ -237,7 +237,6 @@
                  background-color: #D9EDF7; /* Azul claro */
                  color: #31708F; /* Azul escuro */
              }
-             /* --- Fim do Novo CSS --- */
 
             /* Estilos para os Intervalos */
             .intervalo-container {
@@ -306,7 +305,7 @@
 
             /* Container para campos de ajuste */
             .ajuste-container {
-                margin-top: 30px; 
+                margin-top: 30px;
                 display: flex;
                 flex-direction: column;
                 gap: 10px;
@@ -373,7 +372,7 @@
             @media (max-width: 768px) {
                 body {
                     padding: 10px;
-                    font-size: 16px; /* Aumenta fonte base no mobile */
+                    font-size: 16px;
                 }
 
                 table {
@@ -406,6 +405,7 @@
                     border-bottom: 1px dotted #eee;
                     padding-top: 10px;
                     padding-bottom: 10px;
+                    vertical-align: middle !important; /* Força alinhamento no mobile */
                 }
                 td:last-child {
                     border-bottom: none;
@@ -421,7 +421,10 @@
                     text-align: left;
                     font-weight: bold;
                     color: #555;
-                    font-family: Arial, sans-serif; /* Usa fonte normal para labels */
+                    font-family: Arial, sans-serif; /* Fonte normal para labels */
+                     /* Alinha label no meio */
+                     top: 50%;
+                     transform: translateY(-50%);
                 }
 
                 /* Ajustes específicos */
@@ -435,15 +438,14 @@
                     margin-top: 5px;
                 }
 
-                 /* Saldo no mobile */
-                 td[data-label="Saldo Dia"] {
-                     padding-left: 50% !important; 
-                     padding-right: 8px !important; 
-                 }
-                 .saldo-dia {
-                     padding: 10px 8px !important; /* Garante padding vertical */
-                 }
-
+                /* Saldo no mobile */
+                td[data-label="Saldo Dia"] {
+                    padding-left: 50% !important;
+                    padding-right: 8px !important;
+                }
+                .saldo-dia {
+                     padding: 10px 8px !important;
+                }
 
                 td[data-label="Hora-aula?"] {
                     text-align: left;
@@ -452,6 +454,8 @@
                     width: auto;
                     position: static;
                     margin-right: 10px;
+                    transform: none; /* Reseta transform */
+                    top: auto;
                 }
                 td[data-label="Hora-aula?"] input {
                     vertical-align: middle;
@@ -467,13 +471,16 @@
 
                 td[data-label="Intervalos"] {
                     padding-left: 8px;
+                     vertical-align: top !important; /* Intervalos precisa alinhar no topo */
                 }
-                td[data-label="Intervalos"]::before {
-                    display: none;
-                }
+                 td[data-label="Intervalos"]::before {
+                     display: block; /* Garante que o label exista mas não mostre */
+                     visibility: hidden; /* Esconde o label mas mantém espaço */
+                 }
                 .intervalo-container {
                     margin-top: 5px;
                 }
+
 
                 /* Ajusta containers inferiores */
                 .ajuste-container,
@@ -487,7 +494,7 @@
                     margin-top: 0;
                     margin-bottom: 15px;
                 }
-                 /* Estilo específico para labels/inputs de ajuste */
+                /* Estilo específico para labels/inputs de ajuste */
                 .ajuste-container {
                     gap: 15px;
                 }
@@ -497,9 +504,9 @@
                     border-radius: 4px;
                     border: 1px solid #ccc; /* Adiciona borda similar aos cards */
                 }
-                 .ajuste-container label {
-                     font-family: Arial, sans-serif; /* Fonte normal para labels */
-                 }
+                .ajuste-container label {
+                    font-family: Arial, sans-serif; /* Fonte normal para labels */
+                }
 
                 /* Estilo específico para resumo e total no mobile */
                 #resumo-semanal-container,
@@ -514,15 +521,15 @@
                     border: none;
                     padding: 0;
                     margin-bottom: 8px;
-                     font-family: Arial, sans-serif; /* Fonte normal para títulos */
+                    font-family: Arial, sans-serif; /* Fonte normal para títulos */
                 }
                 #total-mes-container h3 {
                     text-align: left;
                 }
-                 #resumo-semanal {
-                     font-family: Arial, sans-serif; /* Fonte normal para resumo */
-                     color: #333;
-                 }
+                #resumo-semanal {
+                    font-family: Arial, sans-serif; /* Fonte normal para resumo */
+                    color: #333;
+                }
             }
         </style>
     </head>
@@ -772,17 +779,19 @@
                 return totalCompensatedMinutes;
             }
 
-             // --- FUNÇÃO DE CÁLCULO PRINCIPAL (COM SALDO) ---
+            // --- FUNÇÃO DE CÁLCULO PRINCIPAL (COM SALDO POR DATA) ---
             function calcularHoras() {
                 const linhas = document.querySelectorAll('#corpo-tabela tr');
                 let totalMinutosMes = 0;
+                const totaisPorData = {}; // Objeto para acumular minutos por data
                 const HORAS_DIA_PADRAO_MIN = 8 * 60; // 480 minutos
 
+                // --- PRIMEIRO LOOP: Calcula totais por linha e acumula por data ---
                 linhas.forEach(linha => {
                     const entrada = linha.querySelector('.entrada').value;
                     const saida = linha.querySelector('.saida').value;
                     const horaAula = linha.querySelector('.hora-aula').checked;
-                    const tdSaldo = linha.querySelector('.saldo-dia'); // Pega a célula do saldo
+                    const dataStr = linha.querySelector('.data').value; // Pega a data da linha
                     
                     let minutosDiaCompensados = 0;
 
@@ -815,28 +824,55 @@
                     linha.querySelector('.horas-dia').textContent = converterParaHora(minutosArredondados);
                     totalMinutosMes += minutosArredondados;
 
-                    // --- LÓGICA DO SALDO ---
-                    const saldoMinutos = minutosArredondados - HORAS_DIA_PADRAO_MIN;
-                    // Verifica se tdSaldo existe antes de tentar modificar
-                    if (tdSaldo) {
-                         tdSaldo.textContent = converterParaHora(saldoMinutos);
-
-                         // Aplica a classe de cor
-                         tdSaldo.classList.remove('saldo-positivo', 'saldo-negativo', 'saldo-neutro');
-                         if (saldoMinutos > 0) {
-                             tdSaldo.classList.add('saldo-positivo');
-                         } else if (saldoMinutos < 0) {
-                             tdSaldo.classList.add('saldo-negativo');
-                         } else if (minutosArredondados > 0) { // Só aplica neutro se trabalhou (evita 00:00 ficar azul)
-                              tdSaldo.classList.add('saldo-neutro');
-                         }
-                    } else {
-                         console.error("Elemento .saldo-dia não encontrado na linha:", linha);
+                    // Acumula os minutos por data
+                    if (dataStr) {
+                        if (!totaisPorData[dataStr]) {
+                            totaisPorData[dataStr] = 0;
+                        }
+                        totaisPorData[dataStr] += minutosArredondados;
                     }
-                    // --- FIM DA LÓGICA DO SALDO ---
-
                 });
 
+                // --- SEGUNDO LOOP: Calcula e aplica o saldo por data ---
+                linhas.forEach(linha => {
+                     const dataStr = linha.querySelector('.data').value;
+                     const tdSaldo = linha.querySelector('.saldo-dia');
+                     const minutosArredondadosLinha = converterParaMinutos(linha.querySelector('.horas-dia').textContent); // Pega o total já calculado para a linha
+
+                     let saldoMinutosDia = 0;
+                     let classeSaldo = '';
+
+                     if (dataStr && totaisPorData[dataStr] !== undefined) {
+                         // Calcula o saldo com base no total acumulado para a data
+                         saldoMinutosDia = totaisPorData[dataStr] - HORAS_DIA_PADRAO_MIN;
+                     } else {
+                          // Se não tem data, calcula saldo individualmente (ou deixa 00:00)
+                          // Vamos calcular individualmente para consistência
+                          saldoMinutosDia = minutosArredondadosLinha - HORAS_DIA_PADRAO_MIN;
+                     }
+                      
+                     // Define a classe de cor baseada no saldo calculado
+                     if (saldoMinutosDia > 0) {
+                         classeSaldo = 'saldo-positivo';
+                     } else if (saldoMinutosDia < 0) {
+                         classeSaldo = 'saldo-negativo';
+                     } else if (dataStr && totaisPorData[dataStr] > 0) { // Neutro só se trabalhou no dia
+                          classeSaldo = 'saldo-neutro';
+                     } else if (!dataStr && minutosArredondadosLinha > 0) { // Neutro (sem data) só se trabalhou na linha
+                          classeSaldo = 'saldo-neutro';
+                     }
+
+
+                     if (tdSaldo) {
+                         tdSaldo.textContent = converterParaHora(saldoMinutosDia);
+                         tdSaldo.classList.remove('saldo-positivo', 'saldo-negativo', 'saldo-neutro');
+                         if (classeSaldo) {
+                             tdSaldo.classList.add(classeSaldo);
+                         }
+                     }
+                });
+
+                // --- Finaliza cálculo do total do mês ---
                 const horasExternasStr = document.getElementById('horas-externas').value;
                 const minutosExternos = converterParaMinutos(horasExternasStr);
                 totalMinutosMes += minutosExternos;
@@ -850,9 +886,10 @@
                 calcularResumoSemanal();
             }
 
+
             // --- FUNÇÃO (Cálculo Semanal) ---
             function calcularResumoSemanal() {
-                const semanas = {}; // Objeto para guardar os minutos por semana
+                const semanas = {}; 
                 const linhas = document.querySelectorAll("#corpo-tabela tr");
 
                 linhas.forEach((linha) => {
@@ -952,13 +989,13 @@
             // --- FUNÇÕES CONVERSORAS ---
             function converterParaMinutos(horaStr) {
                  if (!horaStr || horaStr.indexOf(':') === -1) return 0;
-                 const isNegative = horaStr.startsWith('-'); // Verifica se é negativo
+                 const isNegative = horaStr.startsWith('-'); 
                  const horaLimpa = horaStr.replace('-', '');
                  const [h, m] = horaLimpa.split(':').map(Number);
-                 if (horaStr === '24:00') return 1440; // Trata 24:00
+                 if (horaStr === '24:00') return 1440; 
                  if (isNaN(h) || isNaN(m)) return 0;
                  const totalMinutos = h * 60 + m;
-                 return isNegative ? -totalMinutos : totalMinutos; // Retorna negativo se necessário
+                 return isNegative ? -totalMinutos : totalMinutos; 
             }
 
             function converterParaHora(minutos) {
@@ -976,8 +1013,7 @@
                      horaFormatada = `${String(h).padStart(2, '0')}:${String(m).padStart(2, '0')}`;
                 }
                 
-                // Retorna "00:00" em vez de "-00:00" se minutos for 0
-                if(horaFormatada === '00:00' && !isNegative) return '00:00'; // Ajuste para não retornar negativo se for zero
+                if(horaFormatada === '00:00' && !isNegative) return '00:00'; 
 
                 return isNegative ? '-' + horaFormatada : horaFormatada;
             }
@@ -1042,14 +1078,7 @@
                         }
 
                         dados.linhas.forEach((linhaDados) => {
-                             // --- CORREÇÃO APLICADA AQUI ---
-                            const novaLinha = criarElementoLinha(); // Usa criarElementoLinha
-                            document.getElementById("corpo-tabela").appendChild(novaLinha); // Adiciona à tabela
-                            novaLinha.querySelectorAll("input").forEach((input) => { // Adiciona listeners
-                                input.addEventListener("input", calcularHoras);
-                            });
-                             // --- FIM DA CORREÇÃO ---
-
+                            const novaLinha = adicionarLinha(); 
 
                             novaLinha.querySelector(".data").value =
                                 linhaDados.data || "";
@@ -1077,7 +1106,6 @@
                                 ).value = linhaDados.intervalos[0].fim || "";
                             }
 
-                            // A lógica de adicionar intervalos restantes foi mantida como estava na versão anterior
                             let ultimoBotaoAdicionar = primeiroIntervaloPair.querySelector('.add-intervalo');
                             for (let i = 1; i < (linhaDados.intervalos || []).length; i++) {
                                  adicionarIntervalo(ultimoBotaoAdicionar); 
@@ -1099,7 +1127,6 @@
                     } catch (err) {
                         console.error("Erro ao ler ou processar o arquivo JSON:", err);
                         alert("Erro ao ler o arquivo JSON: " + err.message + ". Verifique o console (F12) para detalhes.");
-                         // Garante que haja pelo menos uma linha se o carregamento falhar completamente
                          if (document.getElementById("corpo-tabela").children.length === 0) {
                              adicionarLinha();
                          }
