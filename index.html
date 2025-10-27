@@ -213,16 +213,15 @@
                 text-align: left;
             }
 
-            /* --- CSS MODIFICADO (Fonte e Alinhamento Total Dia e Saldo Dia) --- */
+            /* CSS (Fonte e Alinhamento Total Dia e Saldo Dia) */
             .horas-dia, .saldo-dia {
                 font-family: "Courier New", Courier, monospace;
                 vertical-align: middle !important; /* Alinha ambos no meio */
             }
-            /* --- Fim da Modificação --- */
 
              /* CSS (Cores e Estilo do Saldo) */
              .saldo-dia {
-                font-weight: bold;
+                /* font-weight: bold; -- REMOVIDO */
                 padding: 6px 4px !important; /* Menos padding lateral para cor preencher */
              }
              .saldo-positivo {
@@ -833,44 +832,62 @@
                     }
                 });
 
-                // --- SEGUNDO LOOP: Calcula e aplica o saldo por data ---
-                linhas.forEach(linha => {
-                     const dataStr = linha.querySelector('.data').value;
-                     const tdSaldo = linha.querySelector('.saldo-dia');
-                     const minutosArredondadosLinha = converterParaMinutos(linha.querySelector('.horas-dia').textContent); // Pega o total já calculado para a linha
+                // --- SEGUNDO LOOP: Calcula e aplica o saldo por data (APENAS NA ÚLTIMA LINHA DO DIA) ---
+                const todasLinhasArray = Array.from(linhas); // Converte NodeList para Array uma vez
 
-                     let saldoMinutosDia = 0;
-                     let classeSaldo = '';
+                linhas.forEach((linha, index) => {
+                    const dataStr = linha.querySelector('.data').value;
+                    const tdSaldo = linha.querySelector('.saldo-dia');
+                    const minutosArredondadosLinha = converterParaMinutos(linha.querySelector('.horas-dia').textContent);
 
-                     if (dataStr && totaisPorData[dataStr] !== undefined) {
-                         // Calcula o saldo com base no total acumulado para a data
-                         saldoMinutosDia = totaisPorData[dataStr] - HORAS_DIA_PADRAO_MIN;
-                     } else {
-                          // Se não tem data, calcula saldo individualmente (ou deixa 00:00)
-                          // Vamos calcular individualmente para consistência
-                          saldoMinutosDia = minutosArredondadosLinha - HORAS_DIA_PADRAO_MIN;
-                     }
-                      
-                     // Define a classe de cor baseada no saldo calculado
-                     if (saldoMinutosDia > 0) {
-                         classeSaldo = 'saldo-positivo';
-                     } else if (saldoMinutosDia < 0) {
-                         classeSaldo = 'saldo-negativo';
-                     } else if (dataStr && totaisPorData[dataStr] > 0) { // Neutro só se trabalhou no dia
-                          classeSaldo = 'saldo-neutro';
-                     } else if (!dataStr && minutosArredondadosLinha > 0) { // Neutro (sem data) só se trabalhou na linha
-                          classeSaldo = 'saldo-neutro';
-                     }
+                    if (!tdSaldo) return; // Checagem de segurança
 
+                    let saldoMinutosDia = 0;
+                    let classeSaldo = '';
+                    let deveMostrarSaldo = false;
 
-                     if (tdSaldo) {
-                         tdSaldo.textContent = converterParaHora(saldoMinutosDia);
-                         tdSaldo.classList.remove('saldo-positivo', 'saldo-negativo', 'saldo-neutro');
-                         if (classeSaldo) {
-                             tdSaldo.classList.add(classeSaldo);
-                         }
-                     }
+                    // Determina se esta é a última linha para a data atual
+                    const nextRow = todasLinhasArray[index + 1];
+                    const nextDataStr = nextRow ? nextRow.querySelector('.data').value : null;
+
+                    if (!dataStr) { // Se a linha atual não tem data, calcula saldo individual
+                        deveMostrarSaldo = true;
+                        saldoMinutosDia = minutosArredondadosLinha - HORAS_DIA_PADRAO_MIN;
+                    } else if (!nextRow || nextDataStr !== dataStr || !nextDataStr) {
+                        // É a última linha da tabela OU
+                        // A próxima linha tem data diferente OU
+                        // A próxima linha não tem data
+                        // ENTÃO: Mostra o saldo acumulado para esta data
+                        deveMostrarSaldo = true;
+                        if (totaisPorData[dataStr] !== undefined) {
+                            saldoMinutosDia = totaisPorData[dataStr] - HORAS_DIA_PADRAO_MIN;
+                        } else {
+                            // Fallback, não deveria acontecer se dataStr existe
+                            saldoMinutosDia = minutosArredondadosLinha - HORAS_DIA_PADRAO_MIN;
+                        }
+                    } // else: Não é a última linha da data, não mostra saldo.
+
+                    // Define a classe de cor SE for mostrar o saldo
+                    if (deveMostrarSaldo) {
+                        if (saldoMinutosDia > 0) {
+                            classeSaldo = 'saldo-positivo';
+                        } else if (saldoMinutosDia < 0) {
+                            classeSaldo = 'saldo-negativo';
+                        } else if (dataStr && totaisPorData[dataStr] > 0) { // Neutro só se trabalhou no dia (com data)
+                            classeSaldo = 'saldo-neutro';
+                        } else if (!dataStr && minutosArredondadosLinha > 0) { // Neutro (sem data) só se trabalhou na linha
+                            classeSaldo = 'saldo-neutro';
+                        }
+                    }
+
+                    // Aplica o texto e a classe
+                    tdSaldo.textContent = deveMostrarSaldo ? converterParaHora(saldoMinutosDia) : '';
+                    tdSaldo.classList.remove('saldo-positivo', 'saldo-negativo', 'saldo-neutro');
+                    if (deveMostrarSaldo && classeSaldo) {
+                        tdSaldo.classList.add(classeSaldo);
+                    }
                 });
+                // --- FIM DO SEGUNDO LOOP ---
 
                 // --- Finaliza cálculo do total do mês ---
                 const horasExternasStr = document.getElementById('horas-externas').value;
