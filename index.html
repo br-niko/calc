@@ -125,9 +125,8 @@
             input[type="date"] {
                 width: 100%;
             }
-             /* --- CSS MODIFICADO (Input number largura) --- */
              input[type="number"] {
-                  width: 60px; /* Largura menor para dias */
+                  width: 60px; 
                   text-align: right;
              }
 
@@ -316,30 +315,49 @@
                 flex-grow: 1;
             }
 
-            /* Container para campos de ajuste */
-            .ajuste-container {
-                margin-top: 30px;
+            /* Container para campos de ajuste e escala */
+            .ajuste-container, #escala-container {
+                margin-top: 20px; 
                 display: flex;
                 flex-direction: column;
                 gap: 10px;
-                max-width: 300px;
+                max-width: 350px; 
                 margin-bottom: 20px;
+                background-color: #c0c0c0; 
+                border-style: inset;
+                border-width: 2px;
+                border-color: #888 #eee #eee #888;
+                padding: 10px 15px;
             }
-            .ajuste-container div {
+            .ajuste-container div, #escala-container .escala-row {
                 display: flex;
                 justify-content: space-between;
                 align-items: center;
             }
-            .ajuste-container label {
+             #escala-container h4 { 
+                 margin: 0 0 8px 0;
+                 border-bottom: 1px solid #888;
+                 padding-bottom: 4px;
+                 font-size: 1em;
+                 font-weight: bold;
+                 color: #000;
+            }
+            .ajuste-container label, #escala-container label {
                 font-size: 1em;
                 margin-right: 5px;
+                white-space: nowrap; 
             }
-            /* --- CSS MODIFICADO (Aplica largura a time e number) --- */
             .ajuste-container input[type="time"],
-            .ajuste-container input[type="number"] {
-                width: 120px; 
+            .ajuste-container input[type="number"],
+            #escala-container input[type="time"] {
+                width: 100px; 
             }
-            /* --- Fim da Modificação --- */
+             #escala-container .escala-inputs { 
+                  display: flex;
+                  gap: 5px;
+             }
+             /* Botão Salvar Escala removido */
+
 
             /* CSS (Campo de subtração) */
             #horas-subtrair {
@@ -365,7 +383,7 @@
                 padding: 8px 12px;
                 border-radius: 0;
                 max-width: 300px;
-                /* margin-bottom: 8px; -- Removido */
+                margin-bottom: 8px;
             }
             #resumo-semanal-container h4 {
                 margin: 0 0 8px 0;
@@ -421,7 +439,7 @@
                     border-bottom: 1px dotted #eee;
                     padding-top: 10px;
                     padding-bottom: 10px;
-                    vertical-align: middle !important; /* Força alinhamento no mobile */
+                    vertical-align: middle !important; 
                 }
                 td:last-child {
                     border-bottom: none;
@@ -437,8 +455,7 @@
                     text-align: left;
                     font-weight: bold;
                     color: #555;
-                    font-family: Arial, sans-serif; /* Fonte normal para labels */
-                     /* Alinha label no meio */
+                    font-family: Arial, sans-serif; 
                      top: 50%;
                      transform: translateY(-50%);
                 }
@@ -470,7 +487,7 @@
                     width: auto;
                     position: static;
                     margin-right: 10px;
-                    transform: none; /* Reseta transform */
+                    transform: none; 
                     top: auto;
                 }
                 td[data-label="Hora-aula?"] input {
@@ -487,7 +504,7 @@
 
                 td[data-label="Intervalos"] {
                     padding-left: 8px;
-                     vertical-align: top !important; /* Intervalos precisa alinhar no topo */
+                     vertical-align: top !important; 
                 }
                  td[data-label="Intervalos"]::before {
                      display: block; 
@@ -500,6 +517,7 @@
 
                 /* Ajusta containers inferiores */
                 .ajuste-container,
+                #escala-container, 
                 #resumo-semanal-container,
                 #total-mes-container,
                 #saldo-mes-container 
@@ -512,19 +530,40 @@
                     margin-top: 0;
                     margin-bottom: 15px;
                 }
-                /* Estilo específico para labels/inputs de ajuste */
-                .ajuste-container {
-                    gap: 15px;
-                }
-                .ajuste-container div {
+                /* Estilo específico para labels/inputs de ajuste e escala */
+                 .ajuste-container div, #escala-container .escala-row {
                     background-color: #f8f8f8;
                     padding: 10px;
                     border-radius: 4px;
                     border: 1px solid #ccc; 
-                }
-                .ajuste-container label {
-                    font-family: Arial, sans-serif; 
-                }
+                     font-family: Arial, sans-serif; /* Fonte normal */
+                 }
+                  #escala-container .escala-row {
+                       flex-wrap: wrap; 
+                  }
+                   #escala-container label {
+                        width: 100%; 
+                        margin-bottom: 5px;
+                        font-family: Arial, sans-serif; 
+                   }
+                    #escala-container .escala-inputs {
+                         width: 100%;
+                         justify-content: space-between;
+                    }
+                     #escala-container input[type="time"] {
+                         width: 48%; 
+                     }
+
+                  #escala-container h4 {
+                       font-family: Arial, sans-serif; 
+                       border: none;
+                       padding: 10px; /* Adiciona padding ao título no mobile */
+                       margin-bottom: 0px; /* Remove margem inferior */
+                       background-color: #f8f8f8; /* Fundo igual aos rows */
+                       border-radius: 4px; /* Mesma borda */
+                       border: 1px solid #ccc;
+                  }
+
 
                 /* Estilo específico para resumo e total no mobile */
                 #resumo-semanal-container,
@@ -652,7 +691,7 @@
                 />
             </div>
             <div>
-                <label for="feriados-mes">Feriados no Mês (dias):</label>
+                <label for="feriados-mes">Feriados (dias):</label>
                 <input
                     type="number"
                     id="feriados-mes"
@@ -661,7 +700,26 @@
                     oninput="calcularHoras()"
                 />
             </div>
+        </div>
+
+        <div id="escala-container">
+             <h4>Definir Escala Padrão</h4>
+             <div class="escala-row">
+                 <label>Turno 1:</label>
+                 <div class="escala-inputs">
+                     <input type="time" id="escala-entrada1" title="Entrada Turno 1" oninput="calcularHoras()">
+                     <input type="time" id="escala-saida1" title="Saída Turno 1" oninput="calcularHoras()">
+                 </div>
              </div>
+             <div class="escala-row">
+                 <label>Turno 2:</label>
+                  <div class="escala-inputs">
+                     <input type="time" id="escala-entrada2" title="Entrada Turno 2 (opcional)" oninput="calcularHoras()">
+                     <input type="time" id="escala-saida2" title="Saída Turno 2 (opcional)" oninput="calcularHoras()">
+                 </div>
+             </div>
+             </div>
+
 
         <div id="resumo-semanal-container">
             <h4>Resumo Semanal</h4>
@@ -821,13 +879,51 @@
                 return totalCompensatedMinutes;
             }
 
-            // --- FUNÇÃO DE CÁLCULO PRINCIPAL (COM SALDO POR DATA e SALDO MENSAL AJUSTADO) ---
+            // --- FUNÇÃO DE CÁLCULO PRINCIPAL (COM ESCALA, TOLERÂNCIA E SALDO MENSAL) ---
             function calcularHoras() {
                 const linhas = document.querySelectorAll('#corpo-tabela tr');
                 let totalMinutosMes = 0;
                 const totaisPorData = {}; 
                 const diasTrabalhados = new Set(); 
-                const HORAS_DIA_PADRAO_MIN = 8 * 60; 
+                const HORAS_DIA_PADRAO_MIN = 8 * 60; // 480 minutos
+                const TOLERANCIA_MINUTOS = 5;
+
+                // --- Lê a escala definida ---
+                const e1 = document.getElementById('escala-entrada1').value;
+                const s1 = document.getElementById('escala-saida1').value;
+                const e2 = document.getElementById('escala-entrada2').value;
+                const s2 = document.getElementById('escala-saida2').value;
+
+                let duracaoEsperadaMin = HORAS_DIA_PADRAO_MIN; // Padrão 8h
+                const DAY_END = 1440; // 24:00 em minutos
+                
+                try {
+                    let duracaoTurno1 = 0;
+                    let duracaoTurno2 = 0;
+
+                    if (e1 && s1) {
+                        const e1Min = converterParaMinutos(e1);
+                        const s1Min = converterParaMinutos(s1);
+                        // Trata virada de dia no turno 1
+                        duracaoTurno1 = (s1Min < e1Min) ? (DAY_END - e1Min) + s1Min : s1Min - e1Min;
+                    }
+                    if (e2 && s2) {
+                        const e2Min = converterParaMinutos(e2);
+                        const s2Min = converterParaMinutos(s2);
+                         // Trata virada de dia no turno 2
+                        duracaoTurno2 = (s2Min < e2Min) ? (DAY_END - e2Min) + s2Min : s2Min - e2Min; 
+                    }
+
+                    // Se pelo menos um turno foi preenchido, usa a soma deles
+                    if (duracaoTurno1 > 0 || duracaoTurno2 > 0) {
+                        duracaoEsperadaMin = duracaoTurno1 + duracaoTurno2;
+                    } // Se não, mantém o padrão 8h
+                } catch (e) {
+                     console.error("Erro ao calcular duração da escala", e);
+                     duracaoEsperadaMin = HORAS_DIA_PADRAO_MIN; // Volta pro padrão em caso de erro
+                }
+                // --- Fim leitura escala ---
+
 
                 // --- PRIMEIRO LOOP ---
                 linhas.forEach(linha => {
@@ -876,7 +972,7 @@
                     }
                 });
 
-                // --- SEGUNDO LOOP ---
+                // --- SEGUNDO LOOP: Aplica saldo diário COM TOLERÂNCIA ---
                 const todasLinhasArray = Array.from(linhas); 
 
                 linhas.forEach((linha, index) => {
@@ -886,38 +982,42 @@
 
                      if (!tdSaldo) return; 
 
-                     let saldoMinutosDia = 0;
+                     let saldoMinutosDiaCalculado = 0; 
+                     let saldoMinutosDiaExibido = 0; 
                      let classeSaldo = '';
                      let deveMostrarSaldo = false;
+                     let minutosTrabalhadosNoDia = 0;
 
                      const nextRow = todasLinhasArray[index + 1];
                      const nextDataStr = nextRow ? nextRow.querySelector('.data').value : null;
 
                      if (!dataStr) { 
                          deveMostrarSaldo = true;
-                         saldoMinutosDia = minutosArredondadosLinha - HORAS_DIA_PADRAO_MIN;
+                         minutosTrabalhadosNoDia = minutosArredondadosLinha;
+                         saldoMinutosDiaCalculado = minutosTrabalhadosNoDia - duracaoEsperadaMin; 
                      } else if (!nextRow || nextDataStr !== dataStr || !nextDataStr) {
                          deveMostrarSaldo = true;
-                         if (totaisPorData[dataStr] !== undefined) {
-                             saldoMinutosDia = totaisPorData[dataStr] - HORAS_DIA_PADRAO_MIN;
-                         } else {
-                             saldoMinutosDia = minutosArredondadosLinha - HORAS_DIA_PADRAO_MIN;
-                         }
+                         minutosTrabalhadosNoDia = totaisPorData[dataStr] || 0;
+                         saldoMinutosDiaCalculado = minutosTrabalhadosNoDia - duracaoEsperadaMin;
                      } 
-
+                     
                      if (deveMostrarSaldo) {
-                         if (saldoMinutosDia > 0) {
+                          if (saldoMinutosDiaCalculado >= -TOLERANCIA_MINUTOS && saldoMinutosDiaCalculado < 0) {
+                               saldoMinutosDiaExibido = 0; 
+                          } else {
+                               saldoMinutosDiaExibido = saldoMinutosDiaCalculado; 
+                          }
+
+                         if (saldoMinutosDiaExibido > 0) {
                              classeSaldo = 'saldo-positivo';
-                         } else if (saldoMinutosDia < 0) {
+                         } else if (saldoMinutosDiaExibido < 0) {
                              classeSaldo = 'saldo-negativo';
-                         } else if (dataStr && totaisPorData[dataStr] > 0) { 
-                              classeSaldo = 'saldo-neutro';
-                         } else if (!dataStr && minutosArredondadosLinha > 0) { 
-                              classeSaldo = 'saldo-neutro';
+                         } else if (minutosTrabalhadosNoDia > 0){ 
+                             classeSaldo = 'saldo-neutro';
                          }
                      }
 
-                     tdSaldo.textContent = deveMostrarSaldo ? converterParaHora(saldoMinutosDia) : '';
+                     tdSaldo.textContent = deveMostrarSaldo ? converterParaHora(saldoMinutosDiaExibido) : '';
                      tdSaldo.classList.remove('saldo-positivo', 'saldo-negativo', 'saldo-neutro');
                      if (deveMostrarSaldo && classeSaldo) {
                          tdSaldo.classList.add(classeSaldo);
@@ -933,34 +1033,46 @@
                 const minutosSubtrair = converterParaMinutos(horasSubtrairStr);
                 totalMinutosMes -= minutosSubtrair;
 
-                // Pega número de feriados
                 const feriadosInput = document.getElementById('feriados-mes');
                 const numeroDeFeriados = parseInt(feriadosInput.value, 10) || 0;
-                const minutosFeriados = numeroDeFeriados * HORAS_DIA_PADRAO_MIN;
+                // Os minutos dos feriados NÃO devem ser subtraídos das horas esperadas,
+                // eles devem ser ADICIONADOS ao total trabalhado ou considerados como dias não esperados.
+                // Vamos abordá-lo como dias onde a expectativa é ZERO.
+                
+                // Recalcula Horas Esperadas: Soma a duração da escala para cada dia trabalhado *que não é feriado*
+                let horasEsperadasMes = 0;
+                let diasTrabalhadosValidos = 0; // Conta dias que não são feriados
+                diasTrabalhados.forEach(dia => {
+                     // Aqui precisaríamos de uma lista real de feriados para comparar.
+                     // Por simplicidade, vamos assumir que os 'numeroDeFeriados' são distribuídos
+                     // e subtraímos do total de dias trabalhados para calcular o esperado.
+                     // Esta é uma APROXIMAÇÃO. Uma lógica real de feriados seria mais complexa.
+                     diasTrabalhadosValidos++; 
+                });
+                
+                // Ajusta a contagem de dias esperados pelos feriados informados
+                const diasEsperados = Math.max(0, diasTrabalhadosValidos - numeroDeFeriados);
+                horasEsperadasMes = diasEsperados * duracaoEsperadaMin;
 
                 // Atualiza Total do Mês
                 document.getElementById('total-mes').textContent = converterParaHora(totalMinutosMes);
                 
-                // Calcula Horas Esperadas descontando feriados
-                // Considera apenas dias ÚNICOS onde houve lançamento
-                const horasEsperadasMes = (diasTrabalhados.size * HORAS_DIA_PADRAO_MIN) - minutosFeriados;
-                
                 // Calcula e Atualiza Saldo do Mês
-                const saldoMinutosMes = totalMinutosMes - horasEsperadasMes;
+                const saldoMinutosMes = totalMinutosMes - horasEsperadasMes; 
                 const saldoMesContainer = document.getElementById('saldo-mes-container');
                 const saldoMesSpan = document.getElementById('saldo-mes');
 
                 if(saldoMesSpan) saldoMesSpan.textContent = converterParaHora(saldoMinutosMes);
 
-                // Aplica cor ao container do Saldo do Mês
                 if(saldoMesContainer) {
                     saldoMesContainer.classList.remove('saldo-positivo', 'saldo-negativo', 'saldo-neutro');
+                    // Aplica cor baseada no saldo, considerando que 0 é neutro
                     if (saldoMinutosMes > 0) {
                         saldoMesContainer.classList.add('saldo-positivo');
                     } else if (saldoMinutosMes < 0) {
                         saldoMesContainer.classList.add('saldo-negativo');
-                    } else if (diasTrabalhados.size > 0 || numeroDeFeriados > 0){ // Neutro se houve dias ou feriados
-                        saldoMesContainer.classList.add('saldo-neutro');
+                    } else if (totalMinutosMes > 0 || diasTrabalhados.size > 0) { // Neutro se houve horas ou dias
+                         saldoMesContainer.classList.add('saldo-neutro');
                     }
                 }
 
@@ -979,10 +1091,13 @@
                         linha.querySelector(".horas-dia").textContent;
 
                     if (dataStr && horasStr) {
-                        const minutosDia = converterParaMinutos(horasStr);
+                        const inicioSemana = getInicioDaSemana(dataStr);
+                         // Adiciona checagem se getInicioDaSemana retornou null
+                         if (!inicioSemana) return; 
+
+                         const minutosDia = converterParaMinutos(horasStr);
                         if (minutosDia === 0) return;
 
-                        const inicioSemana = getInicioDaSemana(dataStr);
 
                         if (!semanas[inicioSemana]) {
                             semanas[inicioSemana] = 0;
@@ -1011,18 +1126,31 @@
             }
 
             // --- FUNÇÃO (Helper de Data) ---
-            function getInicioDaSemana(dataStr) {
-                const [ano, mes, dia] = dataStr.split("-").map(Number);
-                const data = new Date(ano, mes - 1, dia);
-                const diaDaSemana = data.getDay();
-                const dataInicio = new Date(
-                    data.setDate(data.getDate() - diaDaSemana),
-                );
-                const y = dataInicio.getFullYear();
-                const m = String(dataInicio.getMonth() + 1).padStart(2, "0");
-                const d = String(dataInicio.getDate()).padStart(2, "0");
-                return `${y}-${m}-${d}`;
-            }
+             function getInicioDaSemana(dataStr) {
+                 if (!dataStr || !dataStr.includes('-')) return null; 
+                 try {
+                     // Garante que a data seja interpretada corretamente como local
+                     const [ano, mes, dia] = dataStr.split('-').map(Number);
+                     // Usa UTC para evitar problemas de fuso horário na criação do objeto Date
+                     // Mas o cálculo de dia da semana funciona corretamente independente do fuso inicial.
+                     const data = new Date(Date.UTC(ano, mes - 1, dia)); 
+                     if (isNaN(data.getTime())) return null; 
+
+                     const diaDaSemana = data.getUTCDay(); // Usa getUTCDay (0 = Domingo)
+                     // Clona a data antes de modificar
+                     const dataInicio = new Date(data.getTime()); 
+                     dataInicio.setUTCDate(data.getUTCDate() - diaDaSemana); // Ajusta para o domingo
+
+                     const y = dataInicio.getUTCFullYear();
+                     const m = String(dataInicio.getUTCMonth() + 1).padStart(2, "0");
+                     const d = String(dataInicio.getUTCDate()).padStart(2, "0");
+                     return `${y}-${m}-${d}`;
+                 } catch(e) {
+                     console.error("Erro ao processar data em getInicioDaSemana:", dataStr, e);
+                     return null;
+                 }
+             }
+
 
             // --- FUNÇÃO (Ordenação por Data) ---
             function ordenarPorData() {
@@ -1072,7 +1200,10 @@
                  if (!horaStr || horaStr.indexOf(':') === -1) return 0;
                  const isNegative = horaStr.startsWith('-'); 
                  const horaLimpa = horaStr.replace('-', '');
-                 const [h, m] = horaLimpa.split(':').map(Number);
+                 const parts = horaLimpa.split(':');
+                 const h = parseInt(parts[0], 10);
+                 const m = parseInt(parts[1], 10);
+
                  if (horaStr === '24:00') return 1440; 
                  if (isNaN(h) || isNaN(m)) return 0;
                  const totalMinutos = h * 60 + m;
@@ -1100,12 +1231,19 @@
             }
 
 
-            // --- FUNÇÕES Salvar e Carregar (JSON Local - COM FERIADOS) ---
+            // --- FUNÇÕES Salvar e Carregar (JSON Local - COM ESCALA E FERIADOS) ---
             function salvarDados() {
                 const dados = {
                     horasExternas: document.getElementById("horas-externas").value,
                     horasSubtrair: document.getElementById("horas-subtrair").value,
-                    feriadosMes: document.getElementById("feriados-mes").value, // Salva feriados
+                    feriadosMes: document.getElementById("feriados-mes").value, 
+                    // Salva a escala no JSON
+                    escala: {
+                         e1: document.getElementById('escala-entrada1').value,
+                         s1: document.getElementById('escala-saida1').value,
+                         e2: document.getElementById('escala-entrada2').value,
+                         s2: document.getElementById('escala-saida2').value
+                     },
                     linhas: [],
                 };
 
@@ -1153,7 +1291,22 @@
                         document.getElementById("horas-subtrair").value =
                             dados.horasSubtrair || "";
                         document.getElementById("feriados-mes").value = 
-                            dados.feriadosMes || 0; // Carrega feriados
+                            dados.feriadosMes || 0; 
+                        
+                        // Carrega a escala do JSON, se existir
+                        if (dados.escala) {
+                            document.getElementById('escala-entrada1').value = dados.escala.e1 || '';
+                            document.getElementById('escala-saida1').value = dados.escala.s1 || '';
+                            document.getElementById('escala-entrada2').value = dados.escala.e2 || '';
+                            document.getElementById('escala-saida2').value = dados.escala.s2 || '';
+                        } else {
+                            // Limpa campos da escala se não vier no JSON
+                            document.getElementById('escala-entrada1').value = '';
+                            document.getElementById('escala-saida1').value = '';
+                            document.getElementById('escala-entrada2').value = '';
+                            document.getElementById('escala-saida2').value = '';
+                        }
+
 
                         if (!dados.linhas || dados.linhas.length === 0) {
                             adicionarLinha();
@@ -1220,10 +1373,14 @@
                 reader.readAsText(file);
                 event.target.value = null;
             }
+             
+             // As funções salvarEscala e carregarEscala foram removidas
 
             // --- INICIALIZAÇÃO DA PÁGINA ---
             adicionarLinha();
+            // carregarEscala(); // Removido - escala carrega com o JSON
             calcularResumoSemanal();
+             calcularHoras(); // Chama para calcular saldos iniciais com escala padrão (ou vazia)
         </script>
     </body>
 </html>
