@@ -7,7 +7,6 @@
 
         <style>
             /* --- Definição da Fonte W95 --- */
-            /* IMPORTANTE: Os arquivos .woff e .woff2 devem estar na MESMA pasta que este HTML */
             @font-face {
                 font-family: "W95Font";
                 src:
@@ -44,27 +43,32 @@
                 margin-bottom: 20px;
             }
 
-            /* colgroup para 8 colunas */
+            /* colgroup para 9 colunas */
             colgroup col:nth-child(1) {
                 width: 130px;
-            }
+            } /* Data */
             colgroup col:nth-child(2) {
-                width: 187px;
-            }
+                width: 170px;
+            } /* Atividade */
             colgroup col:nth-child(3),
             colgroup col:nth-child(4) {
                 width: 60px;
-            }
+            } /* Início, Fim */
             colgroup col:nth-child(5) {
-                width: 220px;
-            }
-            colgroup col:nth-child(6),
+                width: 210px;
+            } /* Intervalos */
+            colgroup col:nth-child(6) {
+                width: 70px;
+            } /* Hora-aula */
             colgroup col:nth-child(7) {
-                width: 80px;
-            }
+                width: 70px;
+            } /* Total Dia */
             colgroup col:nth-child(8) {
+                width: 70px;
+            } /* Saldo Dia */
+            colgroup col:nth-child(9) {
                 width: 50px;
-            }
+            } /* Ações */
 
             /* CSS (Sem linhas verticais, ajuste padding) */
             th,
@@ -73,7 +77,7 @@
                 border-bottom: 1px solid #c0c0c0;
                 padding: 6px 8px;
                 text-align: center;
-                vertical-align: top;
+                vertical-align: top; /* Default para top */
                 overflow: hidden;
                 text-overflow: ellipsis;
             }
@@ -137,6 +141,11 @@
             input[type="date"] {
                 width: 100%;
             }
+            input[type="number"] {
+                width: 60px;
+                text-align: right;
+            }
+
             input[type="checkbox"] {
                 appearance: none;
                 background-color: #fff;
@@ -190,22 +199,23 @@
                 height: 20px;
             }
 
-            /* --- CSS MODIFICADO (Container para os botões de ação) --- */
+            /* Container para os botões de ação */
             .botoes-acao {
                 display: flex;
                 gap: 10px;
                 flex-wrap: wrap;
-                margin-top: 10px; /* Reduz espaço acima */
+                margin-top: 10px;
             }
-            /* --- Fim da Modificação --- */
 
-            /* CSS (Fonte do Total Mês) */
-            #total-mes {
+            /* CSS (Fonte do Total Mês e Saldo Mês) */
+            #total-mes,
+            #saldo-mes {
                 font-weight: normal;
                 font-family: "Courier New", Courier, monospace;
             }
-            /* Container do total mês */
-            #total-mes-container {
+            /* Container do total mês e Saldo Mês */
+            #total-mes-container,
+            #saldo-mes-container {
                 margin-top: 8px;
                 background-color: #c0c0c0;
                 border-style: inset;
@@ -216,7 +226,15 @@
                 max-width: 300px;
                 margin-bottom: 20px;
             }
-            #total-mes-container h3 {
+            #resumo-semanal-container {
+                margin-bottom: 8px;
+            }
+            #total-mes-container {
+                margin-bottom: 8px;
+            }
+
+            #total-mes-container h3,
+            #saldo-mes-container h3 {
                 font-family: "W95Font", Arial, sans-serif;
                 margin: 0;
                 font-size: 1em;
@@ -226,9 +244,36 @@
                 text-align: left;
             }
 
-            /* CSS (Fonte Total Dia) */
-            .horas-dia {
+            /* CSS (Fonte e Alinhamento Total Dia e Saldo Dia) */
+            .horas-dia,
+            .saldo-dia {
                 font-family: "Courier New", Courier, monospace;
+                vertical-align: middle !important;
+            }
+
+            /* CSS (Cores do Saldo - Aplicadas aos containers também) */
+            .saldo-dia {
+                padding: 6px 4px !important;
+            }
+            .saldo-positivo {
+                background-color: #dff0d8 !important;
+                color: #3c763d !important;
+            }
+            .saldo-negativo {
+                background-color: #f2dede !important;
+                color: #a94442 !important;
+            }
+            .saldo-neutro {
+                background-color: #d9edf7 !important;
+                color: #31708f !important;
+            }
+            #saldo-mes-container.saldo-positivo h3,
+            #saldo-mes-container.saldo-positivo #saldo-mes,
+            #saldo-mes-container.saldo-negativo h3,
+            #saldo-mes-container.saldo-negativo #saldo-mes,
+            #saldo-mes-container.saldo-neutro h3,
+            #saldo-mes-container.saldo-neutro #saldo-mes {
+                color: inherit !important;
             }
 
             /* Estilos para os Intervalos */
@@ -296,16 +341,20 @@
                 flex-grow: 1;
             }
 
-            /* --- CSS MODIFICADO (Container para campos de ajuste) --- */
+            /* Container para campos de ajuste */
             .ajuste-container {
-                margin-top: 30px; /* Aumenta espaço acima */
+                margin-top: 30px;
                 display: flex;
                 flex-direction: column;
                 gap: 10px;
                 max-width: 300px;
                 margin-bottom: 20px;
+                background-color: #c0c0c0;
+                border-style: inset;
+                border-width: 2px;
+                border-color: #888 #eee #eee #888;
+                padding: 10px 15px;
             }
-            /* --- Fim da Modificação --- */
             .ajuste-container div {
                 display: flex;
                 justify-content: space-between;
@@ -315,8 +364,9 @@
                 font-size: 1em;
                 margin-right: 5px;
             }
-            .ajuste-container input[type="time"] {
-                width: 120px;
+            .ajuste-container input[type="time"],
+            .ajuste-container input[type="number"] {
+                width: 100px;
             }
 
             /* CSS (Campo de subtração) */
@@ -332,6 +382,95 @@
                 border-width: 1px;
                 border-color: #888 #eee #eee #888;
                 outline: 1px dotted #000;
+            }
+
+            /* --- CSS MODIFICADO (Container da Escala) --- */
+            #escala-container {
+                margin-top: 20px;
+                display: flex;
+                flex-direction: column;
+                gap: 15px;
+                max-width: 800px; /* Aumenta largura para caber tudo */
+                margin-bottom: 20px;
+                background-color: #c0c0c0;
+                border-style: inset;
+                border-width: 2px;
+                border-color: #888 #eee #eee #888;
+                padding: 10px 15px;
+            }
+            #escala-container h4 {
+                margin: 0 0 10px 0;
+                border-bottom: 1px solid #888;
+                padding-bottom: 4px;
+                font-size: 1em;
+                font-weight: bold;
+                color: #000;
+            }
+            .escala-dia {
+                display: flex;
+                align-items: flex-start; /* Alinha label do dia no topo */
+                gap: 10px;
+                padding-bottom: 10px;
+                border-bottom: 1px dotted #888;
+            }
+            .escala-dia:last-child {
+                border-bottom: none;
+                padding-bottom: 0;
+            }
+            .escala-dia-label {
+                font-weight: bold;
+                width: 60px;
+                flex-shrink: 0;
+                text-align: right;
+                padding-top: 5px; /* Ajusta alinhamento vertical */
+            }
+            .escala-turnos {
+                display: flex;
+                flex-direction: column;
+                gap: 10px; /* Espaço entre turnos */
+                flex-grow: 1;
+            }
+            .escala-turno-container {
+                /* Novo container para um turno completo */
+                display: flex;
+                flex-direction: column;
+                gap: 5px;
+                border: 1px solid #aaa; /* Linha separadora leve */
+                padding: 8px;
+                background: #eee; /* Fundo levemente diferente */
+                border-style: inset;
+                border-width: 1px;
+                border-color: #aaa #f0f0f0 #f0f0f0 #aaa;
+            }
+            .escala-row {
+                display: flex;
+                align-items: center;
+                gap: 5px;
+                flex-wrap: wrap; /* Permite quebra em telas menores */
+            }
+            .escala-row label {
+                font-size: 0.9em;
+                width: 70px; /* Largura para "Entrada:", "Intervalo:" */
+                flex-shrink: 0;
+                text-align: right;
+            }
+            .escala-inputs {
+                display: flex;
+                gap: 5px;
+                flex-grow: 1; /* Ocupa espaço */
+            }
+            #escala-container input[type="time"] {
+                width: 90px; /* Largura fixa menor */
+            }
+            .escala-hora-aula-container {
+                margin-left: 75px; /* Alinha checkbox com inputs */
+                display: flex;
+                align-items: center;
+            }
+            .escala-hora-aula-container label {
+                width: auto; /* Label do checkbox com largura auto */
+                margin-left: 3px;
+                font-size: 0.9em;
             }
 
             /* CSS (Resumo Semanal W95) */
@@ -399,6 +538,7 @@
                     border-bottom: 1px dotted #eee;
                     padding-top: 10px;
                     padding-bottom: 10px;
+                    vertical-align: middle !important;
                 }
                 td:last-child {
                     border-bottom: none;
@@ -414,6 +554,9 @@
                     text-align: left;
                     font-weight: bold;
                     color: #555;
+                    font-family: Arial, sans-serif;
+                    top: 50%;
+                    transform: translateY(-50%);
                 }
 
                 /* Ajustes específicos */
@@ -427,6 +570,15 @@
                     margin-top: 5px;
                 }
 
+                /* Saldo no mobile */
+                td[data-label="Saldo Dia"] {
+                    padding-left: 50% !important;
+                    padding-right: 8px !important;
+                }
+                .saldo-dia {
+                    padding: 10px 8px !important;
+                }
+
                 td[data-label="Hora-aula?"] {
                     text-align: left;
                 }
@@ -434,6 +586,8 @@
                     width: auto;
                     position: static;
                     margin-right: 10px;
+                    transform: none;
+                    top: auto;
                 }
                 td[data-label="Hora-aula?"] input {
                     vertical-align: middle;
@@ -449,9 +603,11 @@
 
                 td[data-label="Intervalos"] {
                     padding-left: 8px;
+                    vertical-align: top !important;
                 }
                 td[data-label="Intervalos"]::before {
-                    display: none;
+                    display: block;
+                    visibility: hidden;
                 }
                 .intervalo-container {
                     margin-top: 5px;
@@ -459,8 +615,10 @@
 
                 /* Ajusta containers inferiores */
                 .ajuste-container,
+                #escala-container,
                 #resumo-semanal-container,
-                #total-mes-container {
+                #total-mes-container,
+                #saldo-mes-container {
                     border-style: none;
                     background-color: transparent;
                     padding: 0;
@@ -469,35 +627,111 @@
                     margin-top: 0;
                     margin-bottom: 15px;
                 }
-                #total-mes-container {
-                    border-radius: 0;
-                    border-top: none;
-                }
-                /* Estilo específico para labels/inputs de ajuste */
-                .ajuste-container {
-                    gap: 15px;
-                }
-                .ajuste-container div {
+                /* Estilo específico para labels/inputs de ajuste e escala */
+                .ajuste-container div,
+                #escala-container {
                     background-color: #f8f8f8;
                     padding: 10px;
                     border-radius: 4px;
+                    border: 1px solid #ccc;
+                    font-family: Arial, sans-serif;
+                }
+                #escala-container .escala-dia {
+                    flex-direction: column;
+                    align-items: flex-start;
+                    border: none;
+                    padding: 0;
+                    margin-bottom: 15px; /* Espaço entre dias no mobile */
+                }
+                .escala-dia:last-child {
+                    margin-bottom: 0;
+                }
+                .escala-dia-label {
+                    width: auto;
+                    text-align: left;
+                    margin-bottom: 5px;
+                    font-size: 1.1em;
+                    font-family: Arial, sans-serif;
+                }
+                .escala-turnos {
+                    width: 100%;
+                    gap: 10px;
+                }
+                .escala-turno-container {
+                    border: none;
+                    background: #eee;
+                    padding: 10px;
+                    border-radius: 3px;
+                }
+                .escala-row {
+                    flex-wrap: wrap;
+                }
+                .escala-row label {
+                    width: 100%;
+                    margin-bottom: 3px;
+                    font-family: Arial, sans-serif;
+                    text-align: left;
+                }
+                .escala-inputs {
+                    width: 100%;
+                    justify-content: space-between;
+                }
+                #escala-container input[type="time"] {
+                    width: 48%;
+                }
+                .escala-hora-aula-container {
+                    margin-left: 0;
+                    margin-top: 5px;
+                    width: 100%;
+                }
+                .escala-hora-aula-container label {
+                    width: auto;
+                    font-family: Arial, sans-serif;
+                }
+
+                #escala-container h4 {
+                    font-family: Arial, sans-serif;
+                    border: none;
+                    padding: 10px;
+                    margin-bottom: 0px;
+                    background-color: #f8f8f8;
+                    border-radius: 4px;
+                    border: 1px solid #ccc;
+                    margin-bottom: 10px;
                 }
 
                 /* Estilo específico para resumo e total no mobile */
                 #resumo-semanal-container,
-                #total-mes-container {
+                #total-mes-container,
+                #saldo-mes-container {
                     background-color: #f8f8f8;
                     padding: 10px;
                     border-radius: 4px;
+                    border: 1px solid #ccc;
                 }
                 #resumo-semanal-container h4,
-                #total-mes-container h3 {
+                #total-mes-container h3,
+                #saldo-mes-container h3 {
                     border: none;
                     padding: 0;
                     margin-bottom: 8px;
+                    font-family: Arial, sans-serif;
                 }
-                #total-mes-container h3 {
+                #total-mes-container h3,
+                #saldo-mes-container h3 {
                     text-align: left;
+                }
+                #resumo-semanal {
+                    font-family: Arial, sans-serif;
+                    color: #333;
+                }
+                #saldo-mes-container.saldo-positivo h3,
+                #saldo-mes-container.saldo-positivo #saldo-mes,
+                #saldo-mes-container.saldo-negativo h3,
+                #saldo-mes-container.saldo-negativo #saldo-mes,
+                #saldo-mes-container.saldo-neutro h3,
+                #saldo-mes-container.saldo-neutro #saldo-mes {
+                    color: inherit !important;
                 }
             }
         </style>
@@ -505,6 +739,7 @@
     <body>
         <table id="tabela-horas">
             <colgroup>
+                <col />
                 <col />
                 <col />
                 <col />
@@ -522,7 +757,8 @@
                     <th>Fim</th>
                     <th>Intervalos</th>
                     <th>Hora-aula?</th>
-                    <th>Total do Dia</th>
+                    <th>Total Dia</th>
+                    <th>Saldo Dia</th>
                     <th>Ações</th>
                 </tr>
             </thead>
@@ -596,6 +832,480 @@
                     oninput="calcularHoras()"
                 />
             </div>
+            <div>
+                <label for="feriados-mes">Feriados (dias):</label>
+                <input
+                    type="number"
+                    id="feriados-mes"
+                    min="0"
+                    value="0"
+                    oninput="calcularHoras()"
+                />
+            </div>
+        </div>
+
+        <div id="escala-container">
+            <h4>Definir Escala Padrão Semanal</h4>
+
+            <div class="escala-dia">
+                <span class="escala-dia-label">Segunda:</span>
+                <div class="escala-turnos">
+                    <div class="escala-turno-container">
+                        <div class="escala-row">
+                            <label>Entrada 1:</label>
+                            <input
+                                type="time"
+                                id="escala-entrada1-seg"
+                                oninput="calcularHoras()"
+                            />
+                            <label>Saída 1:</label>
+                            <input
+                                type="time"
+                                id="escala-saida1-seg"
+                                oninput="calcularHoras()"
+                            />
+                        </div>
+                        <div class="escala-row">
+                            <label>Intervalo:</label>
+                            <div class="escala-inputs">
+                                <input
+                                    type="time"
+                                    id="escala-int-inicio1-seg"
+                                    title="Início Intervalo 1"
+                                    oninput="calcularHoras()"
+                                />
+                                <input
+                                    type="time"
+                                    id="escala-int-fim1-seg"
+                                    title="Fim Intervalo 1"
+                                    oninput="calcularHoras()"
+                                />
+                            </div>
+                        </div>
+                        <div class="escala-hora-aula-container">
+                            <input
+                                type="checkbox"
+                                id="escala-hora-aula1-seg"
+                                onchange="calcularHoras()"
+                            />
+                            <label for="escala-hora-aula1-seg"
+                                >Hora-Aula?</label
+                            >
+                        </div>
+                    </div>
+                    <div class="escala-turno-container">
+                        <div class="escala-row">
+                            <label>Entrada 2:</label>
+                            <input
+                                type="time"
+                                id="escala-entrada2-seg"
+                                oninput="calcularHoras()"
+                            />
+                            <label>Saída 2:</label>
+                            <input
+                                type="time"
+                                id="escala-saida2-seg"
+                                oninput="calcularHoras()"
+                            />
+                        </div>
+                        <div class="escala-row">
+                            <label>Intervalo:</label>
+                            <div class="escala-inputs">
+                                <input
+                                    type="time"
+                                    id="escala-int-inicio2-seg"
+                                    title="Início Intervalo 2"
+                                    oninput="calcularHoras()"
+                                />
+                                <input
+                                    type="time"
+                                    id="escala-int-fim2-seg"
+                                    title="Fim Intervalo 2"
+                                    oninput="calcularHoras()"
+                                />
+                            </div>
+                        </div>
+                        <div class="escala-hora-aula-container">
+                            <input
+                                type="checkbox"
+                                id="escala-hora-aula2-seg"
+                                onchange="calcularHoras()"
+                            />
+                            <label for="escala-hora-aula2-seg"
+                                >Hora-Aula?</label
+                            >
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="escala-dia">
+                <span class="escala-dia-label">Terça:</span>
+                <div class="escala-turnos">
+                    <div class="escala-turno-container">
+                        <div class="escala-row">
+                            <label>Entrada 1:</label>
+                            <input
+                                type="time"
+                                id="escala-entrada1-ter"
+                                oninput="calcularHoras()"
+                            />
+                            <label>Saída 1:</label>
+                            <input
+                                type="time"
+                                id="escala-saida1-ter"
+                                oninput="calcularHoras()"
+                            />
+                        </div>
+                        <div class="escala-row">
+                            <label>Intervalo:</label>
+                            <div class="escala-inputs">
+                                <input
+                                    type="time"
+                                    id="escala-int-inicio1-ter"
+                                    title="Início Intervalo 1"
+                                    oninput="calcularHoras()"
+                                />
+                                <input
+                                    type="time"
+                                    id="escala-int-fim1-ter"
+                                    title="Fim Intervalo 1"
+                                    oninput="calcularHoras()"
+                                />
+                            </div>
+                        </div>
+                        <div class="escala-hora-aula-container">
+                            <input
+                                type="checkbox"
+                                id="escala-hora-aula1-ter"
+                                onchange="calcularHoras()"
+                            />
+                            <label for="escala-hora-aula1-ter"
+                                >Hora-Aula?</label
+                            >
+                        </div>
+                    </div>
+                    <div class="escala-turno-container">
+                        <div class="escala-row">
+                            <label>Entrada 2:</label>
+                            <input
+                                type="time"
+                                id="escala-entrada2-ter"
+                                oninput="calcularHoras()"
+                            />
+                            <label>Saída 2:</label>
+                            <input
+                                type="time"
+                                id="escala-saida2-ter"
+                                oninput="calcularHoras()"
+                            />
+                        </div>
+                        <div class="escala-row">
+                            <label>Intervalo:</label>
+                            <div class="escala-inputs">
+                                <input
+                                    type="time"
+                                    id="escala-int-inicio2-ter"
+                                    title="Início Intervalo 2"
+                                    oninput="calcularHoras()"
+                                />
+                                <input
+                                    type="time"
+                                    id="escala-int-fim2-ter"
+                                    title="Fim Intervalo 2"
+                                    oninput="calcularHoras()"
+                                />
+                            </div>
+                        </div>
+                        <div class="escala-hora-aula-container">
+                            <input
+                                type="checkbox"
+                                id="escala-hora-aula2-ter"
+                                onchange="calcularHoras()"
+                            />
+                            <label for="escala-hora-aula2-ter"
+                                >Hora-Aula?</label
+                            >
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="escala-dia">
+                <span class="escala-dia-label">Quarta:</span>
+                <div class="escala-turnos">
+                    <div class="escala-turno-container">
+                        <div class="escala-row">
+                            <label>Entrada 1:</label>
+                            <input
+                                type="time"
+                                id="escala-entrada1-qua"
+                                oninput="calcularHoras()"
+                            />
+                            <label>Saída 1:</label>
+                            <input
+                                type="time"
+                                id="escala-saida1-qua"
+                                oninput="calcularHoras()"
+                            />
+                        </div>
+                        <div class="escala-row">
+                            <label>Intervalo:</label>
+                            <div class="escala-inputs">
+                                <input
+                                    type="time"
+                                    id="escala-int-inicio1-qua"
+                                    title="Início Intervalo 1"
+                                    oninput="calcularHoras()"
+                                />
+                                <input
+                                    type="time"
+                                    id="escala-int-fim1-qua"
+                                    title="Fim Intervalo 1"
+                                    oninput="calcularHoras()"
+                                />
+                            </div>
+                        </div>
+                        <div class="escala-hora-aula-container">
+                            <input
+                                type="checkbox"
+                                id="escala-hora-aula1-qua"
+                                onchange="calcularHoras()"
+                            />
+                            <label for="escala-hora-aula1-qua"
+                                >Hora-Aula?</label
+                            >
+                        </div>
+                    </div>
+                    <div class="escala-turno-container">
+                        <div class="escala-row">
+                            <label>Entrada 2:</label>
+                            <input
+                                type="time"
+                                id="escala-entrada2-qua"
+                                oninput="calcularHoras()"
+                            />
+                            <label>Saída 2:</label>
+                            <input
+                                type="time"
+                                id="escala-saida2-qua"
+                                oninput="calcularHoras()"
+                            />
+                        </div>
+                        <div class="escala-row">
+                            <label>Intervalo:</label>
+                            <div class="escala-inputs">
+                                <input
+                                    type="time"
+                                    id="escala-int-inicio2-qua"
+                                    title="Início Intervalo 2"
+                                    oninput="calcularHoras()"
+                                />
+                                <input
+                                    type="time"
+                                    id="escala-int-fim2-qua"
+                                    title="Fim Intervalo 2"
+                                    oninput="calcularHoras()"
+                                />
+                            </div>
+                        </div>
+                        <div class="escala-hora-aula-container">
+                            <input
+                                type="checkbox"
+                                id="escala-hora-aula2-qua"
+                                onchange="calcularHoras()"
+                            />
+                            <label for="escala-hora-aula2-qua"
+                                >Hora-Aula?</label
+                            >
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="escala-dia">
+                <span class="escala-dia-label">Quinta:</span>
+                <div class="escala-turnos">
+                    <div class="escala-turno-container">
+                        <div class="escala-row">
+                            <label>Entrada 1:</label>
+                            <input
+                                type="time"
+                                id="escala-entrada1-qui"
+                                oninput="calcularHoras()"
+                            />
+                            <label>Saída 1:</label>
+                            <input
+                                type="time"
+                                id="escala-saida1-qui"
+                                oninput="calcularHoras()"
+                            />
+                        </div>
+                        <div class="escala-row">
+                            <label>Intervalo:</label>
+                            <div class="escala-inputs">
+                                <input
+                                    type="time"
+                                    id="escala-int-inicio1-qui"
+                                    title="Início Intervalo 1"
+                                    oninput="calcularHoras()"
+                                />
+                                <input
+                                    type="time"
+                                    id="escala-int-fim1-qui"
+                                    title="Fim Intervalo 1"
+                                    oninput="calcularHoras()"
+                                />
+                            </div>
+                        </div>
+                        <div class="escala-hora-aula-container">
+                            <input
+                                type="checkbox"
+                                id="escala-hora-aula1-qui"
+                                onchange="calcularHoras()"
+                            />
+                            <label for="escala-hora-aula1-qui"
+                                >Hora-Aula?</label
+                            >
+                        </div>
+                    </div>
+                    <div class="escala-turno-container">
+                        <div class="escala-row">
+                            <label>Entrada 2:</label>
+                            <input
+                                type="time"
+                                id="escala-entrada2-qui"
+                                oninput="calcularHoras()"
+                            />
+                            <label>Saída 2:</label>
+                            <input
+                                type="time"
+                                id="escala-saida2-qui"
+                                oninput="calcularHoras()"
+                            />
+                        </div>
+                        <div class="escala-row">
+                            <label>Intervalo:</label>
+                            <div class="escala-inputs">
+                                <input
+                                    type="time"
+                                    id="escala-int-inicio2-qui"
+                                    title="Início Intervalo 2"
+                                    oninput="calcularHoras()"
+                                />
+                                <input
+                                    type="time"
+                                    id="escala-int-fim2-qui"
+                                    title="Fim Intervalo 2"
+                                    oninput="calcularHoras()"
+                                />
+                            </div>
+                        </div>
+                        <div class="escala-hora-aula-container">
+                            <input
+                                type="checkbox"
+                                id="escala-hora-aula2-qui"
+                                onchange="calcularHoras()"
+                            />
+                            <label for="escala-hora-aula2-qui"
+                                >Hora-Aula?</label
+                            >
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="escala-dia">
+                <span class="escala-dia-label">Sexta:</span>
+                <div class="escala-turnos">
+                    <div class="escala-turno-container">
+                        <div class="escala-row">
+                            <label>Entrada 1:</label>
+                            <input
+                                type="time"
+                                id="escala-entrada1-sex"
+                                oninput="calcularHoras()"
+                            />
+                            <label>Saída 1:</label>
+                            <input
+                                type="time"
+                                id="escala-saida1-sex"
+                                oninput="calcularHoras()"
+                            />
+                        </div>
+                        <div class="escala-row">
+                            <label>Intervalo:</label>
+                            <div class="escala-inputs">
+                                <input
+                                    type="time"
+                                    id="escala-int-inicio1-sex"
+                                    title="Início Intervalo 1"
+                                    oninput="calcularHoras()"
+                                />
+                                <input
+                                    type="time"
+                                    id="escala-int-fim1-sex"
+                                    title="Fim Intervalo 1"
+                                    oninput="calcularHoras()"
+                                />
+                            </div>
+                        </div>
+                        <div class="escala-hora-aula-container">
+                            <input
+                                type="checkbox"
+                                id="escala-hora-aula1-sex"
+                                onchange="calcularHoras()"
+                            />
+                            <label for="escala-hora-aula1-sex"
+                                >Hora-Aula?</label
+                            >
+                        </div>
+                    </div>
+                    <div class="escala-turno-container">
+                        <div class="escala-row">
+                            <label>Entrada 2:</label>
+                            <input
+                                type="time"
+                                id="escala-entrada2-sex"
+                                oninput="calcularHoras()"
+                            />
+                            <label>Saída 2:</label>
+                            <input
+                                type="time"
+                                id="escala-saida2-sex"
+                                oninput="calcularHoras()"
+                            />
+                        </div>
+                        <div class="escala-row">
+                            <label>Intervalo:</label>
+                            <div class="escala-inputs">
+                                <input
+                                    type="time"
+                                    id="escala-int-inicio2-sex"
+                                    title="Início Intervalo 2"
+                                    oninput="calcularHoras()"
+                                />
+                                <input
+                                    type="time"
+                                    id="escala-int-fim2-sex"
+                                    title="Fim Intervalo 2"
+                                    oninput="calcularHoras()"
+                                />
+                            </div>
+                        </div>
+                        <div class="escala-hora-aula-container">
+                            <input
+                                type="checkbox"
+                                id="escala-hora-aula2-sex"
+                                onchange="calcularHoras()"
+                            />
+                            <label for="escala-hora-aula2-sex"
+                                >Hora-Aula?</label
+                            >
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
 
         <div id="resumo-semanal-container">
@@ -605,6 +1315,10 @@
 
         <div id="total-mes-container">
             <h3>Total do mês: <span id="total-mes">00:00</span></h3>
+        </div>
+
+        <div id="saldo-mes-container">
+            <h3>Saldo do Mês: <span id="saldo-mes">00:00</span></h3>
         </div>
 
         <script>
@@ -641,78 +1355,70 @@
                 calcularHoras();
             }
 
-            // --- FUNÇÃO REFATORADA (criarElementoLinha) ---
             function criarElementoLinha() {
                 const linha = document.createElement("tr");
-
                 linha.innerHTML = `
-                <td data-label="Data">
-                    <div class="data-container">
-                        <input type="date" class="data">
-                        <button class="add-linha-abaixo" onclick="adicionarLinhaAbaixo(this)" title="Adicionar linha abaixo com a mesma data">
+                    <td data-label="Data">
+                        <div class="data-container">
+                            <input type="date" class="data">
+                            <button class="add-linha-abaixo" onclick="adicionarLinhaAbaixo(this)" title="Adicionar linha abaixo com a mesma data">
+                                <svg fill="none" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16"><path d="M9 7h6v2H9v6H7V9H1V7h6V1h2v6z" fill="currentColor"/></svg>
+                            </button>
+                        </div>
+                    </td>
+                    <td data-label="Atividade"><input type="text" class="atividade"></td>
+                    <td data-label="Início"><input type="time" class="entrada"></td>
+                    <td data-label="Fim"><input type="time" class="saida"></td>
+                    <td data-label="Intervalos">
+                    <div class="intervalo-container">
+                        <div class="intervalo-pair">
+                        <input type="time" class="intervalo-inicio">
+                        <input type="time" class="intervalo-fim">
+                        <button class="add-intervalo" onclick="adicionarIntervalo(this)" title="Adicionar intervalo">
                             <svg fill="none" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16"><path d="M9 7h6v2H9v6H7V9H1V7h6V1h2v6z" fill="currentColor"/></svg>
                         </button>
+                        </div>
                     </div>
-                </td>
-                <td data-label="Atividade"><input type="text" class="atividade"></td>
-                <td data-label="Início"><input type="time" class="entrada"></td>
-                <td data-label="Fim"><input type="time" class="saida"></td>
-                <td data-label="Intervalos">
-                  <div class="intervalo-container">
-                    <div class="intervalo-pair">
-                      <input type="time" class="intervalo-inicio">
-                      <input type="time" class="intervalo-fim">
-                      <button class="add-intervalo" onclick="adicionarIntervalo(this)" title="Adicionar intervalo">
-                         <svg fill="none" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16"><path d="M9 7h6v2H9v6H7V9H1V7h6V1h2v6z" fill="currentColor"/></svg>
-                      </button>
-                    </div>
-                  </div>
-                </td>
-                <td data-label="Hora-aula?"><input type="checkbox" class="hora-aula"></td>
-                <td data-label="Total Dia" class="horas-dia">00:00</td>
-                <td data-label="Ações">
-                    <button class="remover-intervalo" onclick="removerLinha(this)" title="Remover Linha">
-                        <svg fill="none" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"> <path d="M16 2v4h6v2h-2v14H4V8H2V6h6V2h8zm-2 2h-4v2h4V4zm0 4H6v12h12V8h-4zm-5 2h2v8H9v-8zm6 0h-2v8h2v-8z" fill="currentColor"/> </svg>
-                    </button>
-                </td>
-            `;
+                    </td>
+                    <td data-label="Hora-aula?"><input type="checkbox" class="hora-aula"></td>
+                    <td data-label="Total Dia" class="horas-dia">00:00</td>
+                    <td data-label="Saldo Dia" class="saldo-dia">00:00</td>
+                    <td data-label="Ações">
+                        <button class="remover-intervalo" onclick="removerLinha(this)" title="Remover Linha">
+                            <svg fill="none" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"> <path d="M16 2v4h6v2h-2v14H4V8H2V6h6V2h8zm-2 2h-4v2h4V4zm0 4H6v12h12V8h-4zm-5 2h2v8H9v-8zm6 0h-2v8h2v-8z" fill="currentColor"/> </svg>
+                        </button>
+                    </td>
+                `;
                 return linha;
             }
 
-            // --- FUNÇÃO CORRIGIDA (adicionarLinha) ---
             function adicionarLinha() {
                 const tbody = document.getElementById("corpo-tabela");
-                const novaLinhaElement = criarElementoLinha(); // Cria o elemento
-                tbody.appendChild(novaLinhaElement); // Adiciona ao final da tabela
+                const novaLinhaElement = criarElementoLinha();
+                tbody.appendChild(novaLinhaElement);
 
-                // Adiciona listeners aos inputs da nova linha
                 novaLinhaElement.querySelectorAll("input").forEach((input) => {
                     input.addEventListener("input", calcularHoras);
                 });
-
-                return novaLinhaElement; // Retorna o elemento TR criado
+                return novaLinhaElement;
             }
 
-            // --- NOVA FUNÇÃO (adicionarLinhaAbaixo) ---
             function adicionarLinhaAbaixo(botao) {
                 const linhaAtual = botao.closest("tr");
                 const dataAtualInput = linhaAtual.querySelector(".data");
                 const dataParaCopiar = dataAtualInput
                     ? dataAtualInput.value
-                    : ""; // Pega data atual
+                    : "";
 
-                const novaLinhaElement = criarElementoLinha(); // Cria o elemento da nova linha
+                const novaLinhaElement = criarElementoLinha();
 
-                // Define a data na nova linha
                 const dataNovaInput = novaLinhaElement.querySelector(".data");
                 if (dataNovaInput) {
                     dataNovaInput.value = dataParaCopiar;
                 }
 
-                // Insere a nova linha *depois* da linha atual
                 linhaAtual.insertAdjacentElement("afterend", novaLinhaElement);
 
-                // Adiciona listeners aos inputs da nova linha (IMPORTANTE!)
                 novaLinhaElement.querySelectorAll("input").forEach((input) => {
                     input.addEventListener("input", calcularHoras);
                 });
@@ -759,15 +1465,92 @@
                 return totalCompensatedMinutes;
             }
 
-            // --- FUNÇÃO DE CÁLCULO PRINCIPAL ---
+            // --- FUNÇÃO DE CÁLCULO PRINCIPAL (COM ESCALA SEMANAL DETALHADA, TOLERÂNCIA E SALDO MENSAL) ---
             function calcularHoras() {
                 const linhas = document.querySelectorAll("#corpo-tabela tr");
                 let totalMinutosMes = 0;
+                const totaisPorData = {}; // Guarda { total: xxx, esperado: yyy }
+                const diasTrabalhados = new Set();
+                const HORAS_DIA_PADRAO_MIN = 8 * 60;
+                const TOLERANCIA_MINUTOS = 5;
+                const DAY_END = 1440;
+                const HORA_AULA_FACTOR = 60 / 50;
 
+                // --- Lê a escala SEMANAL DETALHADA e calcula duração esperada POR DIA DA SEMANA ---
+                const duracaoEsperadaPorDiaSemana = {}; // 0=Dom, 1=Seg, ..., 6=Sab
+                const dias = ["seg", "ter", "qua", "qui", "sex"];
+                const diasIdx = { seg: 1, ter: 2, qua: 3, qui: 4, sex: 5 };
+
+                for (const dia of dias) {
+                    let duracaoTotalDia = 0;
+
+                    for (let turno = 1; turno <= 2; turno++) {
+                        const e = document.getElementById(
+                            `escala-entrada${turno}-${dia}`,
+                        ).value;
+                        const s = document.getElementById(
+                            `escala-saida${turno}-${dia}`,
+                        ).value;
+                        const intIni = document.getElementById(
+                            `escala-int-inicio${turno}-${dia}`,
+                        ).value;
+                        const intFim = document.getElementById(
+                            `escala-int-fim${turno}-${dia}`,
+                        ).value;
+                        const hAula = document.getElementById(
+                            `escala-hora-aula${turno}-${dia}`,
+                        ).checked;
+
+                        let duracaoBrutaTurno = 0;
+                        let duracaoIntervaloTurno = 0;
+
+                        if (e && s) {
+                            const eMin = converterParaMinutos(e);
+                            const sMin = converterParaMinutos(s);
+                            duracaoBrutaTurno =
+                                sMin < eMin
+                                    ? DAY_END - eMin + sMin
+                                    : sMin - eMin;
+                        }
+
+                        if (intIni && intFim) {
+                            const intIniMin = converterParaMinutos(intIni);
+                            const intFimMin = converterParaMinutos(intFim);
+                            // Assume intervalo no mesmo dia
+                            duracaoIntervaloTurno =
+                                intFimMin < intIniMin
+                                    ? 0
+                                    : intFimMin - intIniMin;
+                        }
+
+                        let duracaoLiquidaTurno = Math.max(
+                            0,
+                            duracaoBrutaTurno - duracaoIntervaloTurno,
+                        );
+
+                        if (duracaoLiquidaTurno > 0 && hAula) {
+                            duracaoLiquidaTurno *= HORA_AULA_FACTOR;
+                        }
+                        duracaoTotalDia += duracaoLiquidaTurno;
+                    } // Fim loop turnos
+
+                    // Se nenhuma entrada/saída foi definida para o dia, usa 8h padrão, senão usa o calculado
+                    duracaoEsperadaPorDiaSemana[diasIdx[dia]] =
+                        duracaoTotalDia > 0
+                            ? Math.round(duracaoTotalDia)
+                            : HORAS_DIA_PADRAO_MIN;
+                } // Fim loop dias
+
+                duracaoEsperadaPorDiaSemana[0] = 0; // Domingo
+                duracaoEsperadaPorDiaSemana[6] = 0; // Sábado
+                // --- Fim leitura escala semanal detalhada ---
+
+                // --- PRIMEIRO LOOP ---
                 linhas.forEach((linha) => {
                     const entrada = linha.querySelector(".entrada").value;
                     const saida = linha.querySelector(".saida").value;
                     const horaAula = linha.querySelector(".hora-aula").checked;
+                    const dataStr = linha.querySelector(".data").value;
 
                     let minutosDiaCompensados = 0;
 
@@ -805,7 +1588,7 @@
 
                     if (minutosDiaCompensados > 0 && horaAula) {
                         minutosDiaCompensados =
-                            minutosDiaCompensados * (60 / 50);
+                            minutosDiaCompensados * HORA_AULA_FACTOR;
                     }
 
                     minutosDiaCompensados = Math.max(0, minutosDiaCompensados);
@@ -816,8 +1599,122 @@
                     linha.querySelector(".horas-dia").textContent =
                         converterParaHora(minutosArredondados);
                     totalMinutosMes += minutosArredondados;
+
+                    if (dataStr && minutosArredondados >= 0) {
+                        let duracaoEsperadaParaEsteDia = HORAS_DIA_PADRAO_MIN; // Padrão
+                        try {
+                            const dataObj = new Date(dataStr + "T00:00:00");
+                            if (!isNaN(dataObj.getTime())) {
+                                const diaSemana = dataObj.getDay();
+                                duracaoEsperadaParaEsteDia =
+                                    duracaoEsperadaPorDiaSemana[diaSemana]; // Pega a duração calculada da escala
+                            }
+                        } catch (e) {
+                            /* Usa padrão */
+                        }
+
+                        if (!totaisPorData[dataStr]) {
+                            totaisPorData[dataStr] = {
+                                total: 0,
+                                esperado: duracaoEsperadaParaEsteDia,
+                            };
+                        }
+                        totaisPorData[dataStr].total += minutosArredondados;
+                        totaisPorData[dataStr].esperado =
+                            duracaoEsperadaParaEsteDia;
+
+                        if (minutosArredondados > 0) {
+                            diasTrabalhados.add(dataStr);
+                        }
+                    }
                 });
 
+                // --- SEGUNDO LOOP: Aplica saldo diário COM TOLERÂNCIA ---
+                const todasLinhasArray = Array.from(linhas);
+
+                linhas.forEach((linha, index) => {
+                    const dataStr = linha.querySelector(".data").value;
+                    const tdSaldo = linha.querySelector(".saldo-dia");
+                    const minutosArredondadosLinha = converterParaMinutos(
+                        linha.querySelector(".horas-dia").textContent,
+                    );
+
+                    if (!tdSaldo) return;
+
+                    let saldoMinutosDiaCalculado = 0;
+                    let saldoMinutosDiaExibido = 0;
+                    let classeSaldo = "";
+                    let deveMostrarSaldo = false;
+                    let minutosTrabalhadosNoDia = 0;
+                    let duracaoEsperadaParaEsteDia = HORAS_DIA_PADRAO_MIN; // Padrão
+
+                    const nextRow = todasLinhasArray[index + 1];
+                    const nextDataStr = nextRow
+                        ? nextRow.querySelector(".data").value
+                        : null;
+
+                    if (!dataStr) {
+                        deveMostrarSaldo = true;
+                        minutosTrabalhadosNoDia = minutosArredondadosLinha;
+                        // Linha sem data compara com 8h padrão
+                        saldoMinutosDiaCalculado =
+                            minutosTrabalhadosNoDia - HORAS_DIA_PADRAO_MIN;
+                    } else if (
+                        !nextRow ||
+                        nextDataStr !== dataStr ||
+                        !nextDataStr
+                    ) {
+                        deveMostrarSaldo = true;
+                        if (totaisPorData[dataStr]) {
+                            minutosTrabalhadosNoDia =
+                                totaisPorData[dataStr].total;
+                            duracaoEsperadaParaEsteDia =
+                                totaisPorData[dataStr].esperado; // Pega o esperado da escala
+                            saldoMinutosDiaCalculado =
+                                minutosTrabalhadosNoDia -
+                                duracaoEsperadaParaEsteDia;
+                        } else {
+                            minutosTrabalhadosNoDia = minutosArredondadosLinha;
+                            // Se não achou totaisPorData, usa 8h padrão para o saldo
+                            saldoMinutosDiaCalculado =
+                                minutosTrabalhadosNoDia - HORAS_DIA_PADRAO_MIN;
+                        }
+                    }
+
+                    if (deveMostrarSaldo) {
+                        if (
+                            saldoMinutosDiaCalculado >= -TOLERANCIA_MINUTOS &&
+                            saldoMinutosDiaCalculado < 0 &&
+                            duracaoEsperadaParaEsteDia > 0
+                        ) {
+                            saldoMinutosDiaExibido = 0;
+                        } else {
+                            saldoMinutosDiaExibido = saldoMinutosDiaCalculado;
+                        }
+
+                        if (saldoMinutosDiaExibido > 0) {
+                            classeSaldo = "saldo-positivo";
+                        } else if (saldoMinutosDiaExibido < 0) {
+                            classeSaldo = "saldo-negativo";
+                        } else if (minutosTrabalhadosNoDia > 0) {
+                            classeSaldo = "saldo-neutro";
+                        }
+                    }
+
+                    tdSaldo.textContent = deveMostrarSaldo
+                        ? converterParaHora(saldoMinutosDiaExibido)
+                        : "";
+                    tdSaldo.classList.remove(
+                        "saldo-positivo",
+                        "saldo-negativo",
+                        "saldo-neutro",
+                    );
+                    if (deveMostrarSaldo && classeSaldo) {
+                        tdSaldo.classList.add(classeSaldo);
+                    }
+                });
+
+                // --- Finaliza cálculo do total e saldo do mês (COM FERIADOS E ESCALA SEMANAL) ---
                 const horasExternasStr =
                     document.getElementById("horas-externas").value;
                 const minutosExternos = converterParaMinutos(horasExternasStr);
@@ -828,15 +1725,82 @@
                 const minutosSubtrair = converterParaMinutos(horasSubtrairStr);
                 totalMinutosMes -= minutosSubtrair;
 
+                const feriadosInput = document.getElementById("feriados-mes");
+                const numeroDeFeriados = parseInt(feriadosInput.value, 10) || 0;
+
+                // Calcula Horas Esperadas somando o esperado de cada dia único trabalhado
+                let horasEsperadasMes = 0;
+                diasTrabalhados.forEach((dia) => {
+                    // Usa o valor 'esperado' que foi armazenado para cada data no primeiro loop
+                    if (
+                        totaisPorData[dia] &&
+                        totaisPorData[dia].esperado !== undefined
+                    ) {
+                        horasEsperadasMes += totaisPorData[dia].esperado;
+                    } else {
+                        // Fallback improvável, mas seguro
+                        try {
+                            const dataObj = new Date(dia + "T00:00:00");
+                            if (!isNaN(dataObj.getTime())) {
+                                const diaSemana = dataObj.getDay();
+                                horasEsperadasMes +=
+                                    duracaoEsperadaPorDiaSemana[diaSemana] !==
+                                    undefined
+                                        ? duracaoEsperadaPorDiaSemana[diaSemana]
+                                        : HORAS_DIA_PADRAO_MIN;
+                            } else {
+                                horasEsperadasMes += HORAS_DIA_PADRAO_MIN;
+                            }
+                        } catch (e) {
+                            horasEsperadasMes += HORAS_DIA_PADRAO_MIN;
+                        }
+                    }
+                });
+
+                // AJUSTE: Remove a expectativa dos dias de feriado
+                // Assumimos que feriado zera a expectativa de 8h (padrão)
+                horasEsperadasMes -= numeroDeFeriados * HORAS_DIA_PADRAO_MIN;
+                horasEsperadasMes = Math.max(0, horasEsperadasMes);
+
+                // Atualiza Total do Mês
                 document.getElementById("total-mes").textContent =
                     converterParaHora(totalMinutosMes);
+
+                // Calcula e Atualiza Saldo do Mês
+                const saldoMinutosMes = totalMinutosMes - horasEsperadasMes;
+                const saldoMesContainer = document.getElementById(
+                    "saldo-mes-container",
+                );
+                const saldoMesSpan = document.getElementById("saldo-mes");
+
+                if (saldoMesSpan)
+                    saldoMesSpan.textContent =
+                        converterParaHora(saldoMinutosMes);
+
+                if (saldoMesContainer) {
+                    saldoMesContainer.classList.remove(
+                        "saldo-positivo",
+                        "saldo-negativo",
+                        "saldo-neutro",
+                    );
+                    if (saldoMinutosMes > 0) {
+                        saldoMesContainer.classList.add("saldo-positivo");
+                    } else if (saldoMinutosMes < 0) {
+                        saldoMesContainer.classList.add("saldo-negativo");
+                    } else if (
+                        totalMinutosMes > 0 ||
+                        diasTrabalhados.size > 0
+                    ) {
+                        saldoMesContainer.classList.add("saldo-neutro");
+                    }
+                }
 
                 calcularResumoSemanal();
             }
 
             // --- FUNÇÃO (Cálculo Semanal) ---
             function calcularResumoSemanal() {
-                const semanas = {}; // Objeto para guardar os minutos por semana
+                const semanas = {};
                 const linhas = document.querySelectorAll("#corpo-tabela tr");
 
                 linhas.forEach((linha) => {
@@ -845,10 +1809,11 @@
                         linha.querySelector(".horas-dia").textContent;
 
                     if (dataStr && horasStr) {
+                        const inicioSemana = getInicioDaSemana(dataStr);
+                        if (!inicioSemana) return;
+
                         const minutosDia = converterParaMinutos(horasStr);
                         if (minutosDia === 0) return;
-
-                        const inicioSemana = getInicioDaSemana(dataStr);
 
                         if (!semanas[inicioSemana]) {
                             semanas[inicioSemana] = 0;
@@ -878,16 +1843,31 @@
 
             // --- FUNÇÃO (Helper de Data) ---
             function getInicioDaSemana(dataStr) {
-                const [ano, mes, dia] = dataStr.split("-").map(Number);
-                const data = new Date(ano, mes - 1, dia);
-                const diaDaSemana = data.getDay();
-                const dataInicio = new Date(
-                    data.setDate(data.getDate() - diaDaSemana),
-                );
-                const y = dataInicio.getFullYear();
-                const m = String(dataInicio.getMonth() + 1).padStart(2, "0");
-                const d = String(dataInicio.getDate()).padStart(2, "0");
-                return `${y}-${m}-${d}`;
+                if (!dataStr || !dataStr.includes("-")) return null;
+                try {
+                    const [ano, mes, dia] = dataStr.split("-").map(Number);
+                    const data = new Date(Date.UTC(ano, mes - 1, dia));
+                    if (isNaN(data.getTime())) return null;
+
+                    const diaDaSemana = data.getUTCDay();
+                    const dataInicio = new Date(data.getTime());
+                    dataInicio.setUTCDate(data.getUTCDate() - diaDaSemana);
+
+                    const y = dataInicio.getUTCFullYear();
+                    const m = String(dataInicio.getUTCMonth() + 1).padStart(
+                        2,
+                        "0",
+                    );
+                    const d = String(dataInicio.getUTCDate()).padStart(2, "0");
+                    return `${y}-${m}-${d}`;
+                } catch (e) {
+                    console.error(
+                        "Erro ao processar data em getInicioDaSemana:",
+                        dataStr,
+                        e,
+                    );
+                    return null;
+                }
             }
 
             // --- FUNÇÃO (Ordenação por Data) ---
@@ -936,11 +1916,16 @@
             // --- FUNÇÕES CONVERSORAS ---
             function converterParaMinutos(horaStr) {
                 if (!horaStr || horaStr.indexOf(":") === -1) return 0;
+                const isNegative = horaStr.startsWith("-");
                 const horaLimpa = horaStr.replace("-", "");
-                const [h, m] = horaLimpa.split(":").map(Number);
+                const parts = horaLimpa.split(":");
+                const h = parseInt(parts[0], 10);
+                const m = parseInt(parts[1], 10);
+
                 if (horaStr === "24:00") return 1440;
                 if (isNaN(h) || isNaN(m)) return 0;
-                return h * 60 + m;
+                const totalMinutos = h * 60 + m;
+                return isNegative ? -totalMinutos : totalMinutos;
             }
 
             function converterParaHora(minutos) {
@@ -958,16 +1943,47 @@
                     horaFormatada = `${String(h).padStart(2, "0")}:${String(m).padStart(2, "0")}`;
                 }
 
+                if (horaFormatada === "00:00" && !isNegative) return "00:00";
+
                 return isNegative ? "-" + horaFormatada : horaFormatada;
             }
 
-            // --- FUNÇÕES Salvar e Carregar (JSON Local) ---
+            // --- FUNÇÕES Salvar e Carregar (JSON Local - COM ESCALA SEMANAL DETALHADA E FERIADOS) ---
             function salvarDados() {
+                const dias = ["seg", "ter", "qua", "qui", "sex"];
+                const escala = {};
+                for (const dia of dias) {
+                    escala[dia] = {}; // Cria objeto para o dia
+                    for (let turno = 1; turno <= 2; turno++) {
+                        escala[dia][`e${turno}`] =
+                            document.getElementById(
+                                `escala-entrada${turno}-${dia}`,
+                            ).value || "";
+                        escala[dia][`s${turno}`] =
+                            document.getElementById(
+                                `escala-saida${turno}-${dia}`,
+                            ).value || "";
+                        escala[dia][`intIni${turno}`] =
+                            document.getElementById(
+                                `escala-int-inicio${turno}-${dia}`,
+                            ).value || "";
+                        escala[dia][`intFim${turno}`] =
+                            document.getElementById(
+                                `escala-int-fim${turno}-${dia}`,
+                            ).value || "";
+                        escala[dia][`hAula${turno}`] = document.getElementById(
+                            `escala-hora-aula${turno}-${dia}`,
+                        ).checked;
+                    }
+                }
+
                 const dados = {
                     horasExternas:
                         document.getElementById("horas-externas").value,
                     horasSubtrair:
                         document.getElementById("horas-subtrair").value,
+                    feriadosMes: document.getElementById("feriados-mes").value,
+                    escala: escala, // Salva a escala semanal detalhada
                     linhas: [],
                 };
 
@@ -1007,6 +2023,7 @@
             }
 
             function carregarDados(event) {
+                const dias = ["seg", "ter", "qua", "qui", "sex"];
                 const file = event.target.files[0];
                 if (!file) return;
 
@@ -1021,6 +2038,54 @@
                             dados.horasExternas || "";
                         document.getElementById("horas-subtrair").value =
                             dados.horasSubtrair || "";
+                        document.getElementById("feriados-mes").value =
+                            dados.feriadosMes || 0;
+
+                        // Carrega a escala semanal detalhada do JSON, se existir
+                        if (dados.escala) {
+                            for (const dia of dias) {
+                                const escalaDia = dados.escala[dia] || {}; // Pega dados do dia ou objeto vazio
+                                for (let turno = 1; turno <= 2; turno++) {
+                                    document.getElementById(
+                                        `escala-entrada${turno}-${dia}`,
+                                    ).value = escalaDia[`e${turno}`] || "";
+                                    document.getElementById(
+                                        `escala-saida${turno}-${dia}`,
+                                    ).value = escalaDia[`s${turno}`] || "";
+                                    document.getElementById(
+                                        `escala-int-inicio${turno}-${dia}`,
+                                    ).value = escalaDia[`intIni${turno}`] || "";
+                                    document.getElementById(
+                                        `escala-int-fim${turno}-${dia}`,
+                                    ).value = escalaDia[`intFim${turno}`] || "";
+                                    document.getElementById(
+                                        `escala-hora-aula${turno}-${dia}`,
+                                    ).checked =
+                                        escalaDia[`hAula${turno}`] || false;
+                                }
+                            }
+                        } else {
+                            // Limpa todos os campos da escala se 'dados.escala' não existir
+                            for (const dia of dias) {
+                                for (let turno = 1; turno <= 2; turno++) {
+                                    document.getElementById(
+                                        `escala-entrada${turno}-${dia}`,
+                                    ).value = "";
+                                    document.getElementById(
+                                        `escala-saida${turno}-${dia}`,
+                                    ).value = "";
+                                    document.getElementById(
+                                        `escala-int-inicio${turno}-${dia}`,
+                                    ).value = "";
+                                    document.getElementById(
+                                        `escala-int-fim${turno}-${dia}`,
+                                    ).value = "";
+                                    document.getElementById(
+                                        `escala-hora-aula${turno}-${dia}`,
+                                    ).checked = false;
+                                }
+                            }
+                        }
 
                         if (!dados.linhas || dados.linhas.length === 0) {
                             adicionarLinha();
@@ -1032,62 +2097,83 @@
                             const novaLinha = adicionarLinha();
 
                             novaLinha.querySelector(".data").value =
-                                linhaDados.data;
+                                linhaDados.data || "";
                             novaLinha.querySelector(".atividade").value =
-                                linhaDados.atividade;
+                                linhaDados.atividade || "";
                             novaLinha.querySelector(".entrada").value =
-                                linhaDados.entrada;
+                                linhaDados.entrada || "";
                             novaLinha.querySelector(".saida").value =
-                                linhaDados.saida;
+                                linhaDados.saida || "";
                             novaLinha.querySelector(".hora-aula").checked =
-                                linhaDados.horaAula;
+                                linhaDados.horaAula || false;
 
                             const container = novaLinha.querySelector(
                                 ".intervalo-container",
                             );
-                            const primeiroIntervalo =
+                            const primeiroIntervaloPair =
                                 container.querySelector(".intervalo-pair");
-                            const botaoAdd =
-                                primeiroIntervalo.querySelector(
-                                    ".add-intervalo",
-                                );
 
                             if (
                                 linhaDados.intervalos &&
                                 linhaDados.intervalos[0]
                             ) {
-                                primeiroIntervalo.querySelector(
+                                primeiroIntervaloPair.querySelector(
                                     ".intervalo-inicio",
-                                ).value = linhaDados.intervalos[0].inicio;
-                                primeiroIntervalo.querySelector(
+                                ).value = linhaDados.intervalos[0].inicio || "";
+                                primeiroIntervaloPair.querySelector(
                                     ".intervalo-fim",
-                                ).value = linhaDados.intervalos[0].fim;
+                                ).value = linhaDados.intervalos[0].fim || "";
                             }
 
+                            let ultimoBotaoAdicionar =
+                                primeiroIntervaloPair.querySelector(
+                                    ".add-intervalo",
+                                );
                             for (
                                 let i = 1;
                                 i < (linhaDados.intervalos || []).length;
                                 i++
                             ) {
-                                adicionarIntervalo(botaoAdd);
-                                const todosOsPares =
-                                    container.querySelectorAll(
-                                        ".intervalo-pair",
+                                adicionarIntervalo(ultimoBotaoAdicionar);
+
+                                const ultimoPairAdicionado =
+                                    container.querySelector(
+                                        ".intervalo-pair:last-child",
                                     );
-                                const novoPair =
-                                    todosOsPares[todosOsPares.length - 1];
-                                novoPair.querySelector(
-                                    ".intervalo-inicio",
-                                ).value = linhaDados.intervalos[i].inicio;
-                                novoPair.querySelector(".intervalo-fim").value =
-                                    linhaDados.intervalos[i].fim;
+
+                                if (ultimoPairAdicionado) {
+                                    ultimoPairAdicionado.querySelector(
+                                        ".intervalo-inicio",
+                                    ).value =
+                                        linhaDados.intervalos[i].inicio || "";
+                                    ultimoPairAdicionado.querySelector(
+                                        ".intervalo-fim",
+                                    ).value =
+                                        linhaDados.intervalos[i].fim || "";
+                                    ultimoBotaoAdicionar =
+                                        ultimoPairAdicionado.querySelector(
+                                            ".add-intervalo",
+                                        );
+                                } else {
+                                    console.error(
+                                        "Não foi possível encontrar o último par de intervalo adicionado.",
+                                    );
+                                    break;
+                                }
                             }
                         });
 
                         calcularHoras(); // Recalcula tudo após preencher
                     } catch (err) {
-                        alert("Erro ao ler o arquivo JSON: " + err.message);
-                        console.error("Erro ao carregar JSON:", err);
+                        console.error(
+                            "Erro ao ler ou processar o arquivo JSON:",
+                            err,
+                        );
+                        alert(
+                            "Erro ao ler o arquivo JSON: " +
+                                err.message +
+                                ". Verifique o console (F12) para detalhes.",
+                        );
                         if (
                             document.getElementById("corpo-tabela").children
                                 .length === 0
@@ -1101,9 +2187,13 @@
                 event.target.value = null;
             }
 
+            // As funções salvarEscala e carregarEscala foram removidas
+
             // --- INICIALIZAÇÃO DA PÁGINA ---
             adicionarLinha();
+            // carregarEscala(); // Removido
             calcularResumoSemanal();
+            calcularHoras();
         </script>
     </body>
 </html>
