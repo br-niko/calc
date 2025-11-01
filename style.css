@@ -1,0 +1,727 @@
+/* --- Definição da Fonte W95 --- */
+@font-face {
+    font-family: "W95Font";
+    src:
+        url("w95font.woff2") format("woff2"),
+        url("w95font.woff") format("woff");
+    font-weight: normal;
+    font-style: normal;
+}
+@font-face {
+    font-family: "W95Font";
+    src:
+        url("w95font-bold.woff2") format("woff2"),
+        url("w95font-bold.woff") format("woff");
+    font-weight: bold;
+    font-style: normal;
+}
+
+/* Estilos de 'body' e 'table' */
+body {
+    font-family: "W95Font", Arial, sans-serif;
+    background-color: #d4d0c8;
+    padding: 15px;
+    margin: 0;
+    font-size: 14px;
+}
+table {
+    border-collapse: collapse;
+    width: 100%;
+    background-color: #fff;
+    border-style: inset;
+    border-width: 2px;
+    border-color: #888 #eee #eee #888;
+    table-layout: fixed;
+    margin-bottom: 20px;
+}
+
+/* colgroup para 9 colunas */
+colgroup col:nth-child(1) {
+    width: 130px;
+} /* Data */
+colgroup col:nth-child(2) {
+    width: 170px;
+} /* Atividade */
+colgroup col:nth-child(3),
+colgroup col:nth-child(4) {
+    width: 60px;
+} /* Início, Fim */
+colgroup col:nth-child(5) {
+    width: 210px;
+} /* Intervalos */
+colgroup col:nth-child(6) {
+    width: 70px;
+} /* Hora-aula */
+colgroup col:nth-child(7) {
+    width: 70px;
+} /* Total Dia */
+colgroup col:nth-child(8) {
+    width: 70px;
+} /* Saldo Dia */
+colgroup col:nth-child(9) {
+    width: 50px;
+} /* Ações */
+
+/* CSS (Sem linhas verticais, ajuste padding) */
+th,
+td {
+    border: none;
+    border-bottom: 1px solid #c0c0c0;
+    padding: 6px 8px;
+    text-align: center;
+    vertical-align: top; /* Default para top */
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+tbody tr:last-child td {
+    border-bottom: none;
+}
+
+thead th {
+    border-bottom: 1px solid #888;
+    border-right: 1px solid #888;
+    vertical-align: middle;
+    font-weight: bold;
+    background-color: #c0c0c0;
+    font-size: 1em;
+}
+thead th:last-child {
+    border-right: none;
+}
+
+/* CSS (Alinhamento Títulos) */
+thead th:nth-child(1),
+thead th:nth-child(2),
+thead th:nth-child(3),
+thead th:nth-child(4),
+thead th:nth-child(5) {
+    text-align: left;
+}
+
+/* CSS (Header 'Data' clicável) */
+#th-data {
+    cursor: pointer;
+    user-select: none;
+}
+#th-data:hover {
+    background-color: #b0b0b0;
+}
+
+/* Estilos de 'input' */
+input,
+select {
+    font-family: "W95Font", Arial, sans-serif;
+    background-color: #fff;
+    border-style: inset;
+    border-width: 1px;
+    border-color: #888 #eee #eee #888;
+    padding: 4px 6px;
+    font-size: 14px;
+    border-radius: 0;
+    box-sizing: border-box;
+    max-width: 100%;
+}
+input:focus,
+select:focus {
+    outline: 1px dotted #000;
+    background-color: #fff;
+    border-color: #888 #eee #eee #888;
+}
+
+input[type="time"],
+input[type="text"],
+input[type="date"] {
+    width: 100%;
+}
+input[type="number"] {
+    width: 60px;
+    text-align: right;
+}
+
+input[type="checkbox"] {
+    appearance: none;
+    background-color: #fff;
+    border: 1px solid #888;
+    border-right-color: #eee;
+    border-bottom-color: #eee;
+    width: 16px;
+    height: 16px;
+    position: relative;
+    vertical-align: middle;
+    margin: 0 4px;
+}
+input[type="checkbox"]:checked::before {
+    content: "✔";
+    position: absolute;
+    top: -2px;
+    left: 1px;
+    font-size: 14px;
+    color: #000;
+}
+
+/* CSS (Estilo Botão Win95) */
+button {
+    font-family: "W95Font", Arial, sans-serif;
+    background-color: #c0c0c0;
+    color: #000;
+    padding: 4px 8px;
+    font-size: 14px;
+    border-style: outset;
+    border-width: 2px;
+    border-color: #eee #888 #888 #eee;
+    border-radius: 0;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    line-height: 1;
+    min-height: 28px;
+}
+button:active {
+    border-style: inset;
+    border-color: #888 #eee #eee #888;
+    padding: 5px 7px 3px 9px;
+}
+button:hover {
+    background-color: #c0c0c0;
+}
+/* Tamanho dos SVGs nos botões de ação */
+.botoes-acao button svg {
+    width: 20px;
+    height: 20px;
+}
+
+/* Container para os botões de ação */
+.botoes-acao {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-top: 10px;
+}
+
+/* CSS (Fonte do Total Mês e Saldo Mês) */
+#total-mes,
+#saldo-mes {
+    font-weight: normal;
+    font-family: "Courier New", Courier, monospace;
+}
+/* Container do total mês e Saldo Mês */
+#total-mes-container,
+#saldo-mes-container {
+    margin-top: 8px;
+    background-color: #c0c0c0;
+    border-style: inset;
+    border-width: 2px;
+    border-color: #888 #eee #eee #888;
+    padding: 8px 12px;
+    border-radius: 0;
+    max-width: 300px;
+    margin-bottom: 20px;
+}
+#resumo-semanal-container {
+    margin-bottom: 8px;
+}
+#total-mes-container {
+    margin-bottom: 8px;
+}
+
+#total-mes-container h3,
+#saldo-mes-container h3 {
+    font-family: "W95Font", Arial, sans-serif;
+    margin: 0;
+    font-size: 1em;
+    font-weight: bold;
+    border-bottom: none;
+    padding-bottom: 0;
+    text-align: left;
+}
+
+/* CSS (Fonte e Alinhamento Total Dia e Saldo Dia) */
+.horas-dia,
+.saldo-dia {
+    font-family: "Courier New", Courier, monospace;
+    vertical-align: middle !important;
+}
+
+/* CSS (Cores do Saldo - Aplicadas aos containers também) */
+.saldo-dia {
+    padding: 6px 4px !important;
+}
+.saldo-positivo {
+    background-color: #dff0d8 !important;
+    color: #3c763d !important;
+}
+.saldo-negativo {
+    background-color: #f2dede !important;
+    color: #a94442 !important;
+}
+.saldo-neutro {
+    background-color: #d9edf7 !important;
+    color: #31708f !important;
+}
+#saldo-mes-container.saldo-positivo h3,
+#saldo-mes-container.saldo-positivo #saldo-mes,
+#saldo-mes-container.saldo-negativo h3,
+#saldo-mes-container.saldo-negativo #saldo-mes,
+#saldo-mes-container.saldo-neutro h3,
+#saldo-mes-container.saldo-neutro #saldo-mes {
+    color: inherit !important;
+}
+
+/* Estilos para os Intervalos */
+.intervalo-container {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+.intervalo-pair {
+    display: flex;
+    gap: 4px;
+    align-items: center;
+}
+.intervalo-pair input {
+    width: auto;
+    flex: 1;
+}
+
+/* CSS (Botões de Ação na Linha - Estilo Win95) */
+.add-intervalo,
+.remover-intervalo,
+.add-linha-abaixo {
+    background-color: #c0c0c0;
+    color: #000;
+    border-style: outset;
+    border-width: 2px;
+    border-color: #eee #888 #888 #eee;
+    border-radius: 0;
+    width: 24px;
+    height: 24px;
+    padding: 0;
+    cursor: pointer;
+    flex-shrink: 0;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+.add-intervalo:active,
+.remover-intervalo:active,
+.add-linha-abaixo:active {
+    border-style: inset;
+    border-color: #888 #eee #eee #888;
+    padding: 1px 0 0 1px;
+}
+.add-intervalo:hover,
+.remover-intervalo:hover,
+.add-linha-abaixo:hover {
+    background-color: #c0c0c0;
+}
+/* Tamanho dos SVGs nos botões de ação na linha */
+.add-intervalo svg,
+.remover-intervalo svg,
+.add-linha-abaixo svg {
+    width: 16px;
+    height: 16px;
+}
+
+/* CSS (Container da Data) */
+.data-container {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+.data-container input.data {
+    flex-grow: 1;
+}
+
+/* Container para campos de ajuste */
+.ajuste-container {
+    margin-top: 30px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    max-width: 300px;
+    margin-bottom: 20px;
+    background-color: #c0c0c0;
+    border-style: inset;
+    border-width: 2px;
+    border-color: #888 #eee #eee #888;
+    padding: 10px 15px;
+}
+.ajuste-container div {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.ajuste-container label {
+    font-size: 1em;
+    margin-right: 5px;
+}
+.ajuste-container input[type="time"],
+.ajuste-container input[type="number"] {
+    width: 100px;
+}
+
+/* CSS (Campo de subtração) */
+#horas-subtrair {
+    background-color: #fff0f0;
+    border-style: inset;
+    border-width: 1px;
+    border-color: #888 #eee #eee #888;
+}
+#horas-subtrair:focus {
+    background-color: #ffe0e0;
+    border-style: inset;
+    border-width: 1px;
+    border-color: #888 #eee #eee #888;
+    outline: 1px dotted #000;
+}
+
+/* --- CSS MODIFICADO (Container da Escala) --- */
+#escala-container {
+    margin-top: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    max-width: 800px; /* Aumenta largura para caber tudo */
+    margin-bottom: 20px;
+    background-color: #c0c0c0;
+    border-style: inset;
+    border-width: 2px;
+    border-color: #888 #eee #eee #888;
+    padding: 10px 15px;
+}
+#escala-container h4 {
+    margin: 0 0 10px 0;
+    border-bottom: 1px solid #888;
+    padding-bottom: 4px;
+    font-size: 1em;
+    font-weight: bold;
+    color: #000;
+}
+.escala-dia {
+    display: flex;
+    align-items: flex-start; /* Alinha label do dia no topo */
+    gap: 10px;
+    padding-bottom: 10px;
+    border-bottom: 1px dotted #888;
+}
+.escala-dia:last-child {
+    border-bottom: none;
+    padding-bottom: 0;
+}
+.escala-dia-label {
+    font-weight: bold;
+    width: 60px;
+    flex-shrink: 0;
+    text-align: right;
+    padding-top: 5px; /* Ajusta alinhamento vertical */
+}
+.escala-turnos {
+    display: flex;
+    flex-direction: column;
+    gap: 10px; /* Espaço entre turnos */
+    flex-grow: 1;
+}
+.escala-turno-container {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    border: 1px solid #aaa; /* Linha separadora leve */
+    padding: 8px;
+    background: #eee; /* Fundo levemente diferente */
+    border-style: inset;
+    border-width: 1px;
+    border-color: #aaa #f0f0f0 #f0f0f0 #aaa;
+}
+.escala-row {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    flex-wrap: wrap; /* Permite quebra em telas menores */
+}
+.escala-row label {
+    font-size: 0.9em;
+    width: 70px; /* Largura para "Entrada:", "Intervalo:" */
+    flex-shrink: 0;
+    text-align: right;
+}
+.escala-inputs {
+    display: flex;
+    gap: 5px;
+    flex-grow: 1;
+}
+#escala-container input[type="time"] {
+    width: 90px; /* Largura fixa menor */
+}
+.escala-hora-aula-container {
+    margin-left: 75px; /* Alinha checkbox com inputs */
+    display: flex;
+    align-items: center;
+}
+.escala-hora-aula-container label {
+    width: auto; /* Label do checkbox com largura auto */
+    margin-left: 3px;
+    font-size: 0.9em;
+}
+
+/* CSS (Resumo Semanal W95) */
+#resumo-semanal-container {
+    background-color: #c0c0c0;
+    border-style: inset;
+    border-width: 2px;
+    border-color: #888 #eee #eee #888;
+    padding: 8px 12px;
+    border-radius: 0;
+    max-width: 300px;
+    margin-bottom: 8px;
+}
+#resumo-semanal-container h4 {
+    margin: 0 0 8px 0;
+    border-bottom: 1px solid #888;
+    padding-bottom: 4px;
+    font-size: 1em;
+    font-weight: bold;
+    color: #000;
+}
+#resumo-semanal {
+    font-family: "Courier New", Courier, monospace;
+    font-size: 1em;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    color: #000;
+}
+
+/* CSS RESPONSIVO */
+@media (max-width: 768px) {
+    body {
+        padding: 10px;
+        font-size: 16px;
+    }
+
+    table {
+        border-style: none;
+        margin-bottom: 20px;
+    }
+
+    thead {
+        display: none;
+    }
+
+    tr {
+        display: block;
+        margin-bottom: 15px;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        background-color: #fff;
+    }
+
+    colgroup {
+        display: none;
+    }
+
+    td {
+        display: block;
+        width: auto !important;
+        text-align: right;
+        padding-left: 50%;
+        position: relative;
+        border-bottom: 1px dotted #eee;
+        padding-top: 10px;
+        padding-bottom: 10px;
+        vertical-align: middle !important;
+    }
+    td:last-child {
+        border-bottom: none;
+    }
+
+    td::before {
+        content: attr(data-label);
+        position: absolute;
+        left: 10px;
+        width: calc(50% - 20px);
+        padding-right: 10px;
+        white-space: nowrap;
+        text-align: left;
+        font-weight: bold;
+        color: #555;
+        font-family: Arial, sans-serif;
+        top: 50%;
+        transform: translateY(-50%);
+    }
+
+    /* Ajustes específicos */
+    td[data-label="Data"] {
+        padding-left: 8px;
+    }
+    td[data-label="Data"]::before {
+        display: none;
+    }
+    .data-container {
+        margin-top: 5px;
+    }
+
+    /* Saldo no mobile */
+    td[data-label="Saldo Dia"] {
+        padding-left: 50% !important;
+        padding-right: 8px !important;
+    }
+    .saldo-dia {
+        padding: 10px 8px !important;
+    }
+
+    td[data-label="Hora-aula?"] {
+        text-align: left;
+    }
+    td[data-label="Hora-aula?"]::before {
+        width: auto;
+        position: static;
+        margin-right: 10px;
+        transform: none;
+        top: auto;
+    }
+    td[data-label="Hora-aula?"] input {
+        vertical-align: middle;
+    }
+
+    td[data-label="Ações"] {
+        text-align: center;
+        padding-left: 8px;
+    }
+    td[data-label="Ações"]::before {
+        display: none;
+    }
+
+    td[data-label="Intervalos"] {
+        padding-left: 8px;
+        vertical-align: top !important;
+    }
+    td[data-label="Intervalos"]::before {
+        display: block;
+        visibility: hidden;
+    }
+    .intervalo-container {
+        margin-top: 5px;
+    }
+
+    /* Ajusta containers inferiores */
+    .ajuste-container,
+    #escala-container,
+    #resumo-semanal-container,
+    #total-mes-container,
+    #saldo-mes-container {
+        border-style: none;
+        background-color: transparent;
+        padding: 0;
+        max-width: none;
+        width: auto;
+        margin-top: 0;
+        margin-bottom: 15px;
+    }
+    /* Estilo específico para labels/inputs de ajuste e escala */
+    .ajuste-container div,
+    #escala-container {
+        background-color: #f8f8f8;
+        padding: 10px;
+        border-radius: 4px;
+        border: 1px solid #ccc;
+        font-family: Arial, sans-serif;
+    }
+    #escala-container .escala-dia {
+        flex-direction: column;
+        align-items: flex-start;
+        border: none;
+        padding: 0;
+        margin-bottom: 15px;
+    }
+    .escala-dia:last-child {
+        margin-bottom: 0;
+    }
+    .escala-dia-label {
+        width: auto;
+        text-align: left;
+        margin-bottom: 5px;
+        font-size: 1.1em;
+        font-family: Arial, sans-serif;
+    }
+    .escala-turnos {
+        width: 100%;
+        gap: 10px;
+    }
+    .escala-turno-container {
+        border: none;
+        background: #eee;
+        padding: 10px;
+        border-radius: 3px;
+    }
+    .escala-row {
+        flex-wrap: wrap;
+    }
+    .escala-row label {
+        width: 100%;
+        margin-bottom: 3px;
+        font-family: Arial, sans-serif;
+        text-align: left;
+    }
+    .escala-inputs {
+        width: 100%;
+        justify-content: space-between;
+    }
+    #escala-container input[type="time"] {
+        width: 48%;
+    }
+    .escala-hora-aula-container {
+        margin-left: 0;
+        margin-top: 5px;
+        width: 100%;
+    }
+    .escala-hora-aula-container label {
+        width: auto;
+        font-family: Arial, sans-serif;
+    }
+
+    #escala-container h4 {
+        font-family: Arial, sans-serif;
+        border: none;
+        padding: 10px;
+        margin-bottom: 0px;
+        background-color: #f8f8f8;
+        border-radius: 4px;
+        border: 1px solid #ccc;
+        margin-bottom: 10px;
+    }
+
+    /* Estilo específico para resumo e total no mobile */
+    #resumo-semanal-container,
+    #total-mes-container,
+    #saldo-mes-container {
+        background-color: #f8f8f8;
+        padding: 10px;
+        border-radius: 4px;
+        border: 1px solid #ccc;
+    }
+    #resumo-semanal-container h4,
+    #total-mes-container h3,
+    #saldo-mes-container h3 {
+        border: none;
+        padding: 0;
+        margin-bottom: 8px;
+        font-family: Arial, sans-serif;
+    }
+    #total-mes-container h3,
+    #saldo-mes-container h3 {
+        text-align: left;
+    }
+    #resumo-semanal {
+        font-family: Arial, sans-serif;
+        color: #333;
+    }
+    #saldo-mes-container.saldo-positivo h3,
+    #saldo-mes-container.saldo-positivo #saldo-mes,
+    #saldo-mes-container.saldo-negativo h3,
+    #saldo-mes-container.saldo-negativo #saldo-mes,
+    #saldo-mes-container.saldo-neutro h3,
+    #saldo-mes-container.saldo-neutro #saldo-mes {
+        color: inherit !important;
+    }
+}
